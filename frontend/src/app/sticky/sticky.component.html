@@ -1,0 +1,134 @@
+
+<div class="titleSticky " >
+	<span class="cursor-pointer" data-toggle="modal" data-target="#modalCategoryPick">
+		{{categoryActive?.categoria}}
+	</span>
+</div>
+
+<div class="sticky">
+	<div class="card" *ngFor="let sticky of stickers">
+		<!-- <pre>{{ sticky | json }}</pre> -->
+		<div [ngClass]="{ text: !sticky.imagem }">
+			<div class="front">{{ sticky.frente }}</div>
+			<div class="back">{{ sticky.verso }}</div>
+		</div>
+		<div class="image" *ngIf="sticky.imagem">
+			<img
+				src="{{ path }}/{{
+					sticky.imagem | helpers: 'isDevMode':isDevMode
+				}}"
+				alt=""
+			/>
+		</div>
+	</div>
+</div>
+
+<div class="actions">
+	<div class="add-sticky cursor-pointer" data-toggle="modal" data-target="#modalStickyAdd" >
+		<fa-icon class="iconAction" [icon]="faPlus"></fa-icon>
+	</div>
+	<div class="add-category cursor-pointer" data-toggle="modal" data-target="#modalCategoryAdd">
+		<fa-icon class="iconAction" [icon]="faBars"></fa-icon>
+	</div>
+</div>
+
+<!-- Button trigger modal -->
+
+<!-- Modal -->
+<div
+	class="modal fade"
+	id="modalStickyAdd"
+	tabindex="-1"
+	aria-labelledby="modalNewSticky"
+	aria-hidden="true"
+>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modalNewSticky">Add new sticky</h5>
+			</div>
+			<div class="modal-body">
+				<div class="content">
+					<form [formGroup]="form" novalidate>
+						<div class="form-group">
+							<label for="">Front</label>
+							<textarea class="form-control" formControlName="frente" ></textarea>
+						</div>
+						<div class="form-group">
+							<label for="">Verse</label>
+							<textarea class="form-control" formControlName="verso" ></textarea>
+						</div>
+						<div class="form-group">
+							<label for="">
+								<div class="add-category cursor-pointer" data-toggle="modal" data-target="#modalCategoryAdd">
+									Category <fa-icon class="" [icon]="faPlusCircle"></fa-icon>
+								</div>
+							</label>
+
+							<select class='form-control' formControlName='id_categoria'>
+								<option [value]=''> </option>
+								<option *ngFor='let category of categories' [value]='category.id'>
+									{{category?.categoria}}
+								</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput formControlName="imagem" />
+							<div class="uploadArquivo" [style.background-image]=" 'url(' + img + ' )' | safeHtml: 'style' " ></div>
+							<button class="btn btn-upload" (click)="fileInput.click()" > Enviar IMG </button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal" #closemodalStickyAdd > Fechar </button>
+				<button type="button" class="btn btn-primary" (click)="save(form.value)" [disabled]="!form.valid" > Salvar </button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Category -->
+<div class="modal fade" id="modalCategoryAdd" tabindex="-1" aria-labelledby="modalNewCategory" aria-hidden="true" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modalNewCategory">Add new category</h5>
+			</div>
+			<div class="modal-body">
+				<div class="content">
+					<form [formGroup]="formCategory" novalidate>
+						<div class="form-group">
+							<label for="">Category</label>
+							<input class="form-control" formControlName="categoria" >
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal" #closemodalCategoryAdd > Fechar </button>
+				<button type="button" class="btn btn-primary" (click)="saveCategory()" [disabled]="!formCategory.valid" > Salvar </button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- pick Category -->
+<div class="modal fade" id="modalCategoryPick" tabindex="-1" aria-labelledby="modalNewCategory" aria-hidden="true" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modalNewCategory">pick category</h5>
+			</div>
+			<div class="modal-body">
+				<div class="content" style="display: flex;">
+					<div class="pickCategory" *ngFor="let cat of categories" (click)="pickCategory(cat)">
+						{{cat.categoria}}
+					</div>
+				</div>
+			</div>
+			<div data-dismiss="modal" #closemodalCategoryPick >  </div>
+		</div>
+	</div>
+</div>
+
