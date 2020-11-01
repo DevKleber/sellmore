@@ -9,7 +9,7 @@ class CalendarController extends Controller
 {
     public function index()
     {
-        $calendar = \App\Calendar::all();
+        $calendar = \App\Calendar::where('id_usuario', auth('api')->user()->id)->where('bo_ativo', true)->get();
         if (!$calendar) {
             return response(['response' => 'Não existe Calendar'], 400);
         }
@@ -20,6 +20,7 @@ class CalendarController extends Controller
     public function store(Request $request)
     {
         $request['bo_ativo'] = true;
+        $request['id_usuario'] = auth('api')->user()->id;
 
         $calendar = \App\Calendar::create($request->all());
         if (!$calendar) {

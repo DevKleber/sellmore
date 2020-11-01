@@ -9,16 +9,24 @@ class CustomersController extends Controller
 {
     public function index()
     {
-        $customers = \App\Customers::all();
-        if (!$customers) {
+        $arCustomers = \App\Customers::getAll();
+
+        if (!$arCustomers) {
             return response(['response' => 'Não existe Customers'], 400);
         }
 
-        return response(['dados' => $customers]);
+        return response([
+            'dados' => $arCustomers,
+        ]);
     }
 
     public function store(Request $request)
     {
+        $customers = \App\Customers::where('phone', $request['phone'])->get();
+        if ($customers->count()) {
+            return  response(['response' => 'Referido já existe'], 400);
+        }
+        $request['id_usuario'] = auth('api')->user()->id;
         $customers = \App\Customers::create($request->all());
         if (!$customers) {
             return  response(['response' => 'Erro ao salvar Customers'], 400);
@@ -35,6 +43,24 @@ class CustomersController extends Controller
         }
 
         return response($customers);
+    }
+
+    public function changeStatus(Request $request, $id)
+    {
+        $customers = \App\Customers::find($id);
+
+        if (!$customers) {
+            return response(['response' => 'Customers Não encontrado'], 400);
+        }
+
+        $dados = $request->only(['status']);
+        $customers = Helpers::processarColunasUpdate($customers, $dados);
+
+        if (!$customers->update()) {
+            return response(['response' => 'Erro ao alterar'], 400);
+        }
+
+        return response(['response' => 'Atualizado com sucesso']);
     }
 
     public function update(Request $request, $id)

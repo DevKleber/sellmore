@@ -13,11 +13,11 @@ Route::group(['middleware' => 'apiJwt'], function () {
     Route::post('auth/refresh', 'AuthController@refresh');
     Route::get('auth/me', 'AuthController@me');
     Route::put('auth/changePassword', 'AuthController@changePassword');
-    Route::resource('category', 'CategoryController');
-    Route::resource('sticky', 'StickyController');
-    Route::get('sticky/cat/{id}', 'StickyController@byCat');
+
     Route::post('file', 'ArquivoController@store');
+
+    Route::resource('calendar', 'CalendarController');
+    Route::resource('customers', 'CustomersController');
+    Route::put('status/customers/{id}', 'CustomersController@changeStatus');
+    Route::resource('strategy', 'StrategyController');
 });
-Route::resource('calendar','CalendarController');
-Route::resource('customers','CustomersController');
-Route::resource('strategy','StrategyController');

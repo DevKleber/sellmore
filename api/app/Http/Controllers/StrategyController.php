@@ -9,7 +9,7 @@ class StrategyController extends Controller
 {
     public function index()
     {
-        $strategy = \App\Strategy::all();
+        $strategy = \App\Strategy::where('id_usuario', auth('api')->user()->id)->first();
         if (!$strategy) {
             return response(['response' => 'Não existe Strategy'], 400);
         }
@@ -19,6 +19,8 @@ class StrategyController extends Controller
 
     public function store(Request $request)
     {
+        $request['id_usuario'] = auth('api')->user()->id;
+
         $strategy = \App\Strategy::create($request->all());
         if (!$strategy) {
             return  response(['response' => 'Erro ao salvar Strategy'], 400);
