@@ -18,3 +18,6 @@ Route::group(['middleware' => 'apiJwt'], function () {
     Route::get('sticky/cat/{id}', 'StickyController@byCat');
     Route::post('file', 'ArquivoController@store');
 });
+Route::resource('calendar','CalendarController');
+Route::resource('customers','CustomersController');
+Route::resource('strategy','StrategyController');
