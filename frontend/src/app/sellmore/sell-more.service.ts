@@ -8,14 +8,14 @@ import { API } from '../app.api';
 @Injectable({
 	providedIn: 'root',
 })
-export class StickyService {
+export class SellMoreService {
 	lastUrl: string;
 	mostrarMenu = new EventEmitter<boolean>();
 
 	constructor(private http: HttpClient, private router: Router) {}
 
-	getSticky(search?: string): Observable<any[]> {
-		return this.http.get<any[]>(`${API}/sticky/cat/${search}`);
+	getSellMore(search?: string): Observable<any[]> {
+		return this.http.get<any[]>(`${API}/sellMore/cat/${search}`);
 	}
 	getCategories(search?: string): Observable<any[]> {
 		return this.http.get<any[]>(`${API}/category`);
@@ -23,7 +23,7 @@ export class StickyService {
 
 	save(form) {
 		console.log(form);
-		return this.http.post<any>(`${API}/sticky`, form);
+		return this.http.post<any>(`${API}/sellMore`, form);
 	}
 	saveCategory(form) {
 		console.log(form);

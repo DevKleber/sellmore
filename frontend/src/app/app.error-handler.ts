@@ -1,22 +1,16 @@
-import {
-	ErrorHandler,
-	Injectable,
-	Injector,
-	NgZone,
-	EventEmitter,
-} from '@angular/core';
+import { ErrorHandler, Injectable, Injector, NgZone } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Observable, timer } from 'rxjs';
 
 import { NotificationService } from './shared/messages/notification.service';
+import { LoaderService } from './shared/loader/loader.service';
 import { LoginService } from './security/login/login.service';
-import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { Router } from '@angular/router';
 
 @Injectable()
 export class ApplicationErrorHandler extends ErrorHandler {
 	constructor(
 		private ns: NotificationService,
+		private loaderService: LoaderService,
 		private injector: Injector,
 		private zone: NgZone
 	) {
@@ -30,9 +24,9 @@ export class ApplicationErrorHandler extends ErrorHandler {
 					? JSON.parse(errorResponse.error)
 					: errorResponse.error;
 			this.zone.run(() => {
-				// console.log(errorResponse.status)
-				// console.log(errorResponse.error)
-				console.log(error.error);
+				// console.log('logo error handler', errorResponse.status);
+				// console.log('logo error handler', errorResponse.error);
+				// console.log('logo error handler', error.error);
 
 				switch (errorResponse.status) {
 					case 0:
@@ -83,13 +77,7 @@ export class ApplicationErrorHandler extends ErrorHandler {
 							this.ns.notifyError(error.response);
 							if (!error.permission) {
 								let router = this.injector.get(Router);
-								if (router.url == '/pdv') {
-									setTimeout(() => {
-										this.goToLogin('');
-									}, 5000); //esperando 5 segundos e fechando a janela.
-								} else {
-									this.goToLogin('');
-								}
+								this.goToLogin('');
 								// history.go(-1);
 							}
 						}

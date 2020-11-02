@@ -1,0 +1,88 @@
+.sellMore {
+	min-height: 100vh;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.sellMore header {
+	padding: 15px;
+	height: 95px;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	/* flex-direction: row; */
+	/* justify-content: space-between; */
+}
+.sellMore header .logo {
+	width: 120px;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.sellMore header .search {
+	flex: 1;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.sellMore header .profile {
+	width: 120px;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.sellMore header .profile img {
+	width: 56px;
+	height: 56px;
+	border-radius: 28px;
+}
+.sellMore .content {
+	padding: 15px;
+	flex: 1;
+	width: 100%;
+}
+.sellMore footer {
+	position: fixed;
+	padding: 15px;
+	height: 95px;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	bottom: 0;
+}
+.footerItens {
+	width: 80px;
+	height: 80px;
+	border-radius: 40px;
+	background-color: var(--backgroundSecondary);
+	color: var(--backgroundSecondaryColor);
+	margin-left: 10px;
+	font-size: 3em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.totalLead {
+	font-weight: bold;
+	font-size: 28px;
+}
+.totalOthers {
+	font-weight: bold;
+	font-size: 17px;
+}
+
+.customers {
+	width: 422px;
+	height: 510px;
+	background-color: var(--backgroundComponents);
+	margin: 15px;
+	border-radius: 10px;
+	color: #efefed;
+}

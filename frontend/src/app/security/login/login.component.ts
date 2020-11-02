@@ -28,6 +28,7 @@ export class LoginComponent implements OnInit {
 	) {}
 
 	ngOnInit() {
+		// this.loaderService.isLoad(true);
 		this.loginForm = this.fb.group({
 			email: this.fb.control('', [Validators.required]),
 			password: this.fb.control('', [Validators.required]),
@@ -59,7 +60,7 @@ export class LoginComponent implements OnInit {
 				this.loginForm.controls['password'].setValue(
 					this.newAccountForm.value.password
 				);
-				this.loaderService.isLoad(false);
+				// this.loaderService.isLoad(false);
 				this.login();
 			});
 	}
@@ -76,13 +77,6 @@ export class LoginComponent implements OnInit {
 						`Bem vindo, ${user.me['nome']}`
 					);
 					this.loaderService.isLoad(false);
-					// this.notificationService.notifySweet(),
-
-					//atob é para decodificar
-					// this.router.navigate(['/']);
-					// location.reload();
-					// console.log("/#"+atob(this.navigateTo))
-					// this.router.navigate([atob(this.navigateTo)])
 				},
 
 				(response) => {
@@ -97,8 +91,7 @@ export class LoginComponent implements OnInit {
 							'SERVIDOR OFFILINE'
 						);
 					}
-				} //httpErrorResponse
-				// () => {}
+				}
 			);
 	}
 }

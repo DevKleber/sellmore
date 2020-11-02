@@ -7,14 +7,14 @@ export const environment = {
 	// api: "http://apicampanha.siagesc.com.br/api"
 	// api: "https://apiadmin.primepremios.com.br/api",
 
-	// api: 'http://127.0.0.1:8000/api',
-	// apiPublic: 'http://127.0.0.1:8000/public',
-	// apiDominio: 'http://127.0.0.1:8000',
-	// apiSite: 'http://127.0.0.1:8000',
-	api: 'https://memorizeapi.arocweb.com.br/api',
-	apiPublic: 'https://memorizeapi.arocweb.com.br/public',
-	apiDominio: 'https://memorizeapi.arocweb.com.br',
-	apiSite: 'https://memorizeapi.arocweb.com.br',
+	api: 'http://127.0.0.1:8000/api',
+	apiPublic: 'http://127.0.0.1:8000/public',
+	apiDominio: 'http://127.0.0.1:8000',
+	apiSite: 'http://127.0.0.1:8000',
+	// api: 'https://memorizeapi.arocweb.com.br/api',
+	// apiPublic: 'https://memorizeapi.arocweb.com.br/public',
+	// apiDominio: 'https://memorizeapi.arocweb.com.br',
+	// apiSite: 'https://memorizeapi.arocweb.com.br',
 };
 
 /*

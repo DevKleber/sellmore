@@ -45,7 +45,6 @@ import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import ptBr from '@angular/common/locales/pt';
 registerLocaleData(ptBr);
@@ -83,7 +82,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		PerfectScrollbarModule,
 		MatBottomSheetModule,
 		MatButtonModule,
-		FontAwesomeModule,
 	],
 	exports: [
 		BooleanMessagePipe,
@@ -110,7 +108,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		PerfectScrollbarModule,
 		MatBottomSheetModule,
 		MatButtonModule,
-		FontAwesomeModule,
 	],
 })
 export class SharedModule {

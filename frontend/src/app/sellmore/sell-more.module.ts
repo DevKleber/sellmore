@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
 import { RouterModule, Routes } from '@angular/router';
-import { StickyComponent } from './sticky.component';
+import { SellMoreComponent } from './sell-more.component';
 
-const ROUTES: Routes = [{ path: '', component: StickyComponent }];
+const ROUTES: Routes = [{ path: '', component: SellMoreComponent }];
 @NgModule({
-	declarations: [StickyComponent],
+	declarations: [SellMoreComponent],
 	imports: [SharedModule, RouterModule.forChild(ROUTES)],
 })
-export class StickyModule {}
+export class SellMoreModule {}

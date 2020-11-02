@@ -1,71 +1,105 @@
-<div class="login">
-	<ng-container *ngIf="!isNewAccount; else elseTemplateNewAccount">
-		<div class="cardTitle">
-			<div class="title">
-				Memorize
+<div class="login-box">
+	<div class="login">
+		<ng-container *ngIf="!isNewAccount; else elseTemplateNewAccount">
+			<div class="cardTitle">
+				<div class="title">Sell more</div>
+				<div class="subTitle">Login</div>
 			</div>
-			<div class="subTitle">Login</div>
-		</div>
-
-	</ng-container>
-	<ng-template #elseTemplateNewAccount>
-		<div class="cardTitle">
-			<div class="title">
-				<p>Memorize</p>
-
+		</ng-container>
+		<ng-template #elseTemplateNewAccount>
+			<div class="cardTitle">
+				<div class="title">
+					<p>Sell more</p>
+				</div>
+				<div class="subTitle">Create account</div>
 			</div>
-			<div class="subTitle">Create account</div>
-		</div>
+		</ng-template>
 
-	</ng-template>
+		<br />
 
-	<br>
+		<form [formGroup]="loginForm" *ngIf="!isNewAccount">
+			<app-input-container>
+				<input
+					type="text"
+					formControlName="email"
+					class="form-control"
+					placeholder="E-mail"
+					autofocus
+				/>
+			</app-input-container>
 
-	<form [formGroup]="loginForm" *ngIf="!isNewAccount">
-		<app-input-container>
-			<input type="text" formControlName="email" class="form-control" placeholder="E-mail" autofocus />
-		</app-input-container>
+			<app-input-container>
+				<input
+					type="password"
+					formControlName="password"
+					class="form-control"
+					placeholder="Password"
+				/>
+			</app-input-container>
 
-		<app-input-container>
-			<input type="password" formControlName="password" class="form-control" placeholder="Password" />
-		</app-input-container>
+			<button
+				(click)="login()"
+				class="btn btn-primary btn-lg btn-block btnentrar"
+				[disabled]="loginForm.invalid"
+			>
+				Sign-In
+			</button>
+			<hr />
+			<h3>New to Sell more?</h3>
+			<button
+				(click)="changeToNewAccount()"
+				class="btn btn-secondary btn-block btnNewAccount"
+			>
+				Create your Sell more account
+			</button>
+		</form>
 
+		<form [formGroup]="newAccountForm" *ngIf="isNewAccount">
+			<app-input-container>
+				<input
+					type="text"
+					formControlName="nome"
+					class="form-control"
+					placeholder="Name"
+					autofocus
+				/>
+			</app-input-container>
 
-		<button (click)="login()" class="btn btn-primary btn-lg btn-block btnentrar" [disabled]="loginForm.invalid">
-			Sign-In
-		</button>
-		<hr>
-		<h3>
-			New to Memorize?
-		</h3>
-		<button (click)="changeToNewAccount()" class="btn btn-secondary btn-block btnNewAccount">
-			Create your Memorize account
-		</button>
-	</form>
+			<app-input-container>
+				<input
+					type="text"
+					formControlName="email"
+					class="form-control"
+					placeholder="E-mail"
+					email
+				/>
+			</app-input-container>
+			<app-input-container>
+				<input
+					type="password"
+					formControlName="password"
+					class="form-control"
+					placeholder="Password"
+				/>
+			</app-input-container>
 
-	<form [formGroup]="newAccountForm" *ngIf="isNewAccount">
-		<app-input-container>
-			<input type="text" formControlName="nome" class="form-control" placeholder="Name" autofocus />
-		</app-input-container>
-
-		<app-input-container>
-			<input type="text" formControlName="email" class="form-control" placeholder="E-mail" email/>
-		</app-input-container>
-		<app-input-container>
-			<input type="password" formControlName="password" class="form-control" placeholder="Password" />
-		</app-input-container>
-
-		<button (click)="newAccount()" class="btn btn-primary btn-lg btn-block btnentrar" [disabled]="newAccountForm.invalid" *ngIf="showButton">
-			Create your Memorize account
-		</button>
-		<hr>
-		<h3>
-			Already have an account?
-		</h3>
-		<button (click)="changeToLogin()" class="btn btn-secondary btn-block btnNewAccount">
-			Sign-In
-		</button>
-	</form>
-
+			<button
+				(click)="newAccount()"
+				class="btn btn-primary btn-lg btn-block btnentrar"
+				[disabled]="newAccountForm.invalid"
+				*ngIf="showButton"
+			>
+				Create your Sell more account
+			</button>
+			<hr />
+			<h3>Already have an account?</h3>
+			<button
+				(click)="changeToLogin()"
+				class="btn btn-secondary btn-block btnNewAccount"
+			>
+				Sign-In
+			</button>
+		</form>
+	</div>
 </div>
 <div class="bg-img"></div>

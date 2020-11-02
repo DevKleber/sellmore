@@ -1,26 +1,32 @@
 :root {
-	--background: #0e1621;
-	--backgroundColor: #cbd7e1;
+	--background: #efefed;
+	--backgroundColor: #2a004f;
 	--backgroundColorMoreDark: #5b6d80;
-	--colorPrimary: #fff;
-	--backgroundButton: #2b5278;
-	--backgroundButtonHover: #3f6388;
-	--backgroundButtonDisabled: #7699bb;
-	--backgroundButtonDisabledColor: #212025;
+
+	--colorPrimary: #2a004f;
+
+	--backgroundButton: #2a004f;
+	--backgroundButtonHover: #1a0030;
+	--backgroundButtonDisabled: #1c0035;
+	--backgroundButtonDisabledColor: #8e8c94;
 	--backgroundButtonColor: #fff;
-	--primary: #2b5278;
+
+	--primary: #2a004f;
 
 	--icons: #6c7883;
 
 	/* --backgroundComponents: #182533; */
-	--backgroundComponents: #17212b;
+	--backgroundComponents: #2a004f;
 	--backgroundComponentsColor: #cbd7e1;
 
-	--backgroundInput: #17212b;
-	--backgroundInputColor: #cbd7e1;
+	--backgroundInput: #dfe1e5;
+	--backgroundInputColor: #2a004f;
 
 	--backgroundButtonSecondary: #b3b3b3;
 	--backgroundButtonColorSecondary: #fff;
+
+	--backgroundSecondary: #00eb84;
+	--backgroundSecondaryColor: #fff;
 
 	/* --backgroundButton: #04d361;
     --backgroundButtonHover: #0df576;

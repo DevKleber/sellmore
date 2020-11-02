@@ -11,7 +11,7 @@ export const ROUTES: Routes = [
 	{
 		path: '',
 		loadChildren: () =>
-			import('./sticky/sticky.module').then((m) => m.StickyModule),
+			import('./sellmore/sell-more.module').then((m) => m.SellMoreModule),
 	},
 	{
 		path: 'not-found',
