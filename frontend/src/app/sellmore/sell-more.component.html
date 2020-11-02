@@ -35,7 +35,9 @@
 				<div class="parent center-center">
 					<div class="contact">
 						<div class="name">{{ itemLead?.value.name }}</div>
-						<div class="phone">{{ itemLead?.value.phone }}</div>
+						<div class="phone">
+							{{ itemLead?.value.phone | mask: "(00)00000-0000" }}
+						</div>
 					</div>
 					<div class="action">
 						<ng-container
@@ -96,8 +98,7 @@
 						<div
 							class="item"
 							*ngFor="
-								let item of itemLead.value.referidos | keyvalue;
-								let even = even
+								let item of itemLead.value.referidos | keyvalue
 							"
 						>
 							<div class="contacto">
@@ -105,7 +106,10 @@
 									{{ item.value.name }}
 								</div>
 								<div class="contacto-phone">
-									{{ item.value.phone }}
+									{{
+										item.value.phone
+											| mask: "(00)00000-0000"
+									}}
 								</div>
 							</div>
 
@@ -136,6 +140,37 @@
 										class="fa fa-thumbs-up icon-finished icon-finished-yes"
 									>
 									</i>
+									<i
+										class="fa fa-bars icon-finished"
+										style="margin-left: 15px"
+										matTooltip="Menu"
+										[matMenuTriggerFor]="menu"
+									></i>
+									<mat-menu #menu="matMenu">
+										<button mat-menu-item>
+											<a
+												target="_BLANK"
+												href="https://wa.me/5562981993875"
+											>
+												<i class="fab fa-whatsapp"></i>
+												Abrir no Whatsapp
+											</a>
+										</button>
+										<button mat-menu-item>
+											<i class="fas fa-edit"></i> Alterar
+										</button>
+										<button
+											mat-menu-item
+											(click)="newChildren(item.value)"
+											data-toggle="modal"
+											data-target="#modalStickyAdd"
+										>
+											<i
+												class="fa fa-chalkboard-teacher"
+											></i>
+											Tornar Lead
+										</button>
+									</mat-menu>
 								</div>
 							</ng-container>
 							<ng-template #waitingChildren>
@@ -161,6 +196,36 @@
 										class="fa fa-thumbs-up icon-waiting"
 										matTooltip="Vendido 😃"
 									></i>
+									<i
+										class="fa fa-bars icon-waiting"
+										matTooltip="Menu"
+										[matMenuTriggerFor]="menu"
+									></i>
+									<mat-menu #menu="matMenu">
+										<button mat-menu-item>
+											<a
+												target="_BLANK"
+												href="https://wa.me/5562981993875"
+											>
+												<i class="fab fa-whatsapp"></i>
+												Abrir no Whatsapp
+											</a>
+										</button>
+										<button mat-menu-item>
+											<i class="fas fa-edit"></i> Alterar
+										</button>
+										<button
+											mat-menu-item
+											(click)="newChildren(item.value)"
+											data-toggle="modal"
+											data-target="#modalStickyAdd"
+										>
+											<i
+												class="fa fa-chalkboard-teacher"
+											></i>
+											Tornar Lead
+										</button>
+									</mat-menu>
 								</div>
 							</ng-template>
 						</div>
@@ -213,7 +278,9 @@
 			<div class="modal-header">
 				<h3 class="modal-title" id="modalNewSticky">
 					<ng-container *ngIf="parent.id; else indicatedBy">
-						Indicado por: {{ parent.name }}
+						<p>
+							Cadastre abaixo os indicados do(a) {{ parent.name }}
+						</p>
 					</ng-container>
 					<ng-template #indicatedBy> Novo referido </ng-template>
 				</h3>
@@ -244,6 +311,7 @@
 									class="w-100"
 									formControlName="phone"
 									placeholder="Telefone"
+									mask="(00)00000-0000"
 								/>
 							</div>
 						</div>

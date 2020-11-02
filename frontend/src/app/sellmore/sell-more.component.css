@@ -129,7 +129,7 @@
 .parent .action .waiting i {
 	margin-left: 10px;
 }
-.parent .action .waiting {
+.waiting {
 	width: 150px;
 }
 .children .item {
@@ -162,7 +162,7 @@
 	display: flex;
 	align-items: flex-end;
 	justify-content: flex-end;
-	width: 150px;
+	width: 145px;
 }
 .children .item .waiting i {
 	margin-left: 10px;
@@ -212,7 +212,7 @@
 }
 
 .icon-waiting {
-	font-size: 25px;
+	font-size: 20px;
 	cursor: pointer;
 }
 .icon-waiting-yes {

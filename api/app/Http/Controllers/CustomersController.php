@@ -25,7 +25,7 @@ class CustomersController extends Controller
         $request['status'] = ('' == $request['status'] || null == $request['status']) ? 'a' : $request['status'];
         $customers = \App\Customers::where('phone', $request['phone'])->get();
         if ($customers->count()) {
-            return  response(['response' => 'Referido já existe'], 400);
+            return  response(['response' => 'Referido já indicado por outro lead'], 400);
         }
         $request['id_usuario'] = auth('api')->user()->id;
         $customers = \App\Customers::create($request->all());

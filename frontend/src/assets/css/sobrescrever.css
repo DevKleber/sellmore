@@ -15,3 +15,17 @@
 	border-bottom-right-radius: calc(0.3rem - 1px);
 	border-bottom-left-radius: calc(0.3rem - 1px);
 }
+.mat-menu-content button {
+	margin-top: 0 !important;
+}
+.mat-menu-content button a {
+	background: transparent;
+	color: rgba(0, 0, 0, 0.87);
+}
+.mat-menu-content button a:link {
+	text-decoration: none;
+}
+.mat-menu-item:hover,
+.mat-menu-content button a:hover {
+	color: var(--backgroundColor);
+}

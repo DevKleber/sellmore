@@ -33,18 +33,14 @@ import { VerificarVencimentoPipe } from '../pipes/verificar-vencimento.pipe';
 
 import { NgSelectModule } from '@ng-select/ng-select';
 
-import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatCardModule } from '@angular/material/card';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 
-import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
-import { MatButtonModule } from '@angular/material/button';
+import { NgxMaskModule, IConfig } from 'ngx-mask';
 
 import ptBr from '@angular/common/locales/pt';
 registerLocaleData(ptBr);
@@ -73,15 +69,11 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		CommonModule,
 		FormsModule,
 		ReactiveFormsModule,
-		MatDatepickerModule,
 		NgSelectModule,
-		MatNativeDateModule,
 		MatTooltipModule,
-		MatCardModule,
-		MatDialogModule,
+		MatMenuModule,
 		PerfectScrollbarModule,
-		MatBottomSheetModule,
-		MatButtonModule,
+		NgxMaskModule.forRoot(),
 	],
 	exports: [
 		BooleanMessagePipe,
@@ -99,15 +91,11 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		VerificarVencimentoPipe,
 		CepPipe,
 		MesTostringPipe,
-		MatDatepickerModule,
 		NgSelectModule,
-		MatNativeDateModule,
 		MatTooltipModule,
-		MatCardModule,
-		MatDialogModule,
+		MatMenuModule,
 		PerfectScrollbarModule,
-		MatBottomSheetModule,
-		MatButtonModule,
+		NgxMaskModule,
 	],
 })
 export class SharedModule {
@@ -120,7 +108,6 @@ export class SharedModule {
 				LoggedInGuard,
 				Helper,
 				{ provide: LOCALE_ID, useValue: 'pt-br' },
-				{ provide: MAT_DATE_LOCALE, useValue: 'pt-br' },
 				{
 					provide: HTTP_INTERCEPTORS,
 					useClass: AuthInterceptor,
