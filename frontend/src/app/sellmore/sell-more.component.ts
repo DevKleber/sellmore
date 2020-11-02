@@ -24,19 +24,15 @@ import { LoaderService } from '../shared/loader/loader.service';
 	styleUrls: ['./sell-more.component.css'],
 })
 export class SellMoreComponent implements OnInit {
-	customers: any[] = [1, 2, 3, 4, 5];
-	customersArray: any[] = [
-		{ name: 'Roberta', phone: '(64) 99996-7567', status: 'n' },
-		{ name: 'Roberta', phone: '(64) 99996-7567', status: 'n' },
-		{ name: 'Roberta', phone: '(64) 99996-7567', status: 'n' },
-		{ name: 'Roberta', phone: '(64) 99996-7567', status: 'n' },
-		{ name: 'Roberta', phone: '(64) 99996-7567', status: 'n' },
-		{ name: 'Roberta', phone: '(64) 99996-7567', status: 'n' },
-		{ name: 'Roberta', phone: '(64) 99996-7567', status: 'n' },
-		{ name: 'Roberta', phone: '(64) 99996-7567', status: 'n' },
-		{ name: 'Roberta', phone: '(64) 99996-7567', status: 'n' },
-		{ name: 'Roberta', phone: '(64) 99996-7567', status: 'n' },
+	customers: any[] = [];
+
+	status: any[] = [
+		{ id: 'pc', status: 'Problemas com cartão' },
+		{ id: 'ld', status: 'Ligar depois' },
+		{ id: 'n', status: 'Não tem interesse' },
+		{ id: 'c', status: 'Comprou' },
 	];
+	parent: any = {};
 
 	path: string = API_SITE_PATH_IMG;
 	isDevMode: boolean = isDevMode();
@@ -60,42 +56,64 @@ export class SellMoreComponent implements OnInit {
 	) {}
 
 	ngOnInit() {
+		this.getCustomers();
 		// this.getCategories();
 		this.initialForms();
 	}
 
 	initialForms() {
 		this.form = this.formBuilder.group({
-			frente: this.formBuilder.control('', [Validators.required]),
-			verso: this.formBuilder.control('', [Validators.required]),
-			id_categoria: this.formBuilder.control(1, [Validators.required]),
-			imagem: this.formBuilder.control(''),
-		});
-
-		this.formCategory = this.formBuilder.group({
-			categoria: this.formBuilder.control('', [Validators.required]),
+			name: this.formBuilder.control('', [Validators.required]),
+			phone: this.formBuilder.control('', [Validators.required]),
+			address: this.formBuilder.control(''),
+			status: this.formBuilder.control(''),
+			observation: this.formBuilder.control(''),
+			id_parent: this.formBuilder.control(null),
 		});
 	}
-	getStickers() {
+
+	getCustomers() {
 		this.loaderService.isLoad(true);
+		this.sellMoreService.getCustomers().subscribe((res) => {
+			this.loaderService.isLoad(false);
+			this.customers = res['dados'];
+		});
 	}
 
 	save(form) {
 		this.loaderService.isLoad(true);
-	}
-
-	saveForm(form) {
 		this.sellMoreService.save(form).subscribe((data) => {
-			this.notificationService.notifySweet('saved successfully!');
+			this.notificationService.notifySweet('Salvo com sucesso!');
 			this.clearForm();
-			this.form.controls['id_categoria'].setValue(form.id_categoria);
-			this.getStickers();
-			this.closemodalSellMoreAdd.nativeElement.click();
+			this.getCustomers();
 			this.loaderService.isLoad(false);
+			// this.closemodalSellMoreAdd.nativeElement.click();
 		});
 	}
 
+	changeStatus(lead, status) {
+		this.loaderService.isLoad(true);
+		let form = { status: status };
+		this.sellMoreService.changeStatus(form, lead.id).subscribe((res) => {
+			this.loaderService.isLoad(false);
+			lead.status = status;
+			this.notificationService.notifySweet('Atualizado!');
+		});
+	}
+	newChildren(parent) {
+		this.parent = parent;
+		this.form.controls['id_parent'].setValue(parent.id);
+		console.log(parent);
+	}
+	newLead() {
+		this.form.controls['id_parent'].setValue(null);
+		this.parent = {};
+	}
 	clearForm() {
-		this.initialForms();
+		this.form.controls['name'].setValue('');
+		this.form.controls['phone'].setValue('');
+		this.form.controls['address'].setValue('');
+		this.form.controls['status'].setValue('');
+		this.form.controls['observation'].setValue('');
 	}
 }

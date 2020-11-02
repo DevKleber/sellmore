@@ -3,7 +3,16 @@
 		<div class="logo">
 			<img src="/assets/img/system/logo_wiseup.svg" alt="" srcset="" />
 		</div>
-		<div class="search">Search</div>
+		<div class="search">
+			<div class="input" style="width: 490px !important">
+				<div class="inputIcon">
+					<i class="fa fa-search"></i>
+				</div>
+				<div class="inputText">
+					<input type="text" class="" placeholder="Buscar" />
+				</div>
+			</div>
+		</div>
 		<div class="profile">
 			<img
 				src="https://instagram.fgyn16-1.fna.fbcdn.net/v/t51.2885-19/s150x150/118200339_130598715410057_5144472412328920923_n.jpg?_nc_ht=instagram.fgyn16-1.fna.fbcdn.net&_nc_ohc=se62JSn1DcoAX_h_-Zw&oh=cd243c550309755172938ffb1086e91e&oe=5FC6E74D"
@@ -17,73 +26,146 @@
 			<div class="totalOthers">3 vendas</div>
 			<div class="totalOthers">7 problemas com cartão</div>
 		</div>
+
 		<div class="row flex-wrap">
 			<div
 				class="customers"
-				*ngFor="let item of customers; let even = even"
+				*ngFor="let itemLead of customers | keyvalue; let even = even"
 			>
 				<div class="parent center-center">
 					<div class="contact">
-						<div class="name">Kleber de Souza</div>
-						<div class="phone">(64) 99996-7567</div>
+						<div class="name">{{ itemLead?.value.name }}</div>
+						<div class="phone">{{ itemLead?.value.phone }}</div>
 					</div>
 					<div class="action">
-						<div class="finished" *ngIf="even">
-							<img
-								src="/assets/img/system/icons/upYes.svg"
-								alt=""
-								srcset=""
-							/>
-						</div>
-						<div class="waiting" *ngIf="!even">
-							<img
-								src="/assets/img/system/icons/waiting-card.svg"
-							/>
-							<img
-								src="/assets/img/system/icons/waiting-call.svg"
-							/>
-							<img
-								src="/assets/img/system/icons/waiting-down.svg"
-							/>
-							<img
-								src="/assets/img/system/icons/waiting-yes.svg"
-							/>
-						</div>
+						<ng-container
+							*ngIf="itemLead?.value.status != 'a'; else waiting"
+						>
+							<div class="finished">
+								<i
+									*ngIf="itemLead.value.status == 'pc'"
+									class="fa fa-credit-card icon-finished icon-finished-no"
+								>
+								</i>
+								<i
+									*ngIf="itemLead.value.status == 'ld'"
+									class="fa fa-headset icon-finished"
+								>
+								</i>
+								<i
+									*ngIf="itemLead.value.status == 'n'"
+									class="fa fa-thumbs-down icon-finished icon-finished-no"
+								>
+								</i>
+								<i
+									*ngIf="itemLead.value.status == 'c'"
+									class="fa fa-thumbs-up icon-finished icon-finished-yes"
+								>
+								</i>
+							</div>
+						</ng-container>
+						<ng-template #waiting>
+							<div class="waiting">
+								<i
+									(click)="changeStatus(itemLead.value, 'pc')"
+									class="fa fa-credit-card icon-waiting"
+									matTooltip="Problemas com cartão de crédito"
+								>
+								</i>
+								<i
+									(click)="changeStatus(itemLead.value, 'ld')"
+									class="fa fa-headset icon-waiting"
+									matTooltip="Ligar depois"
+								></i>
+								<i
+									(click)="changeStatus(itemLead.value, 'n')"
+									class="fa fa-thumbs-down icon-waiting"
+									matTooltip="Não deu negócio 😭"
+								></i>
+								<i
+									(click)="changeStatus(itemLead.value, 'c')"
+									class="fa fa-thumbs-up icon-waiting"
+									matTooltip="Vendido 😃"
+								></i>
+							</div>
+						</ng-template>
 					</div>
 				</div>
-				<div class="children">
-					<div
-						class="item"
-						*ngFor="let item of customersArray; let even = even"
-					>
-						<div class="contacto">
-							<div class="contacto-name">{{ item.name }}</div>
-							<div class="contacto-phone">{{ item.phone }}</div>
-						</div>
-						<div class="finished" *ngIf="even">
-							<img
-								class="finishedNo"
-								src="/assets/img/system/icons/upYes.svg"
-								alt=""
-								srcset=""
-							/>
-						</div>
-						<div class="waiting" *ngIf="!even">
-							<img
-								src="/assets/img/system/icons/waiting-card.svg"
-							/>
-							<img
-								src="/assets/img/system/icons/waiting-call.svg"
-							/>
-							<img
-								src="/assets/img/system/icons/waiting-down.svg"
-							/>
-							<img
-								src="/assets/img/system/icons/waiting-yes.svg"
-							/>
+				<perfect-scrollbar>
+					<div class="children">
+						<div
+							class="item"
+							*ngFor="
+								let item of itemLead.value.referidos | keyvalue;
+								let even = even
+							"
+						>
+							<div class="contacto">
+								<div class="contacto-name">
+									{{ item.value.name }}
+								</div>
+								<div class="contacto-phone">
+									{{ item.value.phone }}
+								</div>
+							</div>
+
+							<ng-container
+								*ngIf="
+									item.value.status != 'a';
+									else waitingChildren
+								"
+							>
+								<div class="finished">
+									<i
+										*ngIf="item.value.status == 'pc'"
+										class="fa fa-credit-card icon-finished"
+									>
+									</i>
+									<i
+										*ngIf="item.value.status == 'ld'"
+										class="fa fa-headset icon-finished"
+									>
+									</i>
+									<i
+										*ngIf="item.value.status == 'n'"
+										class="fa fa-thumbs-down icon-finished icon-finished-no"
+									>
+									</i>
+									<i
+										*ngIf="item.value.status == 'c'"
+										class="fa fa-thumbs-up icon-finished icon-finished-yes"
+									>
+									</i>
+								</div>
+							</ng-container>
+							<ng-template #waitingChildren>
+								<div class="waiting">
+									<i
+										(click)="changeStatus(item.value, 'pc')"
+										class="fa fa-credit-card icon-waiting"
+										matTooltip="Problemas com cartão de crédito"
+									>
+									</i>
+									<i
+										(click)="changeStatus(item.value, 'ld')"
+										class="fa fa-headset icon-waiting"
+										matTooltip="Ligar depois"
+									></i>
+									<i
+										(click)="changeStatus(item.value, 'n')"
+										class="fa fa-thumbs-down icon-waiting"
+										matTooltip="Não deu negócio 😭"
+									></i>
+									<i
+										(click)="changeStatus(item.value, 'c')"
+										class="fa fa-thumbs-up icon-waiting"
+										matTooltip="Vendido 😃"
+									></i>
+								</div>
+							</ng-template>
 						</div>
 					</div>
-				</div>
+				</perfect-scrollbar>
 
 				<div class="info center-center">
 					<div class="quantitative">
@@ -91,7 +173,14 @@
 						3 à contactar
 					</div>
 					<div class="action">
-						<div class="actionButton">+</div>
+						<div
+							class="actionButton"
+							(click)="newChildren(itemLead.value)"
+							data-toggle="modal"
+							data-target="#modalStickyAdd"
+						>
+							<i class="fa fa-plus"></i>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -100,6 +189,110 @@
 	<footer>
 		<!-- <div class="footerItens">+</div>
 		<div class="footerItens">+</div> -->
-		<div class="footerItens">+</div>
+		<div
+			class="footerItens"
+			(click)="newLead()"
+			data-toggle="modal"
+			data-target="#modalStickyAdd"
+		>
+			<i class="fa fa-plus"></i>
+		</div>
 	</footer>
+</div>
+
+<!-- Modal -->
+<div
+	class="modal fade"
+	id="modalStickyAdd"
+	tabindex="-1"
+	aria-labelledby="modalNewSticky"
+	aria-hidden="true"
+>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title" id="modalNewSticky">
+					<ng-container *ngIf="parent.id; else indicatedBy">
+						Indicado por: {{ parent.name }}
+					</ng-container>
+					<ng-template #indicatedBy> Novo referido </ng-template>
+				</h3>
+			</div>
+			<div class="modal-body">
+				<div class="content">
+					<form [formGroup]="form" novalidate>
+						<div class="input">
+							<div class="inputIcon">
+								<i class="fa fa-user"></i>
+							</div>
+							<div class="inputText">
+								<input
+									type="text"
+									class="w-100"
+									formControlName="name"
+									placeholder="Nome"
+								/>
+							</div>
+						</div>
+						<div class="input">
+							<div class="inputIcon">
+								<i class="fa fa-mobile-alt"></i>
+							</div>
+							<div class="inputText">
+								<input
+									type="text"
+									class="w-100"
+									formControlName="phone"
+									placeholder="Telefone"
+								/>
+							</div>
+						</div>
+						<textarea
+							placeholder="Observação"
+							class="textarea"
+							formControlName="observation"
+						>
+						</textarea>
+						<div class="input">
+							<div class="inputIcon">
+								<i class="fa fa-info"></i>
+							</div>
+							<div class="inputText">
+								<select formControlName="status" class="w-100">
+									<option value="" selected>
+										Selecione uma opção caso tenha entrado
+										em contato com o referente
+									</option>
+									<option
+										*ngFor="let item of status"
+										[value]="item.id"
+									>
+										{{ item?.status }}
+									</option>
+								</select>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button
+					type="button"
+					class="btn btn-secondary"
+					data-dismiss="modal"
+					#closemodalStickyAdd
+				>
+					Fechar
+				</button>
+				<button
+					type="button"
+					class="btn btn-primary"
+					(click)="save(form.value)"
+					[disabled]="!form.valid"
+				>
+					Salvar
+				</button>
+			</div>
+		</div>
+	</div>
 </div>

@@ -67,8 +67,14 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	cursor: pointer;
+	transition: 0.3s;
+	z-index: 998;
 }
-
+.footerItens:hover {
+	background-color: var(--backgroundSecondaryHover);
+	font-size: 3.1em;
+}
 .totalLead {
 	font-weight: bold;
 	font-size: 28px;
@@ -120,7 +126,7 @@
 .parent .action .finished {
 	width: 50px;
 }
-.parent .action .waiting img {
+.parent .action .waiting i {
 	margin-left: 10px;
 }
 .parent .action .waiting {
@@ -158,7 +164,7 @@
 	justify-content: flex-end;
 	width: 150px;
 }
-.children .item .waiting img {
+.children .item .waiting i {
 	margin-left: 10px;
 }
 
@@ -183,6 +189,73 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	font-size: 30px;
+	font-size: 20px;
 	font-weight: bold;
+	cursor: pointer;
+	transition: 0.3s;
+	z-index: 999;
 }
+
+.actionButton:hover {
+	background-color: var(--backgroundSecondaryHover);
+	/* font-size: 22px; */
+}
+
+.icon-finished {
+	font-size: 33px;
+}
+.icon-finished-yes {
+	color: var(--backgroundSecondary);
+}
+.icon-finished-no {
+	color: #ff8888;
+}
+
+.icon-waiting {
+	font-size: 25px;
+	cursor: pointer;
+}
+.icon-waiting-yes {
+	color: var(--backgroundSecondary);
+}
+.icon-waiting-no {
+	color: #ff8888;
+}
+
+.fa-credit-card {
+	/* position: absolute; */
+}
+.fa-slash {
+	margin-left: -150px;
+}
+
+/* input */
+.textarea {
+	width: 100%;
+	height: 200px;
+	border-radius: 10px;
+}
+.input {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 62px;
+	background: var(--backgroundInput) !important;
+	color: var(--backgroundInputColor) !important;
+	border-radius: 10px;
+	margin-bottom: 15px;
+}
+.inputIcon {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 35px;
+}
+.inputText {
+	flex: 1;
+}
+div.status i {
+	margin-right: 10px;
+}
+/* fim input */

@@ -19,6 +19,7 @@ export class ApplicationErrorHandler extends ErrorHandler {
 
 	handleError(errorResponse: HttpErrorResponse | any) {
 		if (errorResponse instanceof HttpErrorResponse) {
+			this.loaderService.isLoad(false);
 			const error =
 				typeof errorResponse.error !== 'object'
 					? JSON.parse(errorResponse.error)

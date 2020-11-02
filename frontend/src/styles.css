@@ -38,12 +38,16 @@ label {
 input,
 textarea,
 select {
-	background: var(--background) !important;
-	color: var(--backgroundColor) !important;
+	background: var(--backgroundInput) !important;
+	color: var(--backgroundInputColor) !important;
 	border: none !important;
 	padding: 15px !important;
 	font-size: 1.1em !important;
 	margin: 6px 0px;
+}
+div.input div.inputText input,
+div.input div.inputText select {
+	padding: 15px 15px 15px 0px !important;
 }
 .form-group {
 	margin-bottom: 1rem;
@@ -64,12 +68,15 @@ label {
 }
 .modal-dialog,
 .modal-content {
-	background: var(--backgroundComponents) !important;
-	color: var(--backgroundComponentsColor) !important;
+	background: var(--background) !important;
+	color: var(--backgroundColor) !important;
 }
 .modal-title {
 	margin-bottom: 0 !important;
 	line-height: 1.5 !important;
+}
+.modal-body {
+	padding: 25px;
 }
 .h5,
 h5 {
@@ -152,8 +159,8 @@ button {
 }
 .btn-secondary {
 	background: none;
-	color: var(--backgroundButtonColorSecondary);
-	border: 1px solid #2e4459;
+	color: var(--backgroundColor) !important;
+	border: 1px solid var(--backgroundColor);
 }
 
 .card {

@@ -14,31 +14,15 @@ export class SellMoreService {
 
 	constructor(private http: HttpClient, private router: Router) {}
 
-	getSellMore(search?: string): Observable<any[]> {
-		return this.http.get<any[]>(`${API}/sellMore/cat/${search}`);
+	getCustomers(search?: string): Observable<any[]> {
+		return this.http.get<any[]>(`${API}/customers`);
 	}
-	getCategories(search?: string): Observable<any[]> {
-		return this.http.get<any[]>(`${API}/category`);
+	changeStatus(form, id) {
+		return this.http.put(`${API}/status/customers/${id}`, form);
 	}
 
 	save(form) {
-		console.log(form);
-		return this.http.post<any>(`${API}/sellMore`, form);
-	}
-	saveCategory(form) {
-		console.log(form);
-		return this.http.post<any>(`${API}/category`, form);
-	}
-	file(form) {
-		return this.http
-			.post<any>(`${API}/file`, form)
-			.pipe(tap((produto) => {}));
-	}
-
-	update(form, id) {
-		return this.http
-			.put(`${API}/premio/${id}`, form)
-			.pipe(tap((user) => {}));
+		return this.http.post<any>(`${API}/customers`, form);
 	}
 
 	inativar(id: string) {
