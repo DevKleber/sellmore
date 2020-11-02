@@ -18,7 +18,83 @@
 			<div class="totalOthers">7 problemas com cartão</div>
 		</div>
 		<div class="row flex-wrap">
-			<div class="customers" *ngFor="let item of customers"></div>
+			<div
+				class="customers"
+				*ngFor="let item of customers; let even = even"
+			>
+				<div class="parent center-center">
+					<div class="contact">
+						<div class="name">Kleber de Souza</div>
+						<div class="phone">(64) 99996-7567</div>
+					</div>
+					<div class="action">
+						<div class="finished" *ngIf="even">
+							<img
+								src="/assets/img/system/icons/upYes.svg"
+								alt=""
+								srcset=""
+							/>
+						</div>
+						<div class="waiting" *ngIf="!even">
+							<img
+								src="/assets/img/system/icons/waiting-card.svg"
+							/>
+							<img
+								src="/assets/img/system/icons/waiting-call.svg"
+							/>
+							<img
+								src="/assets/img/system/icons/waiting-down.svg"
+							/>
+							<img
+								src="/assets/img/system/icons/waiting-yes.svg"
+							/>
+						</div>
+					</div>
+				</div>
+				<div class="children">
+					<div
+						class="item"
+						*ngFor="let item of customersArray; let even = even"
+					>
+						<div class="contacto">
+							<div class="contacto-name">{{ item.name }}</div>
+							<div class="contacto-phone">{{ item.phone }}</div>
+						</div>
+						<div class="finished" *ngIf="even">
+							<img
+								class="finishedNo"
+								src="/assets/img/system/icons/upYes.svg"
+								alt=""
+								srcset=""
+							/>
+						</div>
+						<div class="waiting" *ngIf="!even">
+							<img
+								src="/assets/img/system/icons/waiting-card.svg"
+							/>
+							<img
+								src="/assets/img/system/icons/waiting-call.svg"
+							/>
+							<img
+								src="/assets/img/system/icons/waiting-down.svg"
+							/>
+							<img
+								src="/assets/img/system/icons/waiting-yes.svg"
+							/>
+						</div>
+					</div>
+				</div>
+
+				<div class="info center-center">
+					<div class="quantitative">
+						6 referidos <br />
+						3 à contactar
+					</div>
+					<div class="action">
+						<div class="actionButton">+</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<footer>

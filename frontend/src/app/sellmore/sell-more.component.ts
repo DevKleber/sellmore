@@ -25,6 +25,18 @@ import { LoaderService } from '../shared/loader/loader.service';
 })
 export class SellMoreComponent implements OnInit {
 	customers: any[] = [1, 2, 3, 4, 5];
+	customersArray: any[] = [
+		{ name: 'Roberta', phone: '(64) 99996-7567', status: 'n' },
+		{ name: 'Roberta', phone: '(64) 99996-7567', status: 'n' },
+		{ name: 'Roberta', phone: '(64) 99996-7567', status: 'n' },
+		{ name: 'Roberta', phone: '(64) 99996-7567', status: 'n' },
+		{ name: 'Roberta', phone: '(64) 99996-7567', status: 'n' },
+		{ name: 'Roberta', phone: '(64) 99996-7567', status: 'n' },
+		{ name: 'Roberta', phone: '(64) 99996-7567', status: 'n' },
+		{ name: 'Roberta', phone: '(64) 99996-7567', status: 'n' },
+		{ name: 'Roberta', phone: '(64) 99996-7567', status: 'n' },
+		{ name: 'Roberta', phone: '(64) 99996-7567', status: 'n' },
+	];
 
 	path: string = API_SITE_PATH_IMG;
 	isDevMode: boolean = isDevMode();

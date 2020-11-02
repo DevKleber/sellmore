@@ -85,4 +85,104 @@
 	margin: 15px;
 	border-radius: 10px;
 	color: #efefed;
+	display: flex;
+	flex-direction: column;
+}
+.parent {
+	height: 60px;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+}
+.children {
+	flex: 1;
+	padding: 15px;
+	overflow: auto;
+}
+
+.info {
+	height: 70px;
+	width: 100%;
+	display: flex;
+}
+
+.parent .contact {
+	display: flex;
+	flex: 1;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+.parent .contact .name {
+	font-size: 16px;
+	font-weight: bold;
+}
+.parent .action .finished {
+	width: 50px;
+}
+.parent .action .waiting img {
+	margin-left: 10px;
+}
+.parent .action .waiting {
+	width: 150px;
+}
+.children .item {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 15px;
+}
+.children .item .contacto {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+}
+.children .item .contacto .contacto-name {
+	color: var(--backgroundSecondary) !important;
+	font-size: 20px;
+	font-weight: bold;
+}
+.children .item .contacto .contacto-phone {
+	color: var(--backgroundSecondary) !important;
+}
+
+.children .item .finished {
+	display: flex;
+	align-items: flex-end;
+	justify-content: flex-end;
+	width: 50px;
+}
+.children .item .waiting {
+	display: flex;
+	align-items: flex-end;
+	justify-content: flex-end;
+	width: 150px;
+}
+.children .item .waiting img {
+	margin-left: 10px;
+}
+
+.info .quantitative {
+	margin-left: 15px;
+	flex: 1;
+	font-size: 16px;
+}
+.info .action {
+	display: flex;
+	width: 70px;
+	height: 100%;
+	justify-content: center;
+	align-items: center;
+}
+.actionButton {
+	width: 40px;
+	height: 40px;
+	border-radius: 20px;
+	background-color: var(--backgroundSecondary);
+	color: var(--backgroundSecondaryColor);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 30px;
+	font-weight: bold;
 }
