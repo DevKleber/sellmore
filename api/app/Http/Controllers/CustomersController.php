@@ -22,6 +22,7 @@ class CustomersController extends Controller
 
     public function store(Request $request)
     {
+        $request['status'] = ('' == $request['status'] || null == $request['status']) ? 'a' : $request['status'];
         $customers = \App\Customers::where('phone', $request['phone'])->get();
         if ($customers->count()) {
             return  response(['response' => 'Referido já existe'], 400);

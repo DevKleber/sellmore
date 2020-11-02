@@ -8,7 +8,7 @@ class Customers extends Model
 {
     protected $table = 'customers';
     protected $primaryKey = 'id';
-    protected $fillable = ['name', 'phone', 'address', 'status', 'id_usuario', 'id_parent'];
+    protected $fillable = ['name', 'phone', 'address', 'status', 'id_usuario', 'id_parent','observation'];
 
     public static function getStatus()
     {
