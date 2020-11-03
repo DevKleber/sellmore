@@ -24,7 +24,7 @@
       "reAttach": true,
       "name": "Launch firefox site",
       "url": "http://localhost:4200",
-      "webRoot": "${workspaceFolder}/memorize"
+      "webRoot": "${workspaceFolder}/sellmore"
     },
 
     {
@@ -32,7 +32,7 @@
       "request": "launch",
       "name": "Launch Chrome site",
       "url": "http://localhost:4200",
-      "webRoot": "${workspaceFolder}/memorize"
+      "webRoot": "${workspaceFolder}/sellmore"
     }
   ]
 }
