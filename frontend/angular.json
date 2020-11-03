@@ -3,7 +3,7 @@
 	"version": 1,
 	"newProjectRoot": "projects",
 	"projects": {
-		"memorize": {
+		"sellmore": {
 			"projectType": "application",
 			"schematics": {},
 			"root": "",
@@ -13,7 +13,7 @@
 				"build": {
 					"builder": "@angular-devkit/build-angular:browser",
 					"options": {
-						"outputPath": "dist/memorize",
+						"outputPath": "dist/sellmore",
 						"index": "src/index.html",
 						"main": "src/main.ts",
 						"polyfills": "src/polyfills.ts",
@@ -76,18 +76,18 @@
 				"serve": {
 					"builder": "@angular-devkit/build-angular:dev-server",
 					"options": {
-						"browserTarget": "memorize:build"
+						"browserTarget": "sellmore:build"
 					},
 					"configurations": {
 						"production": {
-							"browserTarget": "memorize:build:production"
+							"browserTarget": "sellmore:build:production"
 						}
 					}
 				},
 				"extract-i18n": {
 					"builder": "@angular-devkit/build-angular:extract-i18n",
 					"options": {
-						"browserTarget": "memorize:build"
+						"browserTarget": "sellmore:build"
 					}
 				},
 				"test": {
@@ -117,16 +117,16 @@
 					"builder": "@angular-devkit/build-angular:protractor",
 					"options": {
 						"protractorConfig": "e2e/protractor.conf.js",
-						"devServerTarget": "memorize:serve"
+						"devServerTarget": "sellmore:serve"
 					},
 					"configurations": {
 						"production": {
-							"devServerTarget": "memorize:serve:production"
+							"devServerTarget": "sellmore:serve:production"
 						}
 					}
 				}
 			}
 		}
 	},
-	"defaultProject": "memorize"
+	"defaultProject": "sellmore"
 }
