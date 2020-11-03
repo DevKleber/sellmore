@@ -35,6 +35,13 @@ export class SellMoreService {
 	}
 
 	inativar(id: string) {
-		return this.http.delete(`${API}/premio/${id}`);
+		return this.http.delete(`${API}/customers/${id}`);
+	}
+
+	file(form, id) {
+		return this.http.post<any>(
+			`${API}/import-contact/customers/${id}`,
+			form
+		);
 	}
 }

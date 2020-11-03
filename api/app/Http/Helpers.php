@@ -2,6 +2,15 @@
 
 class Helpers
 {
+    public static function count($arrayOrContable)
+    {
+        if (is_countable($arrayOrContable) || is_array($arrayOrContable) || $arrayOrContable instanceof \Countable) {
+            return count($arrayOrContable);
+        }
+
+        return null === $arrayOrContable || !isset($arrayOrContable) ? 0 : 1;
+    }
+
     public static function formatCnpjCpf($value)
     {
         $cnpj_cpf = preg_replace('/\\D/', '', $value);
@@ -234,5 +243,27 @@ class Helpers
         $folder = current(array_filter($arFolder, fn ($value) => !is_null($value) && '' !== $value));
 
         return $folder ?? null;
+    }
+
+    public static function numeroNonoDigito($numero)
+    {
+        if (13 == strlen($numero)) {//Se numero tem 13 digitos 5564 9 99967545
+            return $numero;
+        }
+
+        if (12 == strlen($numero)) {//se numero tem 12 5564 99954785 falta o 9
+        $ddd = substr($numero, 0, 4); //Pega ddd e numero e o pais
+        $num = str_replace($ddd, '', $numero);
+
+            if (2 == $num[0] || 3 == $num[0]) {//Verifica se é celular, se nao for retorno o proprio numero
+                return $numero;
+            }
+
+            if (8 == strlen($num)) {//se for celular, so tem 8 numeros, adiciona o 9
+                $num = "9{$num}";
+            }
+
+            return "{$ddd}{$num}";
+        }
     }
 }

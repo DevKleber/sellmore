@@ -64,6 +64,9 @@
 									<button mat-menu-item>
 										<i class="fas fa-edit"></i> Alterar
 									</button>
+									<button mat-menu-item (click)="inativar(itemLead.value)">
+										<i class="fas fa-eye-slash"></i> Arquivar
+									</button>
 
 								</mat-menu>
 							</div>
@@ -82,7 +85,7 @@
 								<i class="fa fa-bars icon-waiting cursor-pointer" matTooltip="Menu"
 									[matMenuTriggerFor]="menu"></i>
 								<mat-menu #menu="matMenu">
-									<button mat-menu-item (click)="newChildren(item.value)" data-toggle="modal"
+									<button mat-menu-item (click)="newChildren(itemLead.value)" data-toggle="modal"
 										data-target="#modalImportContact">
 										<i class="fab fa-whatsapp"></i> Importar contatos
 									</button>
@@ -94,6 +97,9 @@
 									</button>
 									<button mat-menu-item>
 										<i class="fas fa-edit"></i> Alterar
+									</button>
+									<button mat-menu-item (click)="inativar(itemLead.value)">
+										<i class="fas fa-eye-slash"></i> Arquivar
 									</button>
 								</mat-menu>
 							</div>
@@ -140,6 +146,10 @@
 									<i class="fa fa-bars icon-finished" style="margin-left: 15px" matTooltip="Menu"
 										[matMenuTriggerFor]="menu"></i>
 									<mat-menu #menu="matMenu">
+										<button mat-menu-item (click)="newChildren(item?.value)" data-toggle="modal"
+											data-target="#modalImportContact">
+											<i class="fab fa-whatsapp"></i> Importar contatos
+										</button>
 										<button mat-menu-item>
 											<a target="_BLANK" href="https://wa.me/5562981993875">
 												<i class="fab fa-whatsapp"></i>
@@ -148,6 +158,9 @@
 										</button>
 										<button mat-menu-item>
 											<i class="fas fa-edit"></i> Alterar
+										</button>
+										<button mat-menu-item (click)="inativar(item.value)">
+											<i class="fas fa-eye-slash"></i> Arquivar
 										</button>
 										<button mat-menu-item (click)="newChildren(item.value)" data-toggle="modal"
 											data-target="#modalStickyAdd">
@@ -170,6 +183,10 @@
 										matTooltip="Vendido 😃"></i>
 									<i class="fa fa-bars icon-waiting" matTooltip="Menu" [matMenuTriggerFor]="menu"></i>
 									<mat-menu #menu="matMenu">
+										<button mat-menu-item (click)="newChildren(item?.value)" data-toggle="modal"
+											data-target="#modalImportContact">
+											<i class="fab fa-whatsapp"></i> Importar contatos
+										</button>
 										<button mat-menu-item>
 											<a target="_BLANK" href="https://wa.me/5562981993875">
 												<i class="fab fa-whatsapp"></i>
@@ -178,6 +195,9 @@
 										</button>
 										<button mat-menu-item>
 											<i class="fas fa-edit"></i> Alterar
+										</button>
+										<button mat-menu-item (click)="inativar(item.value)">
+											<i class="fas fa-eye-slash"></i> Arquivar
 										</button>
 										<button mat-menu-item (click)="newChildren(item.value)" data-toggle="modal"
 											data-target="#modalStickyAdd">
@@ -317,7 +337,8 @@
 </div>
 
 <!-- Modal roteiro -->
-<div class="modal fade" id="modalImportContact" tabindex="-1" aria-labelledby="modalNewImportContact" aria-hidden="true">
+<div class="modal fade" id="modalImportContact" tabindex="-1" aria-labelledby="modalNewImportContact"
+	aria-hidden="true">
 	<div class="modal-dialog ">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -327,13 +348,44 @@
 			</div>
 			<div class="modal-body">
 				<div class="content">
-					<h2>Anexe o arquivo baixado na conversa com o(a) {{ parent.name }} </h2>
-					<div class="form-group">
-						<input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput  />
-						<div class="uploadArquivo" [style.background-image]=" 'url(' + img + ' )' | safeHtml: 'style' " ></div>
-						<button class="btn btn-upload" (click)="fileInput.click()" > Enviar arquivo </button>
-					</div>
+					<span *ngIf="customersImported.length == 0">
+						<h2>Anexe o arquivo baixado na conversa com o(a) {{ parent.name }} </h2>
+						<div class="form-group margint-25">
+							<input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput />
+							<div class="uploadArquivo"
+								[style.background-image]=" 'url(' + img + ' )' | safeHtml: 'style' "></div>
+							<button class="btn btn-upload btn-secondary" (click)="fileInput.click()"> Anexar arquivo
+							</button>
+						</div>
+					</span>
+					<ng-container *ngIf="customersImported.length != 0">
+						<div class="card"
+							style="background: transparent; color: var(--backgroundColor); margin-bottom: 15px;">
+							<h3>Importado {{customersImported?.res.length}}</h3>
+							<div *ngFor="let item of customersImported?.res" style="margin-top: 15px;">
+								{{ item?.name }} <br>
+								{{ item?.phone}}
+							</div>
+
+						</div>
+						<div class="card" style="background: transparent; color: var(--backgroundColor)">
+							<h3>Indicado por outro lead {{customersImported?.repetidos.length}}</h3>
+							<p *ngFor="let item of customersImported?.repetidos">
+								{{item}}
+							</p>
+
+						</div>
+
+					</ng-container>
+
 				</div>
+			</div>
+			<div class="modal-footer" *ngIf="customersImported.length == 0">
+
+				<button type="button" class="btn btn-primary" (click)="importContact(formScript.value)"
+					[disabled]="!formScript.valid">
+					Importar
+				</button>
 			</div>
 		</div>
 	</div>

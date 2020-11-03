@@ -9,6 +9,7 @@ import { SellMoreService } from './sell-more.service';
 import { NotificationService } from '../shared/messages/notification.service';
 import { Helper } from '../helper';
 import { API_SITE_PATH_IMG } from '../app.api';
+import Swal from 'sweetalert2';
 
 import {
 	FormBuilder,
@@ -32,6 +33,7 @@ export class SellMoreComponent implements OnInit {
 		{ id: 'n', status: 'Não tem interesse' },
 		{ id: 'c', status: 'Comprou' },
 	];
+	customersImported: any[] = [];
 	person: any = {};
 	parent: any = {};
 	parents: any[] = [];
@@ -42,7 +44,8 @@ export class SellMoreComponent implements OnInit {
 	form: FormGroup;
 	formScript: FormGroup;
 	formCategory: FormGroup;
-	img: any = 'assets/img/user/padrao.svg';
+	img: any = 'assets/img/file/search.svg';
+	selectedFile: File;
 
 	constructor(
 		private sellMoreService: SellMoreService,
@@ -131,6 +134,7 @@ export class SellMoreComponent implements OnInit {
 	}
 	newChildren(parent) {
 		this.parent = parent;
+		this.customersImported = [];
 		this.form.controls['id_parent'].setValue(parent.id);
 		console.log(parent);
 	}
@@ -144,5 +148,67 @@ export class SellMoreComponent implements OnInit {
 		this.form.controls['address'].setValue('');
 		this.form.controls['status'].setValue('');
 		this.form.controls['observation'].setValue('');
+	}
+
+	onFileChanged(event) {
+		const file: any = this.helper.onFileChanged(event);
+		if (!file) {
+			this.notificationService.notifySweet('Arquivo não permitido!');
+			return;
+		}
+		this.img = file.img;
+		this.selectedFile = file.selectedFile;
+	}
+	importContact() {
+		this.loaderService.isLoad(true);
+		const uploadData = new FormData();
+		if (this.selectedFile) {
+			uploadData.append(
+				'imagem',
+				this.selectedFile,
+				this.selectedFile.name
+			);
+
+			this.sellMoreService
+				.file(uploadData, this.parent.id)
+				.subscribe((data) => {
+					console.log(data);
+					this.customersImported = data;
+					this.getCustomers();
+					this.loaderService.isLoad(false);
+				});
+		}
+	}
+	inativar(referido) {
+		let isLead = false;
+		Object.entries(this.customers).forEach((element) => {
+			if (element[1].id === referido.id) {
+				isLead = true;
+				return true;
+			}
+		});
+		console.log(isLead);
+
+		Swal.fire({
+			title: `Arquivar ${referido.name} ?`,
+			text: `${
+				isLead
+					? `Atenção, a pessoa escolhida tornou-se um lead e possui referidos em sua cadeia de conexões. Se prosseguir com o arquivamento do(a) ${referido.name}, todos os seus referidos serão também arquivados. Deseja prosseguir?`
+					: ''
+			}`,
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Sim, arquivar!',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				this.loaderService.isLoad(true);
+				this.sellMoreService.inativar(referido.id).subscribe((res) => {
+					this.loaderService.isLoad(false);
+					this.notificationService.notifySweet(res['response']);
+				});
+			}
+		});
 	}
 }
