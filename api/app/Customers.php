@@ -8,7 +8,7 @@ class Customers extends Model
 {
     protected $table = 'customers';
     protected $primaryKey = 'id';
-    protected $fillable = ['name', 'phone', 'address', 'status', 'id_usuario', 'id_parent','observation'];
+    protected $fillable = ['name', 'phone', 'address', 'status', 'id_usuario', 'id_parent', 'observation'];
 
     public static function getStatus()
     {
@@ -54,6 +54,8 @@ class Customers extends Model
             ;
             $arCustomers[$key]['referidos'] = self::where('id_usuario', $id_usuario)
                 ->where('id_parent', $value)
+                ->orderBy('status')
+                ->orderBy('name')
                 ->get()
             ;
         }

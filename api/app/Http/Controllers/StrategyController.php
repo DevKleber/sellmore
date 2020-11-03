@@ -11,10 +11,11 @@ class StrategyController extends Controller
     {
         $strategy = \App\Strategy::where('id_usuario', auth('api')->user()->id)->first();
         if (!$strategy) {
-            return response(['response' => 'Não existe Strategy'], 400);
+            return response(['response' => 'Não existe Strategy'], 200);
         }
+        $arSt = explode(PHP_EOL, $strategy->strategy);
 
-        return response(['dados' => $strategy]);
+        return response(['dados' => $strategy, 'nl2br' => $arSt]);
     }
 
     public function store(Request $request)
@@ -39,13 +40,14 @@ class StrategyController extends Controller
         return response($strategy);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $strategy = \App\Strategy::find($id);
+        $strategy = \App\Strategy::where('id_usuario', auth('api')->user()->id)->first();
 
         if (!$strategy) {
-            return response(['response' => 'Strategy Não encontrado'], 400);
+            return $this->store($request);
         }
+
         $strategy = Helpers::processarColunasUpdate($strategy, $request->all());
 
         if (!$strategy->update()) {

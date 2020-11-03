@@ -232,7 +232,7 @@
 /* input */
 .textarea {
 	width: 100%;
-	height: 200px;
+	height: 500px;
 	border-radius: 10px;
 }
 .input {
@@ -259,3 +259,32 @@ div.status i {
 	margin-right: 10px;
 }
 /* fim input */
+
+/* calling */
+.rowCall {
+	display: flex;
+	-webkit-flex-wrap: wrap;
+	flex-wrap: wrap;
+}
+.person {
+	flex: 1;
+	flex-direction: column;
+	/* width: 500px; */
+}
+.strategy {
+	flex: 1;
+	height: 80vh;
+	overflow: auto;
+}
+.parentName {
+	font-size: 2em;
+	font-weight: bold;
+}
+.parentPhone {
+	font-size: 1.2em;
+}
+.parentDesc {
+	font-size: 1em;
+}
+
+/* fim calling */

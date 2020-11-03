@@ -12,7 +12,7 @@ class CustomersController extends Controller
         $arCustomers = \App\Customers::getAll();
 
         if (!$arCustomers) {
-            return response(['response' => 'Não existe Customers'], 400);
+            return response(['response' => 'Não existe Customers'], 200);
         }
 
         return response([
@@ -20,12 +20,41 @@ class CustomersController extends Controller
         ]);
     }
 
+    public function getAllParents($id)
+    {
+        $id_usuario = auth('api')->user()->id;
+        $arCustomers = \App\Customers::where('id_usuario', $id_usuario)->get();
+        $ar = [];
+        foreach ($arCustomers as $key => $value) {
+            $ar[$value->id] = $value;
+        }
+
+        return $this->buildTree($ar, $id);
+    }
+
+    public function buildTree($ar, $id, $branch = [])
+    {
+        if (!$id || 5 == count($branch)) {
+            return $branch;
+        }
+        $branch[] = $ar[$id];
+
+        return $this->buildTree($ar, $ar[$id]['id_parent'], $branch);
+    }
+
     public function store(Request $request)
     {
         $request['status'] = ('' == $request['status'] || null == $request['status']) ? 'a' : $request['status'];
         $customers = \App\Customers::where('phone', $request['phone'])->get();
         if ($customers->count()) {
-            return  response(['response' => 'Referido já indicado por outro lead'], 400);
+            $customersArray = $customers->toArray();
+
+            return  response(
+                [
+                    'response' => 'Referido já indicado pelo '.\App\Customers::where('id', $customersArray[0]['id_parent'])->first()->name,
+                ],
+                400
+            );
         }
         $request['id_usuario'] = auth('api')->user()->id;
         $customers = \App\Customers::create($request->all());

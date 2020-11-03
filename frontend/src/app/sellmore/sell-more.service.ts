@@ -17,6 +17,15 @@ export class SellMoreService {
 	getCustomers(search?: string): Observable<any[]> {
 		return this.http.get<any[]>(`${API}/customers`);
 	}
+	getStrategy(): Observable<any[]> {
+		return this.http.get<any[]>(`${API}/strategy`);
+	}
+	getAllParents(id): Observable<any[]> {
+		return this.http.get<any[]>(`${API}/parents/customers/${id}`);
+	}
+	insertUpdateStrategy(form): Observable<any[]> {
+		return this.http.put<any[]>(`${API}/strategy`, form);
+	}
 	changeStatus(form, id) {
 		return this.http.put(`${API}/status/customers/${id}`, form);
 	}

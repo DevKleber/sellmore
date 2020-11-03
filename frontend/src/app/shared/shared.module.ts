@@ -22,14 +22,9 @@ import { EncryptPipe } from '../pipes/encrypt.pipe';
 
 import { Helper } from '../helper';
 
-import { ImagemTipoarquivoPipe } from '../pipes/imagem-tipoarquivo.pipe';
 import { SafeHtml } from '../pipes/safe-html.pipe';
-import { BooleanMessagePipe } from '../pipes/boolean-message.pipe';
 import { HelpersPipe } from '../pipes/helpers.pipe';
-import { CepPipe } from '../pipes/cep.pipe';
-import { MesTostringPipe } from '../pipes/mes-tostring.pipe';
-import { TruncateTextPipe } from '../pipes/truncate-text.pipe';
-import { VerificarVencimentoPipe } from '../pipes/verificar-vencimento.pipe';
+import { Nl2BrPipe } from '../pipes/nl2br.pipe';
 
 import { NgSelectModule } from '@ng-select/ng-select';
 
@@ -51,18 +46,13 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 
 @NgModule({
 	declarations: [
-		BooleanMessagePipe,
 		SafeHtml,
-		ImagemTipoarquivoPipe,
 		InputComponent,
 		RadioComponent,
 		SnackbarComponent,
 		EncryptPipe,
 		HelpersPipe,
-		TruncateTextPipe,
-		VerificarVencimentoPipe,
-		CepPipe,
-		MesTostringPipe,
+		Nl2BrPipe,
 	],
 
 	imports: [
@@ -76,9 +66,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		NgxMaskModule.forRoot(),
 	],
 	exports: [
-		BooleanMessagePipe,
 		SafeHtml,
-		ImagemTipoarquivoPipe,
 		InputComponent,
 		RadioComponent,
 		CommonModule,
@@ -87,10 +75,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		SnackbarComponent,
 		EncryptPipe,
 		HelpersPipe,
-		TruncateTextPipe,
-		VerificarVencimentoPipe,
-		CepPipe,
-		MesTostringPipe,
+		Nl2BrPipe,
 		NgSelectModule,
 		MatTooltipModule,
 		MatMenuModule,

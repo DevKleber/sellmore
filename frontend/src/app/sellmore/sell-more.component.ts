@@ -32,20 +32,17 @@ export class SellMoreComponent implements OnInit {
 		{ id: 'n', status: 'Não tem interesse' },
 		{ id: 'c', status: 'Comprou' },
 	];
+	person: any = {};
 	parent: any = {};
+	parents: any[] = [];
+	strategy: any = {};
 
 	path: string = API_SITE_PATH_IMG;
 	isDevMode: boolean = isDevMode();
 	form: FormGroup;
+	formScript: FormGroup;
 	formCategory: FormGroup;
 	img: any = 'assets/img/user/padrao.svg';
-
-	@ViewChild('closemodalCategoryAdd', { static: true })
-	closemodalCategoryAdd: ElementRef;
-	@ViewChild('closemodalCategoryPick', { static: true })
-	closemodalCategoryPick: ElementRef;
-	@ViewChild('closemodalSellMoreAdd', { static: true })
-	closemodalSellMoreAdd: ElementRef;
 
 	constructor(
 		private sellMoreService: SellMoreService,
@@ -57,6 +54,7 @@ export class SellMoreComponent implements OnInit {
 
 	ngOnInit() {
 		this.getCustomers();
+		this.getStrategy();
 		// this.getCategories();
 		this.initialForms();
 	}
@@ -70,6 +68,9 @@ export class SellMoreComponent implements OnInit {
 			observation: this.formBuilder.control(''),
 			id_parent: this.formBuilder.control(null),
 		});
+		this.formScript = this.formBuilder.group({
+			strategy: this.formBuilder.control('', [Validators.required]),
+		});
 	}
 
 	getCustomers() {
@@ -77,6 +78,17 @@ export class SellMoreComponent implements OnInit {
 		this.sellMoreService.getCustomers().subscribe((res) => {
 			this.loaderService.isLoad(false);
 			this.customers = res['dados'];
+		});
+	}
+	getStrategy() {
+		this.loaderService.isLoad(true);
+		this.sellMoreService.getStrategy().subscribe((res) => {
+			this.loaderService.isLoad(false);
+			this.strategy = res['dados'];
+			this.strategy.staps = res['nl2br'];
+			this.formScript.controls['strategy'].setValue(
+				this.strategy.strategy
+			);
 		});
 	}
 
@@ -90,6 +102,13 @@ export class SellMoreComponent implements OnInit {
 			// this.closemodalSellMoreAdd.nativeElement.click();
 		});
 	}
+	saveStrategy(form) {
+		this.loaderService.isLoad(true);
+		this.sellMoreService.insertUpdateStrategy(form).subscribe((data) => {
+			this.notificationService.notifySweet('Salvo com sucesso!');
+			this.loaderService.isLoad(false);
+		});
+	}
 
 	changeStatus(lead, status) {
 		this.loaderService.isLoad(true);
@@ -99,6 +118,16 @@ export class SellMoreComponent implements OnInit {
 			lead.status = status;
 			this.notificationService.notifySweet('Atualizado!');
 		});
+	}
+	callTo(person) {
+		this.loaderService.isLoad(true);
+		this.person = person;
+		this.sellMoreService
+			.getAllParents(person.id_parent)
+			.subscribe((res) => {
+				this.loaderService.isLoad(false);
+				this.parents = res;
+			});
 	}
 	newChildren(parent) {
 		this.parent = parent;

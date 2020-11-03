@@ -9,7 +9,7 @@
 					<i class="fa fa-search"></i>
 				</div>
 				<div class="inputText">
-					<input type="text" class="" placeholder="Buscar" />
+					<input type="text" class="w-100" placeholder="Buscar" />
 				</div>
 			</div>
 		</div>
@@ -101,16 +101,23 @@
 								let item of itemLead.value.referidos | keyvalue
 							"
 						>
-							<div class="contacto">
-								<div class="contacto-name">
-									{{ item.value.name }}
-								</div>
-								<div class="contacto-phone">
-									{{
-										item.value.phone
-											| mask: "(00)00000-0000"
-									}}
-								</div>
+							<div
+								class="contacto cursor-pointer"
+								(click)="callTo(item.value)"
+								data-toggle="modal"
+								data-target="#modalCall"
+							>
+								<span>
+									<div class="contacto-name">
+										{{ item.value.name }}
+									</div>
+									<div class="contacto-phone">
+										{{
+											item.value.phone
+												| mask: "(00)00000-0000"
+										}}
+									</div>
+								</span>
 							</div>
 
 							<ng-container
@@ -122,12 +129,12 @@
 								<div class="finished">
 									<i
 										*ngIf="item.value.status == 'pc'"
-										class="fa fa-credit-card icon-finished"
+										class="fa fa-credit-card icon-finished icon-finished-no"
 									>
 									</i>
 									<i
 										*ngIf="item.value.status == 'ld'"
-										class="fa fa-headset icon-finished"
+										class="fa fa-headset icon-finished icon-finished-no"
 									>
 									</i>
 									<i
@@ -234,7 +241,8 @@
 
 				<div class="info center-center">
 					<div class="quantitative">
-						6 referidos <br />
+						{{ itemLead.value.referidos.length | json }} referidos
+						<br />
 						3 à contactar
 					</div>
 					<div class="action">
@@ -254,6 +262,14 @@
 	<footer>
 		<!-- <div class="footerItens">+</div>
 		<div class="footerItens">+</div> -->
+		<div
+			class="footerItens"
+			(click)="newLead()"
+			data-toggle="modal"
+			data-target="#modalScriptAdd"
+		>
+			<i class="fa fa-receipt"></i>
+		</div>
 		<div
 			class="footerItens"
 			(click)="newLead()"
@@ -360,6 +376,138 @@
 				>
 					Salvar
 				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal roteiro -->
+<div
+	class="modal fade"
+	id="modalScriptAdd"
+	tabindex="-1"
+	aria-labelledby="modalNewScript"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-exlg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title" id="modalNewScript">
+					<p>Roteiro</p>
+				</h3>
+			</div>
+			<div class="modal-body">
+				<div class="content">
+					<form [formGroup]="formScript" novalidate>
+						<textarea
+							placeholder="Estratégia"
+							class="textarea"
+							formControlName="strategy"
+						>
+						</textarea>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button
+					type="button"
+					class="btn btn-secondary"
+					data-dismiss="modal"
+					#closemodalScriptAdd
+				>
+					Fechar
+				</button>
+				<button
+					type="button"
+					class="btn btn-primary"
+					(click)="saveStrategy(formScript.value)"
+					[disabled]="!formScript.valid"
+				>
+					Salvar
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal calling -->
+
+<div
+	class="modal fade"
+	id="modalCall"
+	tabindex="-1"
+	aria-labelledby="modalStapcall"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-exlg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2 class="modal-title" id="modalStapcall">
+					<p>Ligando para {{ person.name }}</p>
+				</h2>
+			</div>
+			<div class="modal-body">
+				<p>Observação: {{ person.observation }}</p>
+				<br />
+				<b>Árvores de indicações</b>
+				<div class="content rowCall">
+					<div class="person">
+						<div
+							class="tree margint-25"
+							*ngFor="let itemParent of parents; let i = index"
+						>
+							<div [style.marginLeft.px]="20 * i">
+								<div class="parentName">
+									<i class="fa fa-folder-open"></i>
+
+									{{ itemParent.name }}
+									<span *ngIf="itemParent.status != 'a'">
+										<i
+											*ngIf="itemParent.status == 'pc'"
+											class="fa fa-credit-card icon-finished icon-finished-no"
+										>
+										</i>
+										<i
+											*ngIf="itemParent.status == 'ld'"
+											class="fa fa-headset icon-finished"
+										>
+										</i>
+										<i
+											*ngIf="itemParent.status == 'n'"
+											class="fa fa-thumbs-down icon-finished icon-finished-no"
+										>
+										</i>
+										<i
+											*ngIf="itemParent.status == 'c'"
+											class="fa fa-thumbs-up icon-finished icon-finished-yes"
+										>
+										</i>
+									</span>
+								</div>
+								<div class="parentPhone">
+									{{
+										itemParent.phone
+											| mask: "(00)00000-0000"
+									}}
+								</div>
+								<div class="parentDesc">
+									{{ itemParent.observation }}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="strategy">
+						<perfect-scrollbar>
+							<h1>Strategy</h1>
+							<span *ngFor="let item of strategy?.staps">
+								<!-- <span *ngIf="item.length"> -->
+								{{ item }}
+								<br />
+								<!-- </span> -->
+							</span>
+						</perfect-scrollbar>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
