@@ -124,7 +124,10 @@
 	font-weight: bold;
 }
 .parent .action .finished {
-	width: 50px;
+	width: 90px;
+}
+.parent .action .finished i {
+	margin-right: 10px;
 }
 .parent .action .waiting i {
 	margin-left: 10px;

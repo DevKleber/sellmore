@@ -14,10 +14,8 @@
 			</div>
 		</div>
 		<div class="profile">
-			<img
-				src="https://instagram.fgyn16-1.fna.fbcdn.net/v/t51.2885-19/s150x150/118200339_130598715410057_5144472412328920923_n.jpg?_nc_ht=instagram.fgyn16-1.fna.fbcdn.net&_nc_ohc=se62JSn1DcoAX_h_-Zw&oh=cd243c550309755172938ffb1086e91e&oe=5FC6E74D"
-				alt=""
-			/>
+			<img src="https://instagram.fgyn16-1.fna.fbcdn.net/v/t51.2885-19/s150x150/118200339_130598715410057_5144472412328920923_n.jpg?_nc_ht=instagram.fgyn16-1.fna.fbcdn.net&_nc_ohc=se62JSn1DcoAX_h_-Zw&oh=cd243c550309755172938ffb1086e91e&oe=5FC6E74D"
+				alt="" />
 		</div>
 	</header>
 	<div class="content pad40">
@@ -28,10 +26,7 @@
 		</div>
 
 		<div class="row flex-wrap">
-			<div
-				class="customers"
-				*ngFor="let itemLead of customers | keyvalue; let even = even"
-			>
+			<div class="customers" *ngFor="let itemLead of customers | keyvalue; let even = even">
 				<div class="parent center-center">
 					<div class="contact">
 						<div class="name">{{ itemLead?.value.name }}</div>
@@ -40,73 +35,78 @@
 						</div>
 					</div>
 					<div class="action">
-						<ng-container
-							*ngIf="itemLead?.value.status != 'a'; else waiting"
-						>
+						<ng-container *ngIf="itemLead?.value.status != 'a'; else waiting">
 							<div class="finished">
-								<i
-									*ngIf="itemLead.value.status == 'pc'"
-									class="fa fa-credit-card icon-finished icon-finished-no"
-								>
+								<i *ngIf="itemLead.value.status == 'pc'"
+									class="fa fa-credit-card icon-finished icon-finished-no">
 								</i>
-								<i
-									*ngIf="itemLead.value.status == 'ld'"
-									class="fa fa-headset icon-finished"
-								>
+								<i *ngIf="itemLead.value.status == 'ld'" class="fa fa-headset icon-finished">
 								</i>
-								<i
-									*ngIf="itemLead.value.status == 'n'"
-									class="fa fa-thumbs-down icon-finished icon-finished-no"
-								>
+								<i *ngIf="itemLead.value.status == 'n'"
+									class="fa fa-thumbs-down icon-finished icon-finished-no">
 								</i>
-								<i
-									*ngIf="itemLead.value.status == 'c'"
-									class="fa fa-thumbs-up icon-finished icon-finished-yes"
-								>
+								<i *ngIf="itemLead.value.status == 'c'"
+									class="fa fa-thumbs-up icon-finished icon-finished-yes">
 								</i>
+								<i class="fa fa-bars icon-finished cursor-pointer" matTooltip="Menu"
+									[matMenuTriggerFor]="menu"></i>
+								<mat-menu #menu="matMenu">
+									<button mat-menu-item (click)="newChildren(itemLead?.value)" data-toggle="modal"
+										data-target="#modalImportContact">
+										<i class="fab fa-whatsapp"></i> Importar contatos
+									</button>
+									<button mat-menu-item>
+										<a target="_BLANK" href="https://wa.me/55{{itemLead?.value.phone}}">
+											<i class="fab fa-whatsapp"></i>
+											Abrir no Whatsapp
+										</a>
+									</button>
+									<button mat-menu-item>
+										<i class="fas fa-edit"></i> Alterar
+									</button>
+
+								</mat-menu>
 							</div>
 						</ng-container>
 						<ng-template #waiting>
 							<div class="waiting">
-								<i
-									(click)="changeStatus(itemLead.value, 'pc')"
-									class="fa fa-credit-card icon-waiting"
-									matTooltip="Problemas com cartão de crédito"
-								>
+								<i (click)="changeStatus(itemLead.value, 'pc')" class="fa fa-credit-card icon-waiting"
+									matTooltip="Problemas com cartão de crédito">
 								</i>
-								<i
-									(click)="changeStatus(itemLead.value, 'ld')"
-									class="fa fa-headset icon-waiting"
-									matTooltip="Ligar depois"
-								></i>
-								<i
-									(click)="changeStatus(itemLead.value, 'n')"
-									class="fa fa-thumbs-down icon-waiting"
-									matTooltip="Não deu negócio 😭"
-								></i>
-								<i
-									(click)="changeStatus(itemLead.value, 'c')"
-									class="fa fa-thumbs-up icon-waiting"
-									matTooltip="Vendido 😃"
-								></i>
+								<i (click)="changeStatus(itemLead.value, 'ld')" class="fa fa-headset icon-waiting"
+									matTooltip="Ligar depois"></i>
+								<i (click)="changeStatus(itemLead.value, 'n')" class="fa fa-thumbs-down icon-waiting"
+									matTooltip="Não deu negócio 😭"></i>
+								<i (click)="changeStatus(itemLead.value, 'c')" class="fa fa-thumbs-up icon-waiting"
+									matTooltip="Vendido 😃"></i>
+								<i class="fa fa-bars icon-waiting cursor-pointer" matTooltip="Menu"
+									[matMenuTriggerFor]="menu"></i>
+								<mat-menu #menu="matMenu">
+									<button mat-menu-item (click)="newChildren(item.value)" data-toggle="modal"
+										data-target="#modalImportContact">
+										<i class="fab fa-whatsapp"></i> Importar contatos
+									</button>
+									<button mat-menu-item>
+										<a target="_BLANK" href="https://wa.me/55{{itemLead?.value.phone}}">
+											<i class="fab fa-whatsapp"></i>
+											Abrir no Whatsapp
+										</a>
+									</button>
+									<button mat-menu-item>
+										<i class="fas fa-edit"></i> Alterar
+									</button>
+								</mat-menu>
 							</div>
 						</ng-template>
 					</div>
 				</div>
 				<perfect-scrollbar>
 					<div class="children">
-						<div
-							class="item"
-							*ngFor="
+						<div class="item" *ngFor="
 								let item of itemLead.value.referidos | keyvalue
-							"
-						>
-							<div
-								class="contacto cursor-pointer"
-								(click)="callTo(item.value)"
-								data-toggle="modal"
-								data-target="#modalCall"
-							>
+							">
+							<div class="contacto cursor-pointer" (click)="callTo(item.value)" data-toggle="modal"
+								data-target="#modalCall">
 								<span>
 									<div class="contacto-name">
 										{{ item.value.name }}
@@ -120,45 +120,28 @@
 								</span>
 							</div>
 
-							<ng-container
-								*ngIf="
+							<ng-container *ngIf="
 									item.value.status != 'a';
 									else waitingChildren
-								"
-							>
+								">
 								<div class="finished">
-									<i
-										*ngIf="item.value.status == 'pc'"
-										class="fa fa-credit-card icon-finished icon-finished-no"
-									>
+									<i *ngIf="item.value.status == 'pc'"
+										class="fa fa-credit-card icon-finished icon-finished-no">
 									</i>
-									<i
-										*ngIf="item.value.status == 'ld'"
-										class="fa fa-headset icon-finished icon-finished-no"
-									>
+									<i *ngIf="item.value.status == 'ld'"
+										class="fa fa-headset icon-finished icon-finished-no">
 									</i>
-									<i
-										*ngIf="item.value.status == 'n'"
-										class="fa fa-thumbs-down icon-finished icon-finished-no"
-									>
+									<i *ngIf="item.value.status == 'n'"
+										class="fa fa-thumbs-down icon-finished icon-finished-no">
 									</i>
-									<i
-										*ngIf="item.value.status == 'c'"
-										class="fa fa-thumbs-up icon-finished icon-finished-yes"
-									>
+									<i *ngIf="item.value.status == 'c'"
+										class="fa fa-thumbs-up icon-finished icon-finished-yes">
 									</i>
-									<i
-										class="fa fa-bars icon-finished"
-										style="margin-left: 15px"
-										matTooltip="Menu"
-										[matMenuTriggerFor]="menu"
-									></i>
+									<i class="fa fa-bars icon-finished" style="margin-left: 15px" matTooltip="Menu"
+										[matMenuTriggerFor]="menu"></i>
 									<mat-menu #menu="matMenu">
 										<button mat-menu-item>
-											<a
-												target="_BLANK"
-												href="https://wa.me/5562981993875"
-											>
+											<a target="_BLANK" href="https://wa.me/5562981993875">
 												<i class="fab fa-whatsapp"></i>
 												Abrir no Whatsapp
 											</a>
@@ -166,15 +149,9 @@
 										<button mat-menu-item>
 											<i class="fas fa-edit"></i> Alterar
 										</button>
-										<button
-											mat-menu-item
-											(click)="newChildren(item.value)"
-											data-toggle="modal"
-											data-target="#modalStickyAdd"
-										>
-											<i
-												class="fa fa-chalkboard-teacher"
-											></i>
+										<button mat-menu-item (click)="newChildren(item.value)" data-toggle="modal"
+											data-target="#modalStickyAdd">
+											<i class="fa fa-chalkboard-teacher"></i>
 											Tornar Lead
 										</button>
 									</mat-menu>
@@ -182,38 +159,19 @@
 							</ng-container>
 							<ng-template #waitingChildren>
 								<div class="waiting">
-									<i
-										(click)="changeStatus(item.value, 'pc')"
-										class="fa fa-credit-card icon-waiting"
-										matTooltip="Problemas com cartão de crédito"
-									>
+									<i (click)="changeStatus(item.value, 'pc')" class="fa fa-credit-card icon-waiting"
+										matTooltip="Problemas com cartão de crédito">
 									</i>
-									<i
-										(click)="changeStatus(item.value, 'ld')"
-										class="fa fa-headset icon-waiting"
-										matTooltip="Ligar depois"
-									></i>
-									<i
-										(click)="changeStatus(item.value, 'n')"
-										class="fa fa-thumbs-down icon-waiting"
-										matTooltip="Não deu negócio 😭"
-									></i>
-									<i
-										(click)="changeStatus(item.value, 'c')"
-										class="fa fa-thumbs-up icon-waiting"
-										matTooltip="Vendido 😃"
-									></i>
-									<i
-										class="fa fa-bars icon-waiting"
-										matTooltip="Menu"
-										[matMenuTriggerFor]="menu"
-									></i>
+									<i (click)="changeStatus(item.value, 'ld')" class="fa fa-headset icon-waiting"
+										matTooltip="Ligar depois"></i>
+									<i (click)="changeStatus(item.value, 'n')" class="fa fa-thumbs-down icon-waiting"
+										matTooltip="Não deu negócio 😭"></i>
+									<i (click)="changeStatus(item.value, 'c')" class="fa fa-thumbs-up icon-waiting"
+										matTooltip="Vendido 😃"></i>
+									<i class="fa fa-bars icon-waiting" matTooltip="Menu" [matMenuTriggerFor]="menu"></i>
 									<mat-menu #menu="matMenu">
 										<button mat-menu-item>
-											<a
-												target="_BLANK"
-												href="https://wa.me/5562981993875"
-											>
+											<a target="_BLANK" href="https://wa.me/5562981993875">
 												<i class="fab fa-whatsapp"></i>
 												Abrir no Whatsapp
 											</a>
@@ -221,15 +179,9 @@
 										<button mat-menu-item>
 											<i class="fas fa-edit"></i> Alterar
 										</button>
-										<button
-											mat-menu-item
-											(click)="newChildren(item.value)"
-											data-toggle="modal"
-											data-target="#modalStickyAdd"
-										>
-											<i
-												class="fa fa-chalkboard-teacher"
-											></i>
+										<button mat-menu-item (click)="newChildren(item.value)" data-toggle="modal"
+											data-target="#modalStickyAdd">
+											<i class="fa fa-chalkboard-teacher"></i>
 											Tornar Lead
 										</button>
 									</mat-menu>
@@ -246,12 +198,8 @@
 						3 à contactar
 					</div>
 					<div class="action">
-						<div
-							class="actionButton"
-							(click)="newChildren(itemLead.value)"
-							data-toggle="modal"
-							data-target="#modalStickyAdd"
-						>
+						<div class="actionButton" (click)="newChildren(itemLead.value)" data-toggle="modal"
+							data-target="#modalStickyAdd">
 							<i class="fa fa-plus"></i>
 						</div>
 					</div>
@@ -262,33 +210,17 @@
 	<footer>
 		<!-- <div class="footerItens">+</div>
 		<div class="footerItens">+</div> -->
-		<div
-			class="footerItens"
-			(click)="newLead()"
-			data-toggle="modal"
-			data-target="#modalScriptAdd"
-		>
+		<div class="footerItens" (click)="newLead()" data-toggle="modal" data-target="#modalScriptAdd">
 			<i class="fa fa-receipt"></i>
 		</div>
-		<div
-			class="footerItens"
-			(click)="newLead()"
-			data-toggle="modal"
-			data-target="#modalStickyAdd"
-		>
+		<div class="footerItens" (click)="newLead()" data-toggle="modal" data-target="#modalStickyAdd">
 			<i class="fa fa-plus"></i>
 		</div>
 	</footer>
 </div>
 
 <!-- Modal -->
-<div
-	class="modal fade"
-	id="modalStickyAdd"
-	tabindex="-1"
-	aria-labelledby="modalNewSticky"
-	aria-hidden="true"
->
+<div class="modal fade" id="modalStickyAdd" tabindex="-1" aria-labelledby="modalNewSticky" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -309,12 +241,7 @@
 								<i class="fa fa-user"></i>
 							</div>
 							<div class="inputText">
-								<input
-									type="text"
-									class="w-100"
-									formControlName="name"
-									placeholder="Nome"
-								/>
+								<input type="text" class="w-100" formControlName="name" placeholder="Nome" />
 							</div>
 						</div>
 						<div class="input">
@@ -322,20 +249,11 @@
 								<i class="fa fa-mobile-alt"></i>
 							</div>
 							<div class="inputText">
-								<input
-									type="text"
-									class="w-100"
-									formControlName="phone"
-									placeholder="Telefone"
-									mask="(00)00000-0000"
-								/>
+								<input type="text" class="w-100" formControlName="phone" placeholder="Telefone"
+									mask="(00)00000-0000" />
 							</div>
 						</div>
-						<textarea
-							placeholder="Observação"
-							class="textarea"
-							formControlName="observation"
-						>
+						<textarea placeholder="Observação" class="textarea" formControlName="observation">
 						</textarea>
 						<div class="input">
 							<div class="inputIcon">
@@ -347,10 +265,7 @@
 										Selecione uma opção caso tenha entrado
 										em contato com o referente
 									</option>
-									<option
-										*ngFor="let item of status"
-										[value]="item.id"
-									>
+									<option *ngFor="let item of status" [value]="item.id">
 										{{ item?.status }}
 									</option>
 								</select>
@@ -360,20 +275,10 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button
-					type="button"
-					class="btn btn-secondary"
-					data-dismiss="modal"
-					#closemodalStickyAdd
-				>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal" #closemodalStickyAdd>
 					Fechar
 				</button>
-				<button
-					type="button"
-					class="btn btn-primary"
-					(click)="save(form.value)"
-					[disabled]="!form.valid"
-				>
+				<button type="button" class="btn btn-primary" (click)="save(form.value)" [disabled]="!form.valid">
 					Salvar
 				</button>
 			</div>
@@ -382,13 +287,7 @@
 </div>
 
 <!-- Modal roteiro -->
-<div
-	class="modal fade"
-	id="modalScriptAdd"
-	tabindex="-1"
-	aria-labelledby="modalNewScript"
-	aria-hidden="true"
->
+<div class="modal fade" id="modalScriptAdd" tabindex="-1" aria-labelledby="modalNewScript" aria-hidden="true">
 	<div class="modal-dialog modal-exlg">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -399,30 +298,17 @@
 			<div class="modal-body">
 				<div class="content">
 					<form [formGroup]="formScript" novalidate>
-						<textarea
-							placeholder="Estratégia"
-							class="textarea"
-							formControlName="strategy"
-						>
+						<textarea placeholder="Estratégia" class="textarea" formControlName="strategy">
 						</textarea>
 					</form>
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button
-					type="button"
-					class="btn btn-secondary"
-					data-dismiss="modal"
-					#closemodalScriptAdd
-				>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal" #closemodalScriptAdd>
 					Fechar
 				</button>
-				<button
-					type="button"
-					class="btn btn-primary"
-					(click)="saveStrategy(formScript.value)"
-					[disabled]="!formScript.valid"
-				>
+				<button type="button" class="btn btn-primary" (click)="saveStrategy(formScript.value)"
+					[disabled]="!formScript.valid">
 					Salvar
 				</button>
 			</div>
@@ -430,15 +316,32 @@
 	</div>
 </div>
 
+<!-- Modal roteiro -->
+<div class="modal fade" id="modalImportContact" tabindex="-1" aria-labelledby="modalNewImportContact" aria-hidden="true">
+	<div class="modal-dialog ">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title" id="modalNewImportContact">
+					<p>Importanto contatos indicados do(a) {{ parent.name }} </p>
+				</h3>
+			</div>
+			<div class="modal-body">
+				<div class="content">
+					<h2>Anexe o arquivo baixado na conversa com o(a) {{ parent.name }} </h2>
+					<div class="form-group">
+						<input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput  />
+						<div class="uploadArquivo" [style.background-image]=" 'url(' + img + ' )' | safeHtml: 'style' " ></div>
+						<button class="btn btn-upload" (click)="fileInput.click()" > Enviar arquivo </button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <!-- Modal calling -->
 
-<div
-	class="modal fade"
-	id="modalCall"
-	tabindex="-1"
-	aria-labelledby="modalStapcall"
-	aria-hidden="true"
->
+<div class="modal fade" id="modalCall" tabindex="-1" aria-labelledby="modalStapcall" aria-hidden="true">
 	<div class="modal-dialog modal-exlg">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -452,35 +355,23 @@
 				<b>Árvores de indicações</b>
 				<div class="content rowCall">
 					<div class="person">
-						<div
-							class="tree margint-25"
-							*ngFor="let itemParent of parents; let i = index"
-						>
+						<div class="tree margint-25" *ngFor="let itemParent of parents; let i = index">
 							<div [style.marginLeft.px]="20 * i">
 								<div class="parentName">
 									<i class="fa fa-folder-open"></i>
 
 									{{ itemParent.name }}
 									<span *ngIf="itemParent.status != 'a'">
-										<i
-											*ngIf="itemParent.status == 'pc'"
-											class="fa fa-credit-card icon-finished icon-finished-no"
-										>
+										<i *ngIf="itemParent.status == 'pc'"
+											class="fa fa-credit-card icon-finished icon-finished-no">
 										</i>
-										<i
-											*ngIf="itemParent.status == 'ld'"
-											class="fa fa-headset icon-finished"
-										>
+										<i *ngIf="itemParent.status == 'ld'" class="fa fa-headset icon-finished">
 										</i>
-										<i
-											*ngIf="itemParent.status == 'n'"
-											class="fa fa-thumbs-down icon-finished icon-finished-no"
-										>
+										<i *ngIf="itemParent.status == 'n'"
+											class="fa fa-thumbs-down icon-finished icon-finished-no">
 										</i>
-										<i
-											*ngIf="itemParent.status == 'c'"
-											class="fa fa-thumbs-up icon-finished icon-finished-yes"
-										>
+										<i *ngIf="itemParent.status == 'c'"
+											class="fa fa-thumbs-up icon-finished icon-finished-yes">
 										</i>
 									</span>
 								</div>
