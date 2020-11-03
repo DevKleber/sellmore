@@ -193,7 +193,7 @@ export class SellMoreComponent implements OnInit {
 			title: `Arquivar ${referido.name} ?`,
 			text: `${
 				isLead
-					? `Atenção, a pessoa escolhida tornou-se um lead e possui referidos em sua cadeia de conexões. Se prosseguir com o arquivamento do(a) ${referido.name}, todos os seus referidos serão também arquivados. Deseja prosseguir?`
+					? `Atenção, a pessoa escolhida é, também, um lead e possui referidos em sua cadeia de conexões (card). Se prosseguir com o arquivamento do(a) ${referido.name}, o seu card será ocultado por completo. Esta ação não altera os referidos que se tornaram lead. Deseja prosseguir?`
 					: ''
 			}`,
 			icon: 'warning',
