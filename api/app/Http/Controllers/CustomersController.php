@@ -67,8 +67,12 @@ class CustomersController extends Controller
                 $number = $phone[$numberToSavePhoneNumber];
                 unset($phone[$numberToSavePhoneNumber]);
             }
+
+            // $pais = substr($number, 0, 2); //numero do pais
+            // $number = str_replace($pais, '', $number);
+
             $pais = substr($number, 0, 2); //numero do pais
-            $number = str_replace($pais, '', $number);
+            $number = substr($number, 2);
 
             $anotherNumbersWhatsapp = implode(',', $whatsapp ?? null);
             $anotherNumbersPhone = implode(',', $phone ?? null);
@@ -77,7 +81,7 @@ class CustomersController extends Controller
             $observationPhone = !empty($anotherNumbersPhone) ? 'Outros: '.$anotherNumbersPhone : '';
             $obs = !empty($observationWhatsapp) || !empty($observationPhone) ? ' Outros números: ' : '';
 
-            $ar['name'] = preg_replace('/[\x{10000}-\x{10FFFF}]/u', '', $value['nome']); // removendo emoji
+            $ar['name'] = Helpers::remove_emoji($value['nome']); // removendo emoji
             $ar['phone'] = $number;
             $ar['address'] = null;
             $ar['status'] = 'a';

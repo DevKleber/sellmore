@@ -245,6 +245,34 @@ class Helpers
         return $folder ?? null;
     }
 
+    public static function remove_emoji($string)
+    {
+        // Match Emoticons
+        $regex_emoticons = '/[\x{1F600}-\x{1F64F}]/u';
+        $clear_string = preg_replace($regex_emoticons, '', $string);
+
+        // Match Miscellaneous Symbols and Pictographs
+        $regex_symbols = '/[\x{1F300}-\x{1F5FF}]/u';
+        $clear_string = preg_replace($regex_symbols, '', $clear_string);
+
+        // Match Transport And Map Symbols
+        $regex_transport = '/[\x{1F680}-\x{1F6FF}]/u';
+        $clear_string = preg_replace($regex_transport, '', $clear_string);
+
+        // Match Miscellaneous Symbols
+        $regex_misc = '/[\x{2600}-\x{26FF}]/u';
+        $clear_string = preg_replace($regex_misc, '', $clear_string);
+
+        // Match Symbols
+        $regex_another = '/[\x{10000}-\x{10FFFF}]/u';
+        $clear_string = preg_replace($regex_another, '', $clear_string);
+
+        // Match Dingbats
+        $regex_dingbats = '/[\x{2700}-\x{27BF}]/u';
+
+        return preg_replace($regex_dingbats, '', $clear_string);
+    }
+
     public static function numeroNonoDigito($numero)
     {
         if (13 == strlen($numero)) {//Se numero tem 13 digitos 5564 9 99967545
@@ -252,8 +280,11 @@ class Helpers
         }
 
         if (12 == strlen($numero)) {//se numero tem 12 5564 99954785 falta o 9
-        $ddd = substr($numero, 0, 4); //Pega ddd e numero e o pais
-        $num = str_replace($ddd, '', $numero);
+            // $ddd = substr($numero, 0, 4); //Pega ddd e numero e o pais
+            // $num = str_replace($ddd, '', $numero);
+
+            $ddd = substr($numero, 0, 4); //Pega ddd e numero e o pais
+            $num = substr($numero, 4);
 
             if (2 == $num[0] || 3 == $num[0]) {//Verifica se é celular, se nao for retorno o proprio numero
                 return $numero;
