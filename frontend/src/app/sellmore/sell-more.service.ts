@@ -33,6 +33,9 @@ export class SellMoreService {
 	save(form) {
 		return this.http.post<any>(`${API}/customers`, form);
 	}
+	update(form, id) {
+		return this.http.put<any>(`${API}/customers/${id}`, form);
+	}
 
 	inativar(id: string) {
 		return this.http.delete(`${API}/customers/${id}`);

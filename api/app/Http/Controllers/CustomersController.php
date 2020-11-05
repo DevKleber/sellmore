@@ -118,10 +118,13 @@ class CustomersController extends Controller
         if ($customers->count()) {
             $customersArray = $customers->toArray();
 
+            $indicadoPor = \App\Customers::where('id', $customersArray[0]['id_parent'])->first();
+            if (!$indicadoPor) { // indico por um lead que não tem lead.
+                return  response(['response' => "Número de telefone já existe ({$customersArray[0]['name']})"], 400);
+            }
+
             return  response(
-                [
-                    'response' => 'Referido já indicado pelo '.\App\Customers::where('id', $customersArray[0]['id_parent'])->first()->name,
-                ],
+                ['response' => 'Referido já indicado pelo(a) '.$indicadoPor->name],
                 400
             );
         }
@@ -164,7 +167,25 @@ class CustomersController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request['status'] = ('' == $request['status'] || null == $request['status']) ? 'a' : $request['status'];
         $customers = \App\Customers::find($id);
+        if ($request['phone'] != $customers->phone) {
+            $customersByNumberPhone = \App\Customers::where('phone', $request['phone'])->get();
+            if ($customersByNumberPhone->count()) {
+                $customersArray = $customersByNumberPhone->toArray();
+
+                $indicadoPor = \App\Customers::where('id', $customersArray[0]['id_parent'])->first();
+                if (!$indicadoPor) { // indico por um lead que não tem lead.
+                    return  response(['response' => "Número de telefone já existe ({$customersArray[0]['name']})"], 400);
+                }
+
+                return  response(
+                    ['response' => 'Referido já indicado pelo(a) '.$indicadoPor->name],
+                    400
+                );
+            }
+        }
+        $request['id_usuario'] = auth('api')->user()->id;
 
         if (!$customers) {
             return response(['response' => 'Customers Não encontrado'], 400);

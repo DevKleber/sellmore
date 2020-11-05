@@ -109,8 +109,8 @@ export class SellMoreComponent implements OnInit {
 
 	update(form) {
 		this.loaderService.isLoad(true);
-		this.sellMoreService.save(form).subscribe((data) => {
-			this.notificationService.notifySweet('Salvo com sucesso!');
+		this.sellMoreService.update(form, form.id).subscribe((data) => {
+			this.notificationService.notifySweet('Alterado com sucesso!');
 			this.clearForm();
 			this.getCustomers();
 			this.loaderService.isLoad(false);
@@ -157,10 +157,12 @@ export class SellMoreComponent implements OnInit {
 	newChildren(parent) {
 		this.parent = parent;
 		this.customersImported = [];
+		this.clearForm();
 		this.form.controls['id_parent'].setValue(parent.id);
 		console.log(parent);
 	}
 	newLead() {
+		this.clearForm();
 		this.form.controls['id_parent'].setValue(null);
 		this.parent = {};
 	}

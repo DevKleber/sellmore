@@ -72,7 +72,8 @@
 											Abrir no Whatsapp
 										</a>
 									</button>
-									<button mat-menu-item>
+									<button mat-menu-item (click)="updateOpenForm(itemLead.value)" data-toggle="modal"
+										data-target="#modalStickyAdd">
 										<i class="fas fa-edit"></i> Alterar
 									</button>
 									<button mat-menu-item (click)="inativar(itemLead.value)">
@@ -106,7 +107,8 @@
 											Abrir no Whatsapp
 										</a>
 									</button>
-									<button mat-menu-item>
+									<button mat-menu-item (click)="updateOpenForm(itemLead.value)" data-toggle="modal"
+										data-target="#modalStickyAdd">
 										<i class="fas fa-edit"></i> Alterar
 									</button>
 									<button mat-menu-item (click)="inativar(itemLead.value)">
@@ -167,7 +169,8 @@
 												Abrir no Whatsapp
 											</a>
 										</button>
-										<button mat-menu-item>
+										<button mat-menu-item (click)="updateOpenForm(item.value)" data-toggle="modal"
+											data-target="#modalStickyAdd">
 											<i class="fas fa-edit"></i> Alterar
 										</button>
 										<button mat-menu-item (click)="inativar(item.value)">
@@ -204,7 +207,8 @@
 												Abrir no Whatsapp
 											</a>
 										</button>
-										<button mat-menu-item>
+										<button mat-menu-item (click)="updateOpenForm(item.value)" data-toggle="modal"
+											data-target="#modalStickyAdd">
 											<i class="fas fa-edit"></i> Alterar
 										</button>
 										<button mat-menu-item (click)="inativar(item.value)">
@@ -229,20 +233,10 @@
 						3 à contactar
 					</div>
 					<div class="action">
-						<ng-container *ngIf="true; else elseTemplateUpdate">
-							<div class="actionButton" (click)="newChildren(itemLead.value)" data-toggle="modal"
-								data-target="#modalStickyAdd">
-								<i class="fa fa-plus"></i>
-							</div>
-
-						</ng-container>
-						<ng-template #elseTemplateUpdate>
-							<div class="actionButton" (click)="update(itemLead.value)" data-toggle="modal"
-								data-target="#modalStickyAdd">
-								<i class="fa fa-plus"></i>
-							</div>
-
-						</ng-template>
+						<div class="actionButton" (click)="newChildren(itemLead.value)" data-toggle="modal"
+							data-target="#modalStickyAdd">
+							<i class="fa fa-plus"></i>
+						</div>
 
 					</div>
 				</div>
@@ -270,7 +264,10 @@
 							Cadastre abaixo os indicados do(a) {{ parent.name }}
 						</p>
 					</ng-container>
-					<ng-template #indicatedBy> Novo referido </ng-template>
+					<ng-template #indicatedBy>
+						<span *ngIf="!form.value.id">Novo referido </span>
+						<span *ngIf="form.value.id">Alterando referido </span>
+					</ng-template>
 				</h3>
 			</div>
 			<div class="modal-body">
@@ -318,9 +315,18 @@
 				<button type="button" class="btn btn-secondary" data-dismiss="modal" #closemodalStickyAdd>
 					Fechar
 				</button>
-				<button type="button" class="btn btn-primary" (click)="save(form.value)" [disabled]="!form.valid">
-					Salvar
-				</button>
+
+
+				<ng-container *ngIf="!form.value.id; else elseTemplateUpdate">
+					<button type="button" class="btn btn-primary" (click)="save(form.value)" [disabled]="!form.valid">
+						Salvar
+					</button>
+				</ng-container>
+				<ng-template #elseTemplateUpdate>
+					<button type="button" class="btn btn-primary" (click)="update(form.value)" [disabled]="!form.valid">
+						Alterar
+					</button>
+				</ng-template>
 			</div>
 		</div>
 	</div>
