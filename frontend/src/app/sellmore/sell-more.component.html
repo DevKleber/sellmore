@@ -428,11 +428,16 @@
 				</h2>
 			</div>
 			<div class="modal-body">
-				<p>Observação: {{ person.observation }}</p>
-				<br />
-				<b>Árvores de indicações</b>
+				<!-- <p>Observação: {{ person.observation }}</p>
+				<br /> -->
+
 				<div class="content rowCall">
 					<div class="person">
+						<form [formGroup]="form" novalidate>
+							<textarea (change)="update(form.value,false,true)"  placeholder="Observação" class="textarea" formControlName="observation" style="width: 95%; height: 300px;">
+							</textarea>
+						</form>
+						<b>Árvores de indicações</b>
 						<div class="tree margint-25" *ngFor="let itemParent of parents; let i = index">
 							<div [style.marginLeft.px]="20 * i">
 								<div class="parentName">

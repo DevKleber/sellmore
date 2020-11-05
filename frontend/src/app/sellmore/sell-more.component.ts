@@ -109,12 +109,21 @@ export class SellMoreComponent implements OnInit {
 		this.form.controls['id_parent'].setValue(person.id_parent);
 	}
 
-	update(form) {
+	update(form, feedback = true, updateList = true) {
+		if (!form.id) {
+			this.notificationService.notifySweet(
+				'Erro: não encontramos o referido!'
+			);
+		}
 		this.loaderService.isLoad(true);
 		this.sellMoreService.update(form, form.id).subscribe((data) => {
-			this.notificationService.notifySweet('Alterado com sucesso!');
-			this.clearForm();
-			this.getCustomers();
+			if (feedback) {
+				this.notificationService.notifySweet('Alterado com sucesso!');
+				this.clearForm();
+			}
+			if (updateList) {
+				this.getCustomers();
+			}
 			this.loaderService.isLoad(false);
 			// this.closemodalSellMoreAdd.nativeElement.click();
 		});
@@ -150,6 +159,7 @@ export class SellMoreComponent implements OnInit {
 	}
 	callTo(person) {
 		this.loaderService.isLoad(true);
+		this.updateOpenForm(person);
 		this.person = person;
 		this.sellMoreService
 			.getAllParents(person.id_parent)
