@@ -3,11 +3,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, NavigationEnd } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap, filter, flatMap } from 'rxjs/operators';
+
 import { API } from '../../app.api';
 import { Helper } from '../../helper';
 import { User } from './user.model';
 
 import { NotificationService } from '../../shared/messages/notification.service';
+import { LoaderService } from '../../shared/loader/loader.service';
 
 @Injectable()
 export class LoginService {
@@ -17,6 +19,7 @@ export class LoginService {
 
 	constructor(
 		private notificationService: NotificationService,
+		private loaderService: LoaderService,
 		private http: HttpClient,
 		private router: Router,
 		private helper: Helper
@@ -53,12 +56,13 @@ export class LoginService {
 		this.handleLogin();
 	}
 	logout() {
-		this.http.get(`${API}/auth/logout`).subscribe((resp) => {
+		this.http.post(`${API}/auth/logout`, {}).subscribe((resp) => {
 			localStorage.removeItem('dG9rZW5fbWVtb3JpemU=');
 			localStorage.removeItem('user');
 			localStorage.removeItem('empresa');
 			this.mostrarMenu.emit(false);
 			this.user = undefined;
+			this.loaderService.isLoad(false);
 			this.handleLogin();
 		});
 		// this.mostrarMenu.emit(false);

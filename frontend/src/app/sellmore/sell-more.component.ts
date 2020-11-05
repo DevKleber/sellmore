@@ -6,6 +6,7 @@ import {
 	ViewChild,
 } from '@angular/core';
 import { SellMoreService } from './sell-more.service';
+import { LoginService } from '../security/login/login.service';
 import { NotificationService } from '../shared/messages/notification.service';
 import { Helper } from '../helper';
 import { API_SITE_PATH_IMG } from '../app.api';
@@ -49,6 +50,7 @@ export class SellMoreComponent implements OnInit {
 
 	constructor(
 		private sellMoreService: SellMoreService,
+		private loginService: LoginService,
 		private formBuilder: FormBuilder,
 		public helper: Helper,
 		public notificationService: NotificationService,
@@ -162,6 +164,10 @@ export class SellMoreComponent implements OnInit {
 	importContact() {
 		this.loaderService.isLoad(true);
 		const uploadData = new FormData();
+		if (!this.selectedFile) {
+			this.notificationService.notifyError('Anexe um arquivo!');
+			this.loaderService.isLoad(false);
+		}
 		if (this.selectedFile) {
 			uploadData.append(
 				'imagem',
@@ -210,5 +216,8 @@ export class SellMoreComponent implements OnInit {
 				});
 			}
 		});
+	}
+	logout() {
+		this.loginService.logout();
 	}
 }
