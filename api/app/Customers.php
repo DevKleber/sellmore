@@ -76,6 +76,7 @@ class Customers extends Model
 
     public static function statistics($arCustomers)
     {
+        $id_usuario = auth('api')->user()->id;
         $statistics = [
             'a' => 0,
             'pc' => 0,
@@ -83,10 +84,14 @@ class Customers extends Model
             'n' => 0,
             'c' => 0,
         ];
-        foreach ($arCustomers as $key => $parent) {
-            ++$statistics[$parent['status']];
-            foreach ($parent['referidos'] as $key => $children) {
-                ++$statistics[$children['status']];
+        $customers = self::where('id_usuario', $id_usuario)->get();
+        foreach ($customers as $key => $value) {
+            if ('c' == $value['status']) {
+                ++$statistics[$value['status']];
+            } else {
+                if ($value['bo_ativo']) {
+                    ++$statistics[$value['status']];
+                }
             }
         }
 
