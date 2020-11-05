@@ -21,7 +21,8 @@
 
 		<mat-menu #profile="matMenu">
 			<button mat-menu-item>
-				<i class="fas fa-id-card-alt"></i> Perfil
+				<i class="fas fa-id-card-alt"></i>
+				{{user?.nome}}
 			</button>
 			<button mat-menu-item (click)="logout()">
 				<i class="fas fa-sign-out-alt"></i> Sair

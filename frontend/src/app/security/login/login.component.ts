@@ -82,7 +82,7 @@ export class LoginComponent implements OnInit {
 				(response) => {
 					this.loaderService.isLoad(false);
 					if (response.status === 401) {
-						this.notificationService.notifyAlert(
+						this.notificationService.notifyError(
 							'Usuário ou senha inválida'
 						);
 					}

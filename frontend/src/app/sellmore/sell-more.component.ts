@@ -48,6 +48,7 @@ export class SellMoreComponent implements OnInit {
 	formCategory: FormGroup;
 	img: any = 'assets/img/file/search.svg';
 	selectedFile: File;
+	user: any = {};
 
 	constructor(
 		private sellMoreService: SellMoreService,
@@ -63,6 +64,7 @@ export class SellMoreComponent implements OnInit {
 		this.getStrategy();
 		// this.getCategories();
 		this.initialForms();
+		this.user = this.loginService.getUser();
 	}
 
 	initialForms() {

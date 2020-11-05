@@ -84,8 +84,9 @@ export class LoginService {
 						'dG9rZW5fbWVtb3JpemU=',
 						user.access_token
 					);
+
 					// localStorage.setItem('user', btoa(JSON.stringify(user.empresa)));
-					let userString = JSON.stringify(user.user);
+					let userString = JSON.stringify(user.me);
 					let encrypt = btoa(userString);
 					let myencrypt = this.helper.encrypt(encrypt);
 					localStorage.setItem('user', myencrypt);
