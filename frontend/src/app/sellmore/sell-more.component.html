@@ -14,8 +14,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="profile" >
-			<img class="cursor-pointer" src="/assets/img/user/user.png" alt="" width="55px"  [matMenuTriggerFor]="profile">
+		<div class="profile">
+			<img class="cursor-pointer" src="/assets/img/user/user.png" alt="" width="55px"
+				[matMenuTriggerFor]="profile">
 		</div>
 
 		<mat-menu #profile="matMenu">
@@ -228,18 +229,27 @@
 						3 à contactar
 					</div>
 					<div class="action">
-						<div class="actionButton" (click)="newChildren(itemLead.value)" data-toggle="modal"
-							data-target="#modalStickyAdd">
-							<i class="fa fa-plus"></i>
-						</div>
+						<ng-container *ngIf="expression; else elseTemplateUpdate">
+							<div class="actionButton" (click)="newChildren(itemLead.value)" data-toggle="modal"
+								data-target="#modalStickyAdd">
+								<i class="fa fa-plus"></i>
+							</div>
+
+						</ng-container>
+						<ng-template #elseTemplateUpdate>
+							<div class="actionButton" (click)="update(itemLead.value)" data-toggle="modal"
+								data-target="#modalStickyAdd">
+								<i class="fa fa-plus"></i>
+							</div>
+
+						</ng-template>
+
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<footer>
-		<!-- <div class="footerItens">+</div>
-		<div class="footerItens">+</div> -->
 		<div class="footerItens" (click)="newLead()" data-toggle="modal" data-target="#modalScriptAdd">
 			<i class="fa fa-receipt"></i>
 		</div>
@@ -249,7 +259,7 @@
 	</footer>
 </div>
 
-<!-- Modal -->
+<!-- Modal cadastre indicados -->
 <div class="modal fade" id="modalStickyAdd" tabindex="-1" aria-labelledby="modalNewSticky" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -346,7 +356,7 @@
 	</div>
 </div>
 
-<!-- Modal roteiro -->
+<!-- Modal importando contatos -->
 <div class="modal fade" id="modalImportContact" tabindex="-1" aria-labelledby="modalNewImportContact"
 	aria-hidden="true">
 	<div class="modal-dialog ">

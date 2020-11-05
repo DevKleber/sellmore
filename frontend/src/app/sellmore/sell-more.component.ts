@@ -66,6 +66,7 @@ export class SellMoreComponent implements OnInit {
 
 	initialForms() {
 		this.form = this.formBuilder.group({
+			id: this.formBuilder.control(null),
 			name: this.formBuilder.control('', [Validators.required]),
 			phone: this.formBuilder.control('', [Validators.required]),
 			address: this.formBuilder.control(''),
@@ -96,7 +97,26 @@ export class SellMoreComponent implements OnInit {
 			);
 		});
 	}
+	updateOpenForm(person) {
+		this.form.controls['id'].setValue(person.id);
+		this.form.controls['name'].setValue(person.name);
+		this.form.controls['phone'].setValue(person.phone);
+		this.form.controls['address'].setValue(person.address);
+		this.form.controls['status'].setValue(person.status);
+		this.form.controls['observation'].setValue(person.observation);
+		this.form.controls['id_parent'].setValue(person.id_parent);
+	}
 
+	update(form) {
+		this.loaderService.isLoad(true);
+		this.sellMoreService.save(form).subscribe((data) => {
+			this.notificationService.notifySweet('Salvo com sucesso!');
+			this.clearForm();
+			this.getCustomers();
+			this.loaderService.isLoad(false);
+			// this.closemodalSellMoreAdd.nativeElement.click();
+		});
+	}
 	save(form) {
 		this.loaderService.isLoad(true);
 		this.sellMoreService.save(form).subscribe((data) => {

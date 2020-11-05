@@ -51,7 +51,7 @@ export class LoginService {
 		localStorage.removeItem('dG9rZW5fbWVtb3JpemU=');
 		localStorage.removeItem('user');
 		localStorage.removeItem('empresa');
-		this.mostrarMenu.emit(false);
+		// this.mostrarMenu.emit(false);
 		this.user = undefined;
 		this.handleLogin();
 	}
@@ -60,7 +60,7 @@ export class LoginService {
 			localStorage.removeItem('dG9rZW5fbWVtb3JpemU=');
 			localStorage.removeItem('user');
 			localStorage.removeItem('empresa');
-			this.mostrarMenu.emit(false);
+			// this.mostrarMenu.emit(false);
 			this.user = undefined;
 			this.loaderService.isLoad(false);
 			this.handleLogin();

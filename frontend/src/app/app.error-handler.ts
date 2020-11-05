@@ -49,7 +49,7 @@ export class ApplicationErrorHandler extends ErrorHandler {
 							const loginService = this.injector.get(
 								LoginService
 							);
-							loginService.logout();
+							// loginService.logout();
 							loginService.logoutForce();
 						} else {
 							let erro =
