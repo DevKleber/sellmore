@@ -15,9 +15,7 @@ class CustomersController extends Controller
             return response(['response' => 'Não existe Customers'], 200);
         }
 
-        return response([
-            'dados' => $arCustomers,
-        ]);
+        return response($arCustomers);
     }
 
     public function getAllParents($id)

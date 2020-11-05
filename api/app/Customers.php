@@ -14,6 +14,7 @@ class Customers extends Model
     public static function getStatus()
     {
         return [
+            'a' => 'Aberto',
             'pc' => 'Problemas com cartão',
             'ld' => 'Ligar depois',
             'n' => 'Não tem interesse',
@@ -70,7 +71,26 @@ class Customers extends Model
             ;
         }
 
-        return $arCustomers;
+        return ['arCustomers' => $arCustomers, 'statistics' => self::statistics($arCustomers)];
+    }
+
+    public static function statistics($arCustomers)
+    {
+        $statistics = [
+            'a' => 0,
+            'pc' => 0,
+            'ld' => 0,
+            'n' => 0,
+            'c' => 0,
+        ];
+        foreach ($arCustomers as $key => $parent) {
+            ++$statistics[$parent['status']];
+            foreach ($parent['referidos'] as $key => $children) {
+                ++$statistics[$children['status']];
+            }
+        }
+
+        return $statistics;
     }
 
     public static function importContacts($request, $id)

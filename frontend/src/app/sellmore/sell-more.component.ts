@@ -39,6 +39,7 @@ export class SellMoreComponent implements OnInit {
 	parent: any = {};
 	parents: any[] = [];
 	strategy: any = {};
+	statistics: any = {};
 
 	path: string = API_SITE_PATH_IMG;
 	isDevMode: boolean = isDevMode();
@@ -83,7 +84,8 @@ export class SellMoreComponent implements OnInit {
 		this.loaderService.isLoad(true);
 		this.sellMoreService.getCustomers().subscribe((res) => {
 			this.loaderService.isLoad(false);
-			this.customers = res['dados'];
+			this.customers = res['arCustomers'];
+			this.statistics = res['statistics'];
 		});
 	}
 	getStrategy() {
@@ -139,6 +141,8 @@ export class SellMoreComponent implements OnInit {
 		this.loaderService.isLoad(true);
 		let form = { status: status };
 		this.sellMoreService.changeStatus(form, lead.id).subscribe((res) => {
+			let value = this.statistics[status];
+			this.statistics[status] = value + 1;
 			this.loaderService.isLoad(false);
 			lead.status = status;
 			this.notificationService.notifySweet('Atualizado!');

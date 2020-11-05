@@ -31,9 +31,11 @@
 	</header>
 	<div class="content pad40">
 		<div class="row flex-direction-column">
-			<div class="totalLead">78 referidos à contactar</div>
-			<div class="totalOthers">3 vendas</div>
-			<div class="totalOthers">7 problemas com cartão</div>
+
+			<div class="totalLead">{{statistics?.a}} referidos à contactar</div>
+			<div class="totalOthers">{{statistics?.c}} {{statistics?.c <= 1 ?   'venda': 'vendas'}}</div>
+			<div class="totalOthers">{{statistics?.pc}} {{statistics?.pc <= 1 ? 'problema com cartão' : 'problemas com cartão'}} </div>
+			<div class="totalOthers">{{statistics?.ld}} ligar depois</div>
 		</div>
 
 		<div class="row flex-wrap">
@@ -230,7 +232,7 @@
 					<div class="quantitative">
 						{{ itemLead.value.referidos.length | json }} referidos
 						<br />
-						3 à contactar
+						N à contactar
 					</div>
 					<div class="action">
 						<div class="actionButton" (click)="newChildren(itemLead.value)" data-toggle="modal"
