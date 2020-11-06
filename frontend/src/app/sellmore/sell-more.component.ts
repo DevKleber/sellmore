@@ -183,6 +183,7 @@ export class SellMoreComponent implements OnInit {
 		this.parent = {};
 	}
 	clearForm() {
+		this.form.controls['id'].setValue('');
 		this.form.controls['name'].setValue('');
 		this.form.controls['phone'].setValue('');
 		this.form.controls['address'].setValue('');
