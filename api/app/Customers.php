@@ -43,7 +43,6 @@ class Customers extends Model
             ->select('id_parent')
             ->whereNotNull('id_parent')
             ->where('bo_ativo', true)
-            ->orderBy('id')
             ->get()
         ;
         $parents->merge($parentsRoot);
