@@ -30,6 +30,7 @@ class Customers extends Model
         $parentsRoot = self::where('id_usuario', $id_usuario)
             ->whereNull('id_parent')
             ->where('bo_ativo', true)
+            ->orderBy('id')
             ->select('id')
             ->get()
         ;
@@ -42,6 +43,7 @@ class Customers extends Model
             ->select('id_parent')
             ->whereNotNull('id_parent')
             ->where('bo_ativo', true)
+            ->orderBy('id')
             ->get()
         ;
         $parents->merge($parentsRoot);
