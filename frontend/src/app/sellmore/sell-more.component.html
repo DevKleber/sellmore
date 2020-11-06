@@ -14,13 +14,10 @@
 				</div>
 			</div>
 		</div>
-		<form action="https://www.paypal.com/donate" method="post" target="_top">
-			<input type="hidden" name="hosted_button_id" value="Z5Z6N2FSLFHRA" />
-			<input style="background: transparent!important;" type="image"
-				src="https://www.paypalobjects.com/pt_BR/BR/i/btn/btn_donateCC_LG.gif" border="0" name="submit"
-				title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-			<img alt="" border="0" src="https://www.paypal.com/pt_BR/i/scr/pixel.gif" width="1" height="1" />
-		</form>
+		<button class="btn-secondary" style="margin-top: 0!important; padding: 10px 32px!important;" data-toggle="modal"
+			data-target="#modalDonate">
+			Doar
+		</button>
 
 		<div class="profile">
 			<img class="cursor-pointer" src="/assets/img/user/user.png" alt="" width="55px"
@@ -492,6 +489,36 @@
 							</span>
 						</perfect-scrollbar>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal doação -->
+<div class="modal fade" id="modalDonate" tabindex="-1" aria-labelledby="modalNewDonate" aria-hidden="true">
+	<div class="modal-dialog ">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="content">
+					<p class="mb-15">
+						O Sellmore é uma ferramenta sem fins lucrativos. Contudo, temos um grande gasto com servidores, pois
+						não é nada fácil manter um programa com o porte do Sellmore no ar. <br>
+					</p>
+					<p class="mb-15">
+						Colaborando conosco, você vai garantir nossa permanência no ar. <br>
+					</p>
+					<p class="mb-15">
+						Faça sua parte. Ajude-nos a manter o servidor sempre on-line.
+					</p>
+					<div class="row center-center">
+						<img style="text-align: center;" src="/assets/img/system/donate.png" alt="">
+					</div>
+					<button class="w-100">
+						<a href="https://www.paypal.com/donate?hosted_button_id=Z5Z6N2FSLFHRA" target="_BLANK" style="color:#fff !important">
+							Faça uma doação de qualquer valor.
+						</a>
+					</button>
 				</div>
 			</div>
 		</div>
