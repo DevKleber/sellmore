@@ -39,8 +39,9 @@ class Customers extends Model
         }
 
         $parents = self::where('id_usuario', $id_usuario)
-            ->groupBy('id_parent')
-            ->select('id_parent')
+            ->orderBy('id')
+            ->groupBy('id_parent', 'id')
+            ->select('id_parent', 'id')
             ->whereNotNull('id_parent')
             ->where('bo_ativo', true)
             ->get()
