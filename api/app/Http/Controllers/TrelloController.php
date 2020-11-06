@@ -10,7 +10,7 @@ class TrelloController extends Controller
     public function issue(Request $request)
     {
         try {
-            $request['desc'] = $request['desc'].' Reportado por: '.auth('api')->user()->nome;
+            $request['desc'] = $request['desc'].' <br /> Reportado por: '.auth('api')->user()->nome;
             Jira::newTask($request);
 
             return response(['response' => 'Obrigado por nos reportar!']);
