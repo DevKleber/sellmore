@@ -45,6 +45,7 @@ export class SellMoreComponent implements OnInit {
 	isDevMode: boolean = isDevMode();
 	form: FormGroup;
 	formScript: FormGroup;
+	formBug: FormGroup;
 	formCategory: FormGroup;
 	img: any = 'assets/img/file/search.svg';
 	selectedFile: File;
@@ -79,6 +80,10 @@ export class SellMoreComponent implements OnInit {
 		});
 		this.formScript = this.formBuilder.group({
 			strategy: this.formBuilder.control('', [Validators.required]),
+		});
+		this.formBug = this.formBuilder.group({
+			name: this.formBuilder.control('', [Validators.required]),
+			desc: this.formBuilder.control('', [Validators.required]),
 		});
 	}
 
@@ -254,6 +259,32 @@ export class SellMoreComponent implements OnInit {
 					this.notificationService.notifySweet(res['response']);
 				});
 			}
+		});
+	}
+	bug(form) {
+		this.loaderService.isLoad(true);
+		this.sellMoreService.bug(form).subscribe((res) => {
+			this.loaderService.isLoad(false);
+			this.formBug.controls['name'].setValue('');
+			this.formBug.controls['desc'].setValue('');
+			Swal.fire({
+				title: 'Obrigado por nos reportar!',
+				text:
+					'Deseja ver a lista de problemas e as novidades que vem por aí?',
+				icon: 'success',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Sim, ver a lista!',
+			}).then((result) => {
+				if (result.isConfirmed) {
+					var win = window.open(
+						'https://trello.com/b/GQpoOLdf/sell-more',
+						'_blank'
+					);
+					win.focus();
+				}
+			});
 		});
 	}
 	logout() {

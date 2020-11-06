@@ -30,6 +30,9 @@ export class SellMoreService {
 		return this.http.put(`${API}/status/customers/${id}`, form);
 	}
 
+	bug(form) {
+		return this.http.post<any>(`${API}/issue`, form);
+	}
 	save(form) {
 		return this.http.post<any>(`${API}/customers`, form);
 	}
