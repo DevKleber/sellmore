@@ -297,4 +297,41 @@ class Helpers
             return "{$ddd}{$num}";
         }
     }
+
+    public static function useCurl($options, $data = null)
+    {
+        $username = isset($options['username']) ? $options['username'] : '';
+        $password = isset($options['password']) ? $options['password'] : '';
+        $options['token'] = isset($options['token']) ? $options['token'] : '';
+
+        $ch = curl_init();
+
+        $headers = ['Accept:application/json', 'Content-Type:application/json', $options['token']];
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_VERBOSE, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        if ('delete' === $options['post']) {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+            $options['post'] = true;
+        }
+        curl_setopt($ch, CURLOPT_POST, $options['post']);
+        if (null != $data) {
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        }
+        curl_setopt($ch, CURLOPT_URL, $options['url']);
+        if ('' != $username) {
+            curl_setopt($ch, CURLOPT_USERPWD, "{$username}:{$password}");
+        }
+
+        $result = json_decode(curl_exec($ch));
+        $ch_error = curl_error($ch);
+        curl_close($ch);
+        if ($ch_error) {
+            return ['error' => $ch_error];
+        }
+
+        return $result;
+    }
 }
