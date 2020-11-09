@@ -179,3 +179,13 @@ button {
 }
 
 .light { background-color: #fff!important; color: var(--backgroundColor);}
+
+.mat-tooltip {
+    /* your own custom styles here */
+    /* e.g. */
+	/* color: yellow !important; */
+	z-index: 9999!important;
+}
+.swal2-container {
+	z-index: 9999!important;
+  }

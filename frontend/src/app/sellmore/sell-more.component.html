@@ -359,6 +359,15 @@
 					<form [formGroup]="formScript" novalidate>
 						<textarea placeholder="Estratégia" class="textarea" formControlName="strategy">
 						</textarea>
+
+						<div class="input">
+							<div class="inputIcon">
+								<i class="fa fa-link"></i>
+							</div>
+							<div class="inputText">
+								<input type="text" class="w-100" formControlName="url_sale" placeholder="Seu link para venda"/>
+							</div>
+						</div>
 					</form>
 				</div>
 			</div>
@@ -435,7 +444,20 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h2 class="modal-title" id="modalStapcall">
-					<p>Ligando para {{ person.name }}</p>
+					<p>Ligando para {{ person.name }} - {{person.phone | mask: "(00)00000-0000"}}</p>
+					<div class="row">
+
+						<a target="_BLANK" href="https://api.whatsapp.com/send/?phone=55{{person.phone}}&text={{strategy?.url_sale}}" title="Enviar link">
+							<div class="card mr-5">
+								<i class="fab fa-whatsapp"></i>
+							</div>
+						</a>
+						<a target="_BLANK" href="{{strategy?.url_sale}}" title="Fazer a venda.">
+							<div class="card">
+								<i class="fab fa-wpforms"></i>
+							</div>
+						</a>
+					</div>
 				</h2>
 			</div>
 			<div class="modal-body">

@@ -80,6 +80,7 @@ export class SellMoreComponent implements OnInit {
 		});
 		this.formScript = this.formBuilder.group({
 			strategy: this.formBuilder.control('', [Validators.required]),
+			url_sale: this.formBuilder.control(''),
 		});
 		this.formBug = this.formBuilder.group({
 			name: this.formBuilder.control('', [Validators.required]),
@@ -103,6 +104,9 @@ export class SellMoreComponent implements OnInit {
 			this.strategy.staps = res['nl2br'];
 			this.formScript.controls['strategy'].setValue(
 				this.strategy.strategy
+			);
+			this.formScript.controls['url_sale'].setValue(
+				this.strategy.url_sale
 			);
 		});
 	}
@@ -149,6 +153,7 @@ export class SellMoreComponent implements OnInit {
 		this.loaderService.isLoad(true);
 		this.sellMoreService.insertUpdateStrategy(form).subscribe((data) => {
 			this.notificationService.notifySweet('Salvo com sucesso!');
+
 			this.loaderService.isLoad(false);
 		});
 	}
