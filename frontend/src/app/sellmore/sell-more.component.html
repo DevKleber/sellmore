@@ -41,12 +41,14 @@
 	</header>
 	<div class="content pad40">
 		<div class="row flex-direction-column">
-
 			<div class="totalLead">{{statistics?.a}} referidos à contactar</div>
 			<div class="totalOthers">{{statistics?.c}} {{statistics?.c <= 1 ?   'venda': 'vendas'}}</div>
-			<div class="totalOthers">{{statistics?.pc}}
-				{{statistics?.pc <= 1 ? 'problema com cartão' : 'problemas com cartão'}} </div>
 			<div class="totalOthers">{{statistics?.ld}} ligar depois</div>
+			<div class="totalOthers">
+				{{statistics?.pc}}
+				{{statistics?.pc <= 1 ? 'problema com cartão' : 'problemas com cartão'}}
+			</div>
+
 		</div>
 
 		<div class="row flex-wrap">
@@ -257,10 +259,13 @@
 		</div>
 	</div>
 	<footer>
-		<div class="footerItens" (click)="newLead()" data-toggle="modal" data-target="#modalScriptAdd">
+		<div class="footerItens" (click)="newLead()" data-toggle="modal" data-target="#modalCalendar" matTooltip="Agenda">
+			<i class="far fa-calendar-alt"></i>
+		</div>
+		<div class="footerItens" (click)="newLead()" data-toggle="modal" data-target="#modalScriptAdd" matTooltip="Estratégia">
 			<i class="fa fa-receipt"></i>
 		</div>
-		<div class="footerItens" (click)="newLead()" data-toggle="modal" data-target="#modalStickyAdd">
+		<div class="footerItens" (click)="newLead()" data-toggle="modal" data-target="#modalStickyAdd" matTooltip="Novo lead">
 			<i class="fa fa-plus"></i>
 		</div>
 	</footer>
@@ -612,6 +617,24 @@
 				[disabled]="!formBug.valid">
 				Salvar
 			</button>
+		</div>
+	</div>
+</div>
+
+<!-- Modal Calendar -->
+<div class="modal fade" id="modalCalendar" tabindex="-1" aria-labelledby="modalCalendar" aria-hidden="true">
+	<div class="modal-dialog modal-exlg">
+		<div class="modal-header">
+			<h3 class="modal-title">
+				<p>
+					<i class="far fa-calendar-alt"></i> Calendario
+				</p>
+			</h3>
+		</div>
+		<div class="modal-body">
+			<div class="content">
+
+			</div>
 		</div>
 	</div>
 </div>
