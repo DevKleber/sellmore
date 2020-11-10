@@ -5,12 +5,29 @@ import {
 	ElementRef,
 	ViewChild,
 } from '@angular/core';
+import {
+	startOfDay,
+	endOfDay,
+	subDays,
+	addDays,
+	endOfMonth,
+	isSameDay,
+	isSameMonth,
+	addHours,
+} from 'date-fns';
+import {
+	CalendarEvent,
+	CalendarEventAction,
+	CalendarEventTimesChangedEvent,
+	CalendarView,
+} from 'angular-calendar';
 import { SellMoreService } from './sell-more.service';
 import { LoginService } from '../security/login/login.service';
 import { NotificationService } from '../shared/messages/notification.service';
 import { Helper } from '../helper';
 import { API_SITE_PATH_IMG } from '../app.api';
 import Swal from 'sweetalert2';
+import { Subject } from 'rxjs';
 
 import {
 	FormBuilder,
@@ -21,7 +38,7 @@ import {
 import { LoaderService } from '../shared/loader/loader.service';
 
 @Component({
-	selector: 'app-sell-more',
+	selector: '[app-sell-more]',
 	templateUrl: './sell-more.component.html',
 	styleUrls: ['./sell-more.component.css'],
 })
@@ -34,6 +51,7 @@ export class SellMoreComponent implements OnInit {
 		{ id: 'n', status: 'Não tem interesse' },
 		{ id: 'c', status: 'Comprou' },
 	];
+	customersLd: any[] = [];
 	customersImported: any[] = [];
 	person: any = {};
 	parent: any = {};
@@ -47,9 +65,19 @@ export class SellMoreComponent implements OnInit {
 	formScript: FormGroup;
 	formBug: FormGroup;
 	formCategory: FormGroup;
+	formCalendar: FormGroup;
 	img: any = 'assets/img/file/search.svg';
 	selectedFile: File;
 	user: any = {};
+
+	view: CalendarView = CalendarView.Month;
+
+	CalendarView = CalendarView;
+
+	viewDate: Date = new Date();
+	events: CalendarEvent[] = [];
+
+	@ViewChild('openCalendar', { static: true }) openCalendar: ElementRef;
 
 	constructor(
 		private sellMoreService: SellMoreService,
@@ -85,6 +113,12 @@ export class SellMoreComponent implements OnInit {
 		this.formBug = this.formBuilder.group({
 			name: this.formBuilder.control('', [Validators.required]),
 			desc: this.formBuilder.control('', [Validators.required]),
+		});
+		this.formCalendar = this.formBuilder.group({
+			date: this.formBuilder.control('', [Validators.required]),
+			hour: this.formBuilder.control('', [Validators.required]),
+			id_customers: this.formBuilder.control('', [Validators.required]),
+			title: this.formBuilder.control(''),
 		});
 	}
 
@@ -166,7 +200,15 @@ export class SellMoreComponent implements OnInit {
 			this.statistics[status] = value + 1;
 			this.loaderService.isLoad(false);
 			lead.status = status;
-			this.notificationService.notifySweet('Atualizado!');
+			this.notificationService.notifySweet(
+				'Status atualizado para ligar depois. Agora agende um horario para entrar em contato!'
+			);
+
+			if (status == 'ld') {
+				this.openCalendar.nativeElement.click();
+				this.formCalendar.controls['id_customers'].setValue(lead.id);
+				this.formCalendar.controls['title'].setValue(lead.name);
+			}
 		});
 	}
 	callTo(person) {
@@ -294,5 +336,144 @@ export class SellMoreComponent implements OnInit {
 	}
 	logout() {
 		this.loginService.logout();
+	}
+
+	// calendar
+	actions: CalendarEventAction[] = [
+		{
+			label: '<i class="fas fa-fw fa-pencil-alt"></i>',
+			a11yLabel: 'Edit',
+			onClick: ({ event }: { event: CalendarEvent }): void => {
+				this.handleEvent('Edited', event);
+			},
+		},
+		{
+			label: '<i class="fas fa-fw fa-trash-alt"></i>',
+			a11yLabel: 'Delete',
+			onClick: ({ event }: { event: CalendarEvent }): void => {
+				this.events = this.events.filter((iEvent) => iEvent !== event);
+				this.handleEvent('Deleted', event);
+			},
+		},
+	];
+
+	refresh: Subject<any> = new Subject();
+
+	setEvents() {
+		this.events = [];
+		this.sellMoreService.getCustomersLd().subscribe((res) => {
+			this.customersLd = res;
+		});
+		this.sellMoreService.getCalenda().subscribe((res: CalendarEvent[]) => {
+			res['dados'].forEach((element) => {
+				this.events = [
+					...this.events,
+					{
+						start: new Date(element.start),
+						end: new Date(element.end),
+						title: element.title,
+						color: element.color,
+						allDay: false,
+						draggable: true,
+						resizable: {
+							beforeStart: true,
+							afterEnd: true,
+						},
+					},
+				];
+			});
+			console.log(this.events);
+			// this.events = res['dados'];
+			this.loaderService.isLoad(false);
+		});
+	}
+
+	activeDayIsOpen: boolean = true;
+
+	dayClicked({
+		date,
+		events,
+	}: {
+		date: Date;
+		events: CalendarEvent[];
+	}): void {
+		let day = ('0' + date.getDate()).slice(-2);
+		let month = ('0' + (date.getMonth() + 1)).slice(-2);
+		let year = date.getFullYear();
+
+		let dia = `${day}/${month}/${year}`;
+
+		this.formCalendar.controls['date'].setValue(dia);
+		if (isSameMonth(date, this.viewDate)) {
+			if (
+				(isSameDay(this.viewDate, date) &&
+					this.activeDayIsOpen === true) ||
+				events.length === 0
+			) {
+				this.activeDayIsOpen = false;
+			} else {
+				this.activeDayIsOpen = true;
+			}
+			this.viewDate = date;
+		}
+	}
+
+	eventTimesChanged({
+		event,
+		newStart,
+		newEnd,
+	}: CalendarEventTimesChangedEvent): void {
+		this.events = this.events.map((iEvent) => {
+			if (iEvent === event) {
+				return {
+					...event,
+					start: newStart,
+					end: newEnd,
+				};
+			}
+			return iEvent;
+		});
+		this.handleEvent('Dropped or resized', event);
+	}
+
+	handleEvent(action: string, event: CalendarEvent): void {
+		// this.modalData = { event, action };
+		// this.modal.open(this.modalContent, { size: 'lg' });
+	}
+
+	addEvent(): void {
+		this.sellMoreService
+			.saveCalendar(this.formCalendar.value)
+			.subscribe((res) => {
+				this.events = [
+					...this.events,
+					{
+						start: new Date(res['dados'].start),
+						end: new Date(res['dados'].end),
+						title: res['dados'].title,
+						color: res['dados'].color,
+						allDay: false,
+						draggable: true,
+						resizable: {
+							beforeStart: true,
+							afterEnd: true,
+						},
+					},
+				];
+				this.loaderService.isLoad(false);
+				this.notificationService.notifySweet('Agendado com sucesso!');
+			});
+	}
+
+	deleteEvent(eventToDelete: CalendarEvent) {
+		this.events = this.events.filter((event) => event !== eventToDelete);
+	}
+
+	setView(view: CalendarView) {
+		this.view = view;
+	}
+
+	closeOpenMonthViewDay() {
+		this.activeDayIsOpen = false;
 	}
 }

@@ -259,13 +259,16 @@
 		</div>
 	</div>
 	<footer>
-		<div class="footerItens" (click)="newLead()" data-toggle="modal" data-target="#modalCalendar" matTooltip="Agenda">
+		<div class="footerItens" (click)="setEvents()" data-toggle="modal" data-target="#modalCalendar" #openCalendar
+			matTooltip="Agenda">
 			<i class="far fa-calendar-alt"></i>
 		</div>
-		<div class="footerItens" (click)="newLead()" data-toggle="modal" data-target="#modalScriptAdd" matTooltip="Estratégia">
+		<div class="footerItens" (click)="newLead()" data-toggle="modal" data-target="#modalScriptAdd"
+			matTooltip="Estratégia">
 			<i class="fa fa-receipt"></i>
 		</div>
-		<div class="footerItens" (click)="newLead()" data-toggle="modal" data-target="#modalStickyAdd" matTooltip="Novo lead">
+		<div class="footerItens" (click)="newLead()" data-toggle="modal" data-target="#modalStickyAdd"
+			matTooltip="Novo lead">
 			<i class="fa fa-plus"></i>
 		</div>
 	</footer>
@@ -370,7 +373,8 @@
 								<i class="fa fa-link"></i>
 							</div>
 							<div class="inputText">
-								<input type="text" class="w-100" formControlName="url_sale" placeholder="Seu link para venda"/>
+								<input type="text" class="w-100" formControlName="url_sale"
+									placeholder="Seu link para venda" />
 							</div>
 						</div>
 					</form>
@@ -452,7 +456,9 @@
 					<p>Ligando para {{ person.name }} - {{person.phone | mask: "(00)00000-0000"}}</p>
 					<div class="row">
 
-						<a target="_BLANK" href="https://api.whatsapp.com/send/?phone=55{{person.phone}}&text={{strategy?.url_sale}}" title="Enviar link">
+						<a target="_BLANK"
+							href="https://api.whatsapp.com/send/?phone=55{{person.phone}}&text={{strategy?.url_sale}}"
+							title="Enviar link">
 							<div class="card mr-5">
 								<i class="fab fa-whatsapp"></i>
 							</div>
@@ -613,8 +619,7 @@
 			<button type="button" class="btn btn-secondary" data-dismiss="modal">
 				Fechar
 			</button>
-			<button type="button" class="btn btn-primary" (click)="bug(formBug.value)"
-				[disabled]="!formBug.valid">
+			<button type="button" class="btn btn-primary" (click)="bug(formBug.value)" [disabled]="!formBug.valid">
 				Salvar
 			</button>
 		</div>
@@ -632,8 +637,109 @@
 			</h3>
 		</div>
 		<div class="modal-body">
-			<div class="content">
 
+			<div class="calendarOptions">
+				<div class="calendarDate">
+					<button class="btn btn-secondary" style="margin:5px; padding:10px" mwlCalendarPreviousView
+						[view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
+						Anterior
+					</button>
+					<button class="btn btn-secondary" style="margin:5px; padding:10px" mwlCalendarToday
+						[(viewDate)]="viewDate">
+						Hoje
+					</button>
+					<button class="btn btn-secondary" style="margin:5px; padding:10px" mwlCalendarNextView [view]="view"
+						[(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
+						Próximo
+					</button>
+				</div>
+				<div class="calendarDateChosen">
+					<h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+				</div>
+				<div class="calendarDateType">
+					<div class="row flex-direction-row">
+						<button class="btn btn-secondary" style="margin:5px; padding:10px"
+							(click)="setView(CalendarView.Month)" [class.active]="view === CalendarView.Month">
+							Mês
+						</button>
+						<button class="btn btn-secondary" style="margin:5px; padding:10px"
+							(click)="setView(CalendarView.Week)" [class.active]="view === CalendarView.Week">
+							Semana
+						</button>
+						<button class="btn btn-secondary" style="margin:5px; padding:10px"
+							(click)="setView(CalendarView.Day)" [class.active]="view === CalendarView.Day">
+							Dia
+						</button>
+					</div>
+				</div>
+			</div>
+			<br />
+			<div [ngSwitch]="view">
+				<mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events"
+					[refresh]="refresh" [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)"
+					(eventClicked)="handleEvent('Clicked', $event.event)"
+					(eventTimesChanged)="eventTimesChanged($event)">
+				</mwl-calendar-month-view>
+				<mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events"
+					[refresh]="refresh" (eventClicked)="handleEvent('Clicked', $event.event)"
+					(eventTimesChanged)="eventTimesChanged($event)">
+				</mwl-calendar-week-view>
+				<mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate" [events]="events"
+					[refresh]="refresh" (eventClicked)="handleEvent('Clicked', $event.event)"
+					(eventTimesChanged)="eventTimesChanged($event)">
+				</mwl-calendar-day-view>
+			</div>
+
+			<!-- Everything you see below is just for the demo, you don't need to include it in your app -->
+
+			<br /><br /><br />
+
+			<!-- <div class="" *ngIf="formCalendar.value.id_customers > 0"> -->
+			<div class="">
+				<h3> Novo agendamento: clique no dia e informe um horario </h3>
+				<h2> {{formCalendar.value.title}}</h2>
+
+				<div class="card-light">
+					<form [formGroup]="formCalendar" novalidate>
+						<div class="row">
+							<div class="input" style="margin-right: 25px;">
+								<div class="inputIcon">
+									<i class="fa fa-calendar-alt"></i>
+								</div>
+								<select formControlName="id_customers" class="w-100">
+									<option value="" selected>
+										Referente
+									</option>
+									<option *ngFor="let item of customersLd" [value]="item.id">
+										{{ item?.name }} - {{ item?.phone }}
+									</option>
+								</select>
+							</div>
+							<div class="input" style="margin-right: 25px;">
+								<div class="inputIcon">
+									<i class="fa fa-calendar-alt"></i>
+								</div>
+								<div class="inputText">
+									<input type="text" mask="dX/M0/0000" [showMaskTyped] = "true" class="w-100" formControlName="date" placeholder="Dia" />
+								</div>
+							</div>
+							<div class="input">
+								<div class="inputIcon">
+									<i class="fa fa-hourglass-start"></i>
+								</div>
+								<div class="inputText">
+									<input type="text"  mask="Hh:m0:s0" [showMaskTyped] = "true" class="w-100" formControlName="hour" placeholder="Hora" />
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary" (click)="addEvent()"
+								[disabled]="!formCalendar.valid">
+								Salvar
+							</button>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>

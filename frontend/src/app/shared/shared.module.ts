@@ -35,6 +35,9 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+
 import { NgxMaskModule, IConfig } from 'ngx-mask';
 
 import ptBr from '@angular/common/locales/pt';
@@ -64,6 +67,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		MatMenuModule,
 		PerfectScrollbarModule,
 		NgxMaskModule.forRoot(),
+		CalendarModule.forRoot({
+			provide: DateAdapter,
+			useFactory: adapterFactory,
+		}),
 	],
 	exports: [
 		SafeHtml,
@@ -81,6 +88,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		MatMenuModule,
 		PerfectScrollbarModule,
 		NgxMaskModule,
+		CalendarModule,
 	],
 })
 export class SharedModule {

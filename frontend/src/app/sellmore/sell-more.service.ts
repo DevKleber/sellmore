@@ -14,6 +14,15 @@ export class SellMoreService {
 
 	constructor(private http: HttpClient, private router: Router) {}
 
+	getCalenda(search?: string): Observable<any[]> {
+		return this.http.get<any[]>(`${API}/calendar`);
+	}
+	saveCalendar(form) {
+		return this.http.post<any>(`${API}/calendar`, form);
+	}
+	getCustomersLd(search?: string): Observable<any[]> {
+		return this.http.get<any[]>(`${API}/getCustomersLd`);
+	}
 	getCustomers(search?: string): Observable<any[]> {
 		return this.http.get<any[]>(`${API}/customers`);
 	}

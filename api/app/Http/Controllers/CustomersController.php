@@ -18,6 +18,22 @@ class CustomersController extends Controller
         return response($arCustomers);
     }
 
+    public function getCustomersLd()
+    {
+        $arCustomers = \App\Customers::where('id_usuario', auth('api')->user()->id)
+            ->where('bo_ativo', true)
+            ->where('status', 'ld')
+            ->orderBy('id')
+            ->get()
+    ;
+
+        if (!$arCustomers) {
+            return response(['response' => 'Não existe Customers'], 200);
+        }
+
+        return response($arCustomers);
+    }
+
     public function getAllParents($id)
     {
         $id_usuario = auth('api')->user()->id;

@@ -289,3 +289,31 @@ div.status i {
 .parentDesc {
 	font-size: 1em;
 }
+
+/* Calendar */
+.calendarOptions{
+	display: flex;
+	width: 100%;
+	/* align-items: center; */
+	justify-content: center;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.calendarDate{
+	width: 300px;
+	display: flex;
+	flex-direction: row;
+}
+.calendarDateChosen{
+	width: 300px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.calendarDateType{
+	display: flex;
+	width: 300px;
+	justify-content: flex-end;
+}
+/* End Calendar */
