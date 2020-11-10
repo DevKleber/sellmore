@@ -33,3 +33,16 @@
 .mat-menu-content button a:hover {
 	color: var(--backgroundColor);
 }
+
+/* calendar */
+.cal-month-view .cal-open-day-events {
+    color:var(--backgroundSecondary);
+    background-color:  var(--primary);
+	box-shadow: none!important;
+	font-weight: 500;
+    /* box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, 0.5); */
+}
+mwl-calendar-event-actions.ng-tns-c119-3 span.cal-event-actions.ng-star-inserted a{
+	color: #fff!important;
+}
+/* end calendar */
