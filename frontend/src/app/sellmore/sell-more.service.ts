@@ -26,7 +26,7 @@ export class SellMoreService {
 		if (search) {
 			params = new HttpParams().set('q', search);
 		}
-		return this.http.get<any[]>(`${API}/search/`, { params: params });
+		return this.http.get<any[]>(`${API}/search`, { params: params });
 	}
 	getCustomersLd(search?: string): Observable<any[]> {
 		return this.http.get<any[]>(`${API}/getCustomersLd`);
