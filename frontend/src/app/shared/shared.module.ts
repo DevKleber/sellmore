@@ -18,10 +18,10 @@ import { AuthRefreshtokenInterceptor } from '../security/auth-refresh-token.inte
 import { BrowserModule } from '@angular/platform-browser';
 
 // pipes
-import { EncryptPipe } from '../pipes/encrypt.pipe';
 
 import { Helper } from '../helper';
 
+import { BooleanMessagePipe } from '../pipes/boolean-message.pipe';
 import { SafeHtml } from '../pipes/safe-html.pipe';
 import { HelpersPipe } from '../pipes/helpers.pipe';
 import { Nl2BrPipe } from '../pipes/nl2br.pipe';
@@ -53,8 +53,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		InputComponent,
 		RadioComponent,
 		SnackbarComponent,
-		EncryptPipe,
 		HelpersPipe,
+		BooleanMessagePipe,
 		Nl2BrPipe,
 	],
 
@@ -80,8 +80,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		FormsModule,
 		ReactiveFormsModule,
 		SnackbarComponent,
-		EncryptPipe,
 		HelpersPipe,
+		BooleanMessagePipe,
 		Nl2BrPipe,
 		NgSelectModule,
 		MatTooltipModule,

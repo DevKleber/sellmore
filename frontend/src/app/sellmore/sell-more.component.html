@@ -5,14 +5,18 @@
 			<!-- <img src="/assets/img/logo/logo.svg" alt="" srcset="" width="56px" /> -->
 		</div>
 		<div class="search">
-			<div class="input" style="width: 490px !important">
-				<div class="inputIcon">
-					<i class="fa fa-search"></i>
+			<form [formGroup]='searchForm'>
+
+				<div class="input" style="width: 490px !important">
+					<div class="inputIcon">
+						<i class="fa fa-search"></i>
+					</div>
+
+					<div class="inputText">
+						<input type="text" class="w-100" placeholder="Buscar" formControlName="searchControl" />
+					</div>
 				</div>
-				<div class="inputText">
-					<input type="text" class="w-100" placeholder="Buscar" />
-				</div>
-			</div>
+			</form>
 		</div>
 		<button class="btn-secondary" style="margin-top: 0!important; padding: 10px 32px!important; margin-right: 5px;"
 			data-toggle="modal" data-target="#modalBug">
@@ -39,7 +43,60 @@
 		</mat-menu>
 
 	</header>
-	<div class="content pad40">
+	<div class="content pad40" *ngIf="customersFilter.length">
+		<div class="totalLead">Filtro: {{searchForm.value.searchControl}}</div>
+		<div class="display-row">
+			<div class="row customersFilter" *ngFor="let item of customersFilter" >
+				<div class="row">
+					<div class="filterName">
+						<div class="filterNameRow">
+							{{ item.name }}
+							<small class="filtercreated_at">{{item.bo_ativo | booleanMessage:'bo_ativo'}}</small>
+						</div>
+						<div class="filterPhone"> {{ item.phone | mask: "(00)00000-0000" }} </div>
+					</div>
+					<div class="menuFilter">
+						<i class="fa fa-bars icon-finished cursor-pointer" style="margin-left: 15px" matTooltip="Menu"
+							[matMenuTriggerFor]="menu"></i>
+						<mat-menu #menu="matMenu">
+							<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
+								data-target="#modalImportContact">
+								<i class="fab fa-whatsapp"></i> Importar contatos
+							</button>
+							<button mat-menu-item>
+								<a target="_BLANK" href="https://wa.me/55{{item.phone}}">
+									<i class="fab fa-whatsapp"></i>
+									Abrir no Whatsapp
+								</a>
+							</button>
+							<button mat-menu-item (click)="updateOpenForm(item)" data-toggle="modal"
+								data-target="#modalStickyAdd">
+								<i class="fas fa-edit"></i> Alterar
+							</button>
+							<button mat-menu-item (click)="inativar(item)">
+								<i class="fas fa-eye-slash"></i> Arquivar
+							</button>
+							<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
+								data-target="#modalStickyAdd">
+								<i class="fa fa-chalkboard-teacher"></i>
+								Tornar Lead
+							</button>
+							<button mat-menu-item (click)="callTo(item)" data-toggle="modal" data-target="#modalCall">
+								<i class="fa fa-chalkboard-teacher"></i>
+								Ligar
+							</button>
+						</mat-menu>
+					</div>
+				</div>
+
+				<div class="filterstatus"> <strong>Status:</strong> {{item.status | helpers:'statusString' }}</div>
+
+				<div class="filterbo_ativo"> <strong>Criado em:</strong> {{item.created_at  | date: 'fullDate'}}</div>
+
+			</div>
+		</div>
+	</div>
+	<div class="content pad40" *ngIf="!customersFilter.length">
 		<div class="row flex-direction-column">
 			<div class="totalLead">{{statistics?.a}} referidos à contactar</div>
 			<div class="totalOthers">{{statistics?.c}} {{statistics?.c <= 1 ?   'venda': 'vendas'}}</div>
@@ -311,7 +368,7 @@
 									mask="(00)00000-0000" />
 							</div>
 						</div>
-						<textarea placeholder="Observação" class="textarea" formControlName="observation">
+						<textarea placeholder="Observação" class="textarea" formControlName="observation" style="height: 265px;">
 						</textarea>
 						<div class="input">
 							<div class="inputIcon">
@@ -720,7 +777,8 @@
 									<i class="fa fa-calendar-alt"></i>
 								</div>
 								<div class="inputText">
-									<input type="text" mask="dX/M0/0000" [showMaskTyped] = "true" class="w-100" formControlName="date" placeholder="Dia" />
+									<input type="text" mask="dX/M0/0000" [showMaskTyped]="true" class="w-100"
+										formControlName="date" placeholder="Dia" />
 								</div>
 							</div>
 							<div class="input">
@@ -728,7 +786,8 @@
 									<i class="fa fa-hourglass-start"></i>
 								</div>
 								<div class="inputText">
-									<input type="text"  mask="Hh:m0:s0" [showMaskTyped] = "true" class="w-100" formControlName="hour" placeholder="Hora" />
+									<input type="text" mask="Hh:m0:s0" [showMaskTyped]="true" class="w-100"
+										formControlName="hour" placeholder="Hora" />
 								</div>
 							</div>
 						</div>

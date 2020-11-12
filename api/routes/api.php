@@ -20,6 +20,7 @@ Route::group(['middleware' => 'apiJwt'], function () {
 
     Route::resource('calendar', 'CalendarController');
 
+    Route::get('search', 'CustomersController@customerSearch');
     Route::resource('customers', 'CustomersController');
     Route::get('getCustomersLd', 'CustomersController@getCustomersLd');
     Route::get('parents/customers/{id}', 'CustomersController@getAllParents');

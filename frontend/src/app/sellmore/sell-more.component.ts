@@ -5,16 +5,7 @@ import {
 	ElementRef,
 	ViewChild,
 } from '@angular/core';
-import {
-	startOfDay,
-	endOfDay,
-	subDays,
-	addDays,
-	endOfMonth,
-	isSameDay,
-	isSameMonth,
-	addHours,
-} from 'date-fns';
+import { isSameDay, isSameMonth } from 'date-fns';
 import {
 	CalendarEvent,
 	CalendarEventAction,
@@ -28,6 +19,7 @@ import { Helper } from '../helper';
 import { API_SITE_PATH_IMG } from '../app.api';
 import Swal from 'sweetalert2';
 import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 import {
 	FormBuilder,
@@ -44,6 +36,7 @@ import { LoaderService } from '../shared/loader/loader.service';
 })
 export class SellMoreComponent implements OnInit {
 	customers: any[] = [];
+	customersFilter: any[] = [];
 
 	status: any[] = [
 		{ id: 'pc', status: 'Problemas com cartão' },
@@ -61,6 +54,10 @@ export class SellMoreComponent implements OnInit {
 
 	path: string = API_SITE_PATH_IMG;
 	isDevMode: boolean = isDevMode();
+
+	searchForm: FormGroup;
+	searchControl: FormControl;
+
 	form: FormGroup;
 	formScript: FormGroup;
 	formBug: FormGroup;
@@ -94,6 +91,21 @@ export class SellMoreComponent implements OnInit {
 		// this.getCategories();
 		this.initialForms();
 		this.user = this.loginService.getUser();
+		this.find();
+	}
+	find() {
+		this.searchControl.valueChanges
+			.pipe(
+				debounceTime(400), //espera 400ms entre dois eventos para fazer a busca novamente
+				distinctUntilChanged(), // só vai fazer a busca se o valor for diferente do valor anterior
+				switchMap((searchTerm) =>
+					this.sellMoreService.customersFind(searchTerm)
+				)
+			)
+			.subscribe((res) => {
+				this.customersFilter = res;
+				this.loaderService.isLoad(false);
+			});
 	}
 
 	initialForms() {
@@ -119,6 +131,11 @@ export class SellMoreComponent implements OnInit {
 			hour: this.formBuilder.control('', [Validators.required]),
 			id_customers: this.formBuilder.control('', [Validators.required]),
 			title: this.formBuilder.control(''),
+		});
+
+		this.searchControl = this.formBuilder.control('');
+		this.searchForm = this.formBuilder.group({
+			searchControl: this.searchControl,
 		});
 	}
 

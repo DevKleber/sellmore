@@ -15,11 +15,28 @@ export class HelpersPipe implements PipeTransform {
 				return this.isDevMode(value, args1);
 				break;
 			}
+			case 'statusString': {
+				return this.statusString(value);
+				break;
+			}
 			default: {
 				break;
 			}
 		}
 		return texto;
+	}
+	statusString(value) {
+		const status = [
+			{ id: 'pc', status: 'Problemas com cartão' },
+			{ id: 'ld', status: 'Ligar depois' },
+			{ id: 'n', status: 'Não tem interesse' },
+			{ id: 'c', status: 'Comprou' },
+			{ id: 'a', status: 'Não entrou em contato' },
+		];
+		var result = status.filter(function (el) {
+			return el.id == value;
+		});
+		return result[0].status;
 	}
 
 	isDevMode(value, isdev) {

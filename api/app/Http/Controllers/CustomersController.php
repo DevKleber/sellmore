@@ -18,6 +18,25 @@ class CustomersController extends Controller
         return response($arCustomers);
     }
 
+    public function customerSearch(Request $request)
+    {
+        $query = Helpers::removerCaracteresPhone($request->input('q'));
+        if (empty($query)) {
+            return response([]);
+        }
+        $id_usuario = auth('api')->user()->id;
+
+        return \App\Customers::where('id_usuario', $id_usuario)
+            ->where(function ($q) use ($query) {
+                $q->where('name', 'LIKE', '%'.$query.'%')
+                    ->orWhere('phone', 'LIKE', '%'.$query.'%')
+                ;
+            })
+            ->orderBy('name')
+            ->get()
+        ;
+    }
+
     public function getCustomersLd()
     {
         $arCustomers = \App\Customers::where('id_usuario', auth('api')->user()->id)

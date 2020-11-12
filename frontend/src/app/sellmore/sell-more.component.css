@@ -83,6 +83,45 @@
 	font-weight: bold;
 	font-size: 17px;
 }
+.display-row{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+
+}
+.customersFilter{
+	background-color: var(--backgroundComponents);
+	width: 422px;
+	margin: 15px;
+	padding: 25px;
+	border-radius: 10px;
+	color: #efefed;
+	flex-direction: column;
+	/* flex: 1; */
+}
+.menuFilter{
+	width: 50px;
+}
+.filterName{
+	color: var(--backgroundSecondary) !important;
+	font-size: 25px;
+	font-weight: bold;
+	display: flex;
+	flex: 1;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+.filterPhone{
+	font-size: 15px;
+	color: #efefed;
+	margin-bottom: 15px;
+
+}
+.filtercreated_at{
+	font-size: 12px;
+	color: #efefed;
+}
 
 .customers {
 	width: 422px;

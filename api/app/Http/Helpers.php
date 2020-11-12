@@ -73,6 +73,11 @@ class Helpers
         return $hour.':'.$minute.':'.$seconds;
     }
 
+    public static function removerCaracteresPhone($conteudo)
+    {
+        return str_replace(['(', ')', '-'], '', $conteudo);
+    }
+
     public static function removerCaracteresEspeciaisEspacos($conteudo)
     {
         return str_replace(['(', ')', '[', ']', '{', '}', '-', ',', '.', '/', '\\', ';', ':', '?', '!', ' ', '°', 'º', "'"], '', $conteudo);
