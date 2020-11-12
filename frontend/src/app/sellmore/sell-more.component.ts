@@ -232,6 +232,10 @@ export class SellMoreComponent implements OnInit {
 		this.loaderService.isLoad(true);
 		this.updateOpenForm(person);
 		this.person = person;
+		if (!person.id_parent) {
+			this.loaderService.isLoad(false);
+			return;
+		}
 		this.sellMoreService
 			.getAllParents(person.id_parent)
 			.subscribe((res) => {
