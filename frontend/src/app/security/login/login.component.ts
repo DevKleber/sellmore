@@ -73,9 +73,7 @@ export class LoginComponent implements OnInit {
 				(user) => {
 					console.log(user.me['nome']);
 					location.replace('/');
-					this.notificationService.notifySweet(
-						`Bem vindo, ${user.me['nome']}`
-					);
+					// this.notificationService.notifySweet( `Bem vindo, ${user.me['nome']}` );
 					this.loaderService.isLoad(false);
 				},
 
