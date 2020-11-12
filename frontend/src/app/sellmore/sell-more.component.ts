@@ -301,7 +301,6 @@ export class SellMoreComponent implements OnInit {
 				return true;
 			}
 		});
-		console.log(isLead);
 
 		Swal.fire({
 			title: `Arquivar ${referido.name} ?`,
