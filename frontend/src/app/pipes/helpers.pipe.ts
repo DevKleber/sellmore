@@ -31,7 +31,7 @@ export class HelpersPipe implements PipeTransform {
 			{ id: 'ld', status: 'Ligar depois' },
 			{ id: 'n', status: 'Não tem interesse' },
 			{ id: 'c', status: 'Comprou' },
-			{ id: 'a', status: 'Não entrou em contato' },
+			{ id: 'a', status: 'Aguardando seu telefonema' },
 		];
 		var result = status.filter(function (el) {
 			return el.id == value;

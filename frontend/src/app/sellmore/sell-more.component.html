@@ -13,7 +13,7 @@
 					</div>
 
 					<div class="inputText">
-						<input type="text" class="w-100" placeholder="Buscar" formControlName="searchControl" />
+						<input type="text" (keydown)="isSearch=true" class="w-100" placeholder="Buscar" formControlName="searchControl" />
 					</div>
 				</div>
 			</form>
@@ -43,8 +43,16 @@
 		</mat-menu>
 
 	</header>
-	<div class="content pad40" *ngIf="customersFilter.length">
-		<div class="totalLead">Filtro: {{searchForm.value.searchControl}}</div>
+	<div class="content pad40" *ngIf="customersFilter.length || searchForm.value.searchControl.length">
+		<div class="totalFilter">Filtro: {{searchForm.value.searchControl}} <span class="totalRegisterFilter">{{customersFilter.length}}</span></div>
+
+		<div class="" *ngIf="!customersFilter.length && !isSearch">
+			<div class="row center-center" style="flex-direction: column;">
+				<img src="/assets/img/system/404-1.png" alt="" width="500px">
+				<h2>Nenhum resultado encontrado</h2>
+			</div>
+		</div>
+
 		<div class="display-row">
 			<div class="row customersFilter" *ngFor="let item of customersFilter" >
 				<div class="row">
@@ -96,7 +104,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="content pad40" *ngIf="!customersFilter.length">
+	<div class="content pad40" *ngIf="!customersFilter.length && !searchForm.value.searchControl.length">
 		<div class="row flex-direction-column">
 			<div class="totalLead">{{statistics?.a}} referidos à contactar</div>
 			<div class="totalOthers">{{statistics?.c}} {{statistics?.c <= 1 ?   'venda': 'vendas'}}</div>

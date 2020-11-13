@@ -52,6 +52,8 @@ export class SellMoreComponent implements OnInit {
 	strategy: any = {};
 	statistics: any = {};
 
+	isSearch: boolean = true;
+
 	path: string = API_SITE_PATH_IMG;
 	isDevMode: boolean = isDevMode();
 
@@ -105,6 +107,7 @@ export class SellMoreComponent implements OnInit {
 			.subscribe((res) => {
 				this.customersFilter = res;
 				this.loaderService.isLoad(false);
+				this.isSearch = false;
 			});
 	}
 

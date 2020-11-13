@@ -356,3 +356,26 @@ div.status i {
 	justify-content: flex-end;
 }
 /* End Calendar */
+
+
+/* filter */
+.totalFilter{
+	display: flex;
+	font-weight: bold;
+	font-size: 28px;
+	align-items: center;
+}
+.totalRegisterFilter{
+	display: flex;
+	width: 40px;
+	height: 40px;
+	border-radius: 20px;
+	background-color: var(--backgroundSecondary);
+	color: var(--backgroundSecondaryColor);
+	align-items: center;
+	justify-content: center;
+	margin-left: 5px;
+	font-size: 20px;
+	font-weight: bold;
+}
+/* end filter */
