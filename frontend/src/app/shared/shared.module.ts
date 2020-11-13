@@ -39,6 +39,8 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 import { NgxMaskModule, IConfig } from 'ngx-mask';
+import { LottieModule } from 'ngx-lottie';
+import player from 'lottie-web';
 
 import ptBr from '@angular/common/locales/pt';
 registerLocaleData(ptBr);
@@ -46,6 +48,9 @@ registerLocaleData(ptBr);
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 	suppressScrollX: true,
 };
+export function playerFactory() {
+	return player;
+}
 
 @NgModule({
 	declarations: [
@@ -71,6 +76,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 			provide: DateAdapter,
 			useFactory: adapterFactory,
 		}),
+		LottieModule.forRoot({ player: playerFactory }),
 	],
 	exports: [
 		SafeHtml,
@@ -89,6 +95,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		PerfectScrollbarModule,
 		NgxMaskModule,
 		CalendarModule,
+		LottieModule,
 	],
 })
 export class SharedModule {

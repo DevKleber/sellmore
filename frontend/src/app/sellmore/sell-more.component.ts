@@ -20,6 +20,8 @@ import { API_SITE_PATH_IMG } from '../app.api';
 import Swal from 'sweetalert2';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { AnimationItem } from 'lottie-web';
+import { AnimationOptions } from 'ngx-lottie';
 
 import {
 	FormBuilder,
@@ -53,6 +55,7 @@ export class SellMoreComponent implements OnInit {
 	statistics: any = {};
 
 	isSearch: boolean = true;
+	showCongrats: boolean = false;
 
 	path: string = API_SITE_PATH_IMG;
 	isDevMode: boolean = isDevMode();
@@ -78,6 +81,24 @@ export class SellMoreComponent implements OnInit {
 
 	@ViewChild('openCalendar', { static: true }) openCalendar: ElementRef;
 
+	options: AnimationOptions = {
+		path: '/assets/animations/json/results.json',
+	};
+
+	optionsSold: AnimationOptions = {
+		path: '/assets/animations/json/congrats.json',
+		autoplay: true,
+		loop: false,
+	};
+	congrats() {
+		this.showCongrats = true;
+		setTimeout(
+			function () {
+				this.showCongrats = false;
+			}.bind(this),
+			3000
+		);
+	}
 	constructor(
 		private sellMoreService: SellMoreService,
 		private loginService: LoginService,
@@ -220,14 +241,18 @@ export class SellMoreComponent implements OnInit {
 			this.statistics[status] = value + 1;
 			this.loaderService.isLoad(false);
 			lead.status = status;
-			this.notificationService.notifySweet(
-				'Status atualizado para ligar depois. Agora agende um horario para entrar em contato!'
-			);
 
-			if (status == 'ld') {
+			if (status == 'c') {
+				this.congrats();
+			} else if (status == 'ld') {
+				this.notificationService.notifySweet(
+					'Status atualizado para ligar depois. Agora agende um horario para entrar em contato!'
+				);
 				this.openCalendar.nativeElement.click();
 				this.formCalendar.controls['id_customers'].setValue(lead.id);
 				this.formCalendar.controls['title'].setValue(lead.name);
+			} else {
+				this.notificationService.notifySweet('Status salvo!');
 			}
 		});
 	}

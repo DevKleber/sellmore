@@ -48,7 +48,7 @@
 
 		<div class="" *ngIf="!customersFilter.length && !isSearch">
 			<div class="row center-center" style="flex-direction: column;">
-				<img src="/assets/img/system/404-1.png" alt="" width="500px">
+				<ng-lottie [options]="options" style="width: 800px;" ></ng-lottie>
 				<h2>Nenhum resultado encontrado</h2>
 			</div>
 		</div>
@@ -810,4 +810,8 @@
 			</div>
 		</div>
 	</div>
+</div>
+
+<div class="row" style="position: fixed; top: 0;width: 100%; height: 100%;" *ngIf="showCongrats">
+	<ng-lottie [options]="optionsSold" class="center-center" (complete)="showCongrats=false" style="width: 100%;"></ng-lottie>
 </div>
