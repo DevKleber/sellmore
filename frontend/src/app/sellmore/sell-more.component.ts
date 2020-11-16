@@ -41,7 +41,7 @@ export class SellMoreComponent implements OnInit {
 	customers: any[] = [];
 	customersFilter: any[] = [];
 
-	nu_telefone: string = '';
+	phone: string = '';
 	bo_whatsapp: boolean = true;
 
 	status: any[] = [
@@ -141,7 +141,6 @@ export class SellMoreComponent implements OnInit {
 		this.form = this.formBuilder.group({
 			id: this.formBuilder.control(null),
 			name: this.formBuilder.control('', [Validators.required]),
-			phone: this.formBuilder.control('', [Validators.required]),
 			address: this.formBuilder.control(''),
 			status: this.formBuilder.control(''),
 			observation: this.formBuilder.control(''),
@@ -168,21 +167,21 @@ export class SellMoreComponent implements OnInit {
 			searchControl: this.searchControl,
 		});
 	}
-	addFKPhone(nu_telefone = this.nu_telefone, bo_whatsapp = this.bo_whatsapp) {
+	addFKPhone(phone = this.phone, bo_whatsapp = this.bo_whatsapp) {
 		let items = this.form.get('telefones') as FormArray;
-		items.push(this.telefoneItem(nu_telefone, bo_whatsapp));
+		items.push(this.telefoneItem(phone, bo_whatsapp));
 		this.closeModalPhone.nativeElement.click();
-		this.nu_telefone = '';
+		this.phone = '';
 		this.bo_whatsapp = false;
 	}
 	deleteTelefone(i: number) {
 		const control = <FormArray>this.form.controls['telefones'];
 		control.removeAt(i);
 	}
-	telefoneItem(nu_telefone = '', bo_whatsapp = false): FormGroup {
-		if (nu_telefone != '') {
+	telefoneItem(phone = '', bo_whatsapp = false): FormGroup {
+		if (phone != '') {
 			return this.formBuilder.group({
-				nu_telefone: this.formBuilder.control(nu_telefone),
+				phone: this.formBuilder.control(phone),
 				bo_whatsapp: this.formBuilder.control(bo_whatsapp),
 			});
 		}
@@ -214,24 +213,20 @@ export class SellMoreComponent implements OnInit {
 	updateOpenForm(person) {
 		this.form.controls['id'].setValue(person.id);
 		this.form.controls['name'].setValue(person.name);
-		this.form.controls['phone'].setValue(person.phone);
+		// this.form.controls['phone'].setValue(person.phone);
 		this.form.controls['address'].setValue(person.address);
 		this.form.controls['status'].setValue(person.status);
 		this.form.controls['observation'].setValue(person.observation);
 		this.form.controls['id_parent'].setValue(person.id_parent);
-		let ar = [
-			{ nu_telefone: '64999967567', bo_whatsapp: true },
-			{ nu_telefone: '64999967561', bo_whatsapp: true },
-			{ nu_telefone: '64999967562', bo_whatsapp: true },
-			{ nu_telefone: '64999967563', bo_whatsapp: true },
-			{ nu_telefone: '64999967564', bo_whatsapp: true },
-		];
 
-		ar.forEach((element) => {
-			console.log(element);
-			this.addFKPhone(element.nu_telefone, element.bo_whatsapp);
+		let items = this.form.get('telefones') as FormArray;
+		if (items.length) {
+			items.clear();
+		}
+
+		person['phones'].forEach((element) => {
+			this.addFKPhone(element.phone, element.bo_whatsapp);
 		});
-		// load phone number
 	}
 
 	update(form, feedback = true, updateList = true) {
@@ -315,7 +310,6 @@ export class SellMoreComponent implements OnInit {
 		this.customersImported = [];
 		this.clearForm();
 		this.form.controls['id_parent'].setValue(parent.id);
-		console.log(parent);
 	}
 	newLead() {
 		this.clearForm();
@@ -325,10 +319,14 @@ export class SellMoreComponent implements OnInit {
 	clearForm() {
 		this.form.controls['id'].setValue('');
 		this.form.controls['name'].setValue('');
-		this.form.controls['phone'].setValue('');
+		// this.form.controls['phone'].setValue('');
 		this.form.controls['address'].setValue('');
 		this.form.controls['status'].setValue('');
 		this.form.controls['observation'].setValue('');
+		let items = this.form.get('telefones') as FormArray;
+		if (items.length) {
+			items.clear();
+		}
 	}
 
 	onFileChanged(event) {

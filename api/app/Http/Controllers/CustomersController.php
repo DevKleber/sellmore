@@ -44,13 +44,18 @@ class CustomersController extends Controller
             ->where('status', 'ld')
             ->orderBy('id')
             ->get()
-    ;
+        ;
+        $ar = [];
+        foreach ($arCustomers as $key => $value) {
+            $ar[$key] = $value;
+            $ar[$key]['phones'] = \App\Phone::where('id_customers', $value->id)->get();
+        }
 
         if (!$arCustomers) {
             return response(['response' => 'Não existe Customers'], 200);
         }
 
-        return response($arCustomers);
+        return response($ar);
     }
 
     public function getAllParents($id)
@@ -101,71 +106,69 @@ class CustomersController extends Controller
                 unset($phone[$numberToSavePhoneNumber]);
             }
 
-            // $pais = substr($number, 0, 2); //numero do pais
-            // $number = str_replace($pais, '', $number);
-
             $pais = substr($number, 0, 2); //numero do pais
             $number = substr($number, 2);
 
-            $anotherNumbersWhatsapp = implode(',', $whatsapp ?? null);
-            $anotherNumbersPhone = implode(',', $phone ?? null);
-
-            $observationWhatsapp = !empty($anotherNumbersWhatsapp) ? 'Whatsapp: '.$anotherNumbersWhatsapp : '';
-            $observationPhone = !empty($anotherNumbersPhone) ? 'Outros: '.$anotherNumbersPhone : '';
-            $obs = !empty($observationWhatsapp) || !empty($observationPhone) ? ' Outros números: ' : '';
-
             $ar['name'] = Helpers::remove_emoji($value['nome']); // removendo emoji
-            $ar['phone'] = $number;
             $ar['address'] = null;
             $ar['status'] = 'a';
             $ar['id_usuario'] = $id_usuario;
             $ar['id_parent'] = $id;
-            $ar['observation'] = "{$obs} {$observationWhatsapp} {$observationPhone}";
+            $ar['observation'] = '';
 
-            $customers = \App\Customers::where('phone', $ar['phone'])->where('id_usuario', $id_usuario)->get();
-            if ($customers->count()) {
-                $customersArray = $customers->toArray();
-                $indicadoPor = \App\Customers::where('id', $customersArray[0]['id_parent'])->first()->name;
-                $duplicado[] = "{$value['nome']} já indicado pelo(a) {$indicadoPor}";
-
-                continue;
+            try {
+                \App\Customers::verifyCustomerExist($number, $id_usuario);
+            } catch (\Throwable $th) {
+                return  response(['response' => $th->getMessage()], 400);
             }
 
-            $imported[] = \App\Customers::create($ar);
-            if (!$imported) {
-                \DB::rollBack();
+            $arPhones['bo_whatsapp'] = null;
+            $arPhones['id_customers'] = $id;
+            $arPhones['phone'] = $number;
 
-                return  response(['response' => 'Erro ao importar contatos'], 400);
+            try {
+                \App\Customers::insertFkPhone($request['telefones'], $arPhones);
+            } catch (\Throwable $th) {
+                return  response(['response' => $th->getMessage()], 400);
             }
+
+            // $imported[] = \App\Customers::create($ar);
+            // if (!$imported) {
+            //     \DB::rollBack();
+
+            //     return  response(['response' => 'Erro ao importar contatos'], 400);
+            // }
         }
-        // \DB::rollBack();
-        \DB::commit();
+        \DB::rollBack();
+        // \DB::commit();
 
         return ['res' => $imported, 'repetidos' => $duplicado];
     }
 
     public function store(Request $request)
     {
+        $id_usuario = auth('api')->user()->id;
+        $request['id_usuario'] = $id_usuario;
         $request['status'] = ('' == $request['status'] || null == $request['status']) ? 'a' : $request['status'];
-        $customers = \App\Customers::where('phone', $request['phone'])->get();
-        if ($customers->count()) {
-            $customersArray = $customers->toArray();
 
-            $indicadoPor = \App\Customers::where('id', $customersArray[0]['id_parent'])->first();
-            if (!$indicadoPor) { // indico por um lead que não tem lead.
-                return  response(['response' => "Número de telefone já existe ({$customersArray[0]['name']})"], 400);
-            }
-
-            return  response(
-                ['response' => 'Referido já indicado pelo(a) '.$indicadoPor->name],
-                400
-            );
+        try {
+            \App\Customers::verifyCustomerExist($request['telefones'], $id_usuario);
+        } catch (\Throwable $th) {
+            return  response(['response' => $th->getMessage()], 400);
         }
-        $request['id_usuario'] = auth('api')->user()->id;
+
+        \DB::beginTransaction();
         $customers = \App\Customers::create($request->all());
         if (!$customers) {
             return  response(['response' => 'Erro ao salvar Customers'], 400);
         }
+
+        try {
+            \App\Customers::insertFkPhone($request['telefones'], $customers);
+        } catch (\Throwable $th) {
+            return  response(['response' => $th->getMessage()], 400);
+        }
+        \DB::commit();
 
         return response(['response' => 'Salvo com sucesso', 'dados' => $customers]);
     }
@@ -200,34 +203,43 @@ class CustomersController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request['status'] = ('' == $request['status'] || null == $request['status']) ? 'a' : $request['status'];
         $customers = \App\Customers::find($id);
-        if ($request['phone'] != $customers->phone) {
-            $customersByNumberPhone = \App\Customers::where('phone', $request['phone'])->get();
-            if ($customersByNumberPhone->count()) {
-                $customersArray = $customersByNumberPhone->toArray();
+        $id_usuario = auth('api')->user()->id;
 
-                $indicadoPor = \App\Customers::where('id', $customersArray[0]['id_parent'])->first();
-                if (!$indicadoPor) { // indico por um lead que não tem lead.
-                    return  response(['response' => "Número de telefone já existe ({$customersArray[0]['name']})"], 400);
-                }
+        $request['status'] = ('' == $request['status'] || null == $request['status']) ? 'a' : $request['status'];
 
-                return  response(
-                    ['response' => 'Referido já indicado pelo(a) '.$indicadoPor->name],
-                    400
-                );
-            }
+        \DB::beginTransaction();
+
+        $phoneCustomers = \App\Phone::join('customers', 'customers.id', '=', 'customers_phone.id_customers')
+            ->where('id_customers', $id)
+            ->where('id_usuario', $id_usuario)
+        ;
+
+        $phoneCustomers->delete();
+
+        try {
+            \App\Customers::verifyCustomerExist($request['telefones'], $id_usuario);
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+
+            return  response(['response' => $th->getMessage()], 400);
         }
-        $request['id_usuario'] = auth('api')->user()->id;
 
-        if (!$customers) {
-            return response(['response' => 'Customers Não encontrado'], 400);
-        }
         $customers = Helpers::processarColunasUpdate($customers, $request->all());
-
         if (!$customers->update()) {
+            \DB::rollBack();
+
             return response(['response' => 'Erro ao alterar'], 400);
         }
+
+        try {
+            \App\Customers::insertFkPhone($request['telefones'], $customers);
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+
+            return  response(['response' => $th->getMessage()], 400);
+        }
+        \DB::commit();
 
         return response(['response' => 'Atualizado com sucesso']);
     }

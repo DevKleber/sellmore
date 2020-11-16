@@ -71,12 +71,12 @@
 								data-target="#modalImportContact">
 								<i class="fab fa-whatsapp"></i> Importar contatos
 							</button>
-							<button mat-menu-item>
+							<!-- <button mat-menu-item>
 								<a target="_BLANK" href="https://wa.me/55{{item.phone}}">
 									<i class="fab fa-whatsapp"></i>
 									Abrir no Whatsapp
 								</a>
-							</button>
+							</button> -->
 							<button mat-menu-item (click)="updateOpenForm(item)" data-toggle="modal"
 								data-target="#modalStickyAdd">
 								<i class="fas fa-edit"></i> Alterar
@@ -121,9 +121,14 @@
 				<div class="parent center-center">
 					<div class="contact">
 						<div class="name">{{ itemLead?.value.name }}</div>
-						<div class="phone">
-							{{ itemLead?.value.phone | mask: "(00)00000-0000" }}
+
+						<div class="row flex-wrap">
+							<div class="contacto-phone" *ngFor="let itemPhone of itemLead.value.phones; let last = last">
+								{{ itemPhone.phone | mask: "(00)00000-0000" }}
+								<span *ngIf="!last" class="mr-10">,</span>
+							</div>
 						</div>
+
 					</div>
 					<div class="action">
 						<ng-container *ngIf="itemLead?.value.status != 'a'; else waiting">
@@ -146,12 +151,12 @@
 										data-target="#modalImportContact">
 										<i class="fab fa-whatsapp"></i> Importar contatos
 									</button>
-									<button mat-menu-item>
+									<!-- <button mat-menu-item>
 										<a target="_BLANK" href="https://wa.me/55{{itemLead?.value.phone}}">
 											<i class="fab fa-whatsapp"></i>
 											Abrir no Whatsapp
 										</a>
-									</button>
+									</button> -->
 									<button mat-menu-item (click)="updateOpenForm(itemLead.value)" data-toggle="modal"
 										data-target="#modalStickyAdd">
 										<i class="fas fa-edit"></i> Alterar
@@ -181,12 +186,12 @@
 										data-target="#modalImportContact">
 										<i class="fab fa-whatsapp"></i> Importar contatos
 									</button>
-									<button mat-menu-item>
+									<!-- <button mat-menu-item>
 										<a target="_BLANK" href="https://wa.me/55{{itemLead?.value.phone}}">
 											<i class="fab fa-whatsapp"></i>
 											Abrir no Whatsapp
 										</a>
-									</button>
+									</button> -->
 									<button mat-menu-item (click)="updateOpenForm(itemLead.value)" data-toggle="modal"
 										data-target="#modalStickyAdd">
 										<i class="fas fa-edit"></i> Alterar
@@ -210,11 +215,11 @@
 									<div class="contacto-name">
 										{{ item.value.name }}
 									</div>
-									<div class="contacto-phone">
-										{{
-											item.value.phone
-												| mask: "(00)00000-0000"
-										}}
+									<div class="row flex-wrap">
+										<div class="contacto-phone" *ngFor="let itemPhone of item.value.phones; let last = last">
+											{{ itemPhone.phone | mask: "(00)00000-0000" }}
+											<span *ngIf="!last" class="mr-10">,</span>
+										</div>
 									</div>
 								</span>
 							</div>
@@ -243,12 +248,12 @@
 											data-target="#modalImportContact">
 											<i class="fab fa-whatsapp"></i> Importar contatos
 										</button>
-										<button mat-menu-item>
+										<!-- <button mat-menu-item>
 											<a target="_BLANK" href="https://wa.me/55{{item?.value.phone}}">
 												<i class="fab fa-whatsapp"></i>
 												Abrir no Whatsapp
 											</a>
-										</button>
+										</button> -->
 										<button mat-menu-item (click)="updateOpenForm(item.value)" data-toggle="modal"
 											data-target="#modalStickyAdd">
 											<i class="fas fa-edit"></i> Alterar
@@ -281,12 +286,12 @@
 											data-target="#modalImportContact">
 											<i class="fab fa-whatsapp"></i> Importar contatos
 										</button>
-										<button mat-menu-item>
+										<!-- <button mat-menu-item>
 											<a target="_BLANK" href="https://wa.me/55{{item?.value.phone}}">
 												<i class="fab fa-whatsapp"></i>
 												Abrir no Whatsapp
 											</a>
-										</button>
+										</button> -->
 										<button mat-menu-item (click)="updateOpenForm(item.value)" data-toggle="modal"
 											data-target="#modalStickyAdd">
 											<i class="fas fa-edit"></i> Alterar
@@ -401,7 +406,7 @@
 							<i class="fa fa-plus " style="margin-right: 5px;"> </i>Adicionar número de telefone
 						</button>
 
-						<div class="card-light mb-15" *ngFor="let telefone of form.value.telefones; let j = index" [attr.data-index]="j">
+						<div class="card-input mb-15" *ngFor="let telefone of form.value.telefones; let j = index" [attr.data-index]="j">
 							<div class="row">
 								<div class="phone-icon">
 									<ng-container *ngIf="telefone?.bo_whatsapp == 1; else IconTelefone">
@@ -413,7 +418,7 @@
 
 								</div>
 								<div class="phone-number">
-									{{telefone?.nu_telefone | mask: "(00) 00000-0000"}}
+									{{telefone?.phone | mask: "(00) 00000-0000"}}
 								</div>
 								<div class="phone-remove ">
 									<i class="fa fa-trash cursor-pointer" (click)="deleteTelefone(j)"></i>
@@ -467,7 +472,7 @@
 									<i class="fa fa-mobile-alt"></i>
 								</div>
 								<div class="inputText">
-									<input class='form-control' [(ngModel)]="nu_telefone" mask="(00) 00000-0000"
+									<input class='form-control' [(ngModel)]="phone" mask="(00) 00000-0000"
 									[ngModelOptions]="{standalone: true}"
 									placeholder=''>
 								</div>
@@ -601,16 +606,20 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h2 class="modal-title" id="modalStapcall">
-					<p>Ligando para {{ person.name }} - {{person.phone | mask: "(00)00000-0000"}}</p>
-					<div class="row">
+					<!-- <pre>{{ person | json }}</pre> -->
 
-						<a target="_BLANK"
-							href="https://api.whatsapp.com/send/?phone=55{{person.phone}}&text={{strategy?.url_sale}}"
-							title="Enviar link">
-							<div class="card mr-5">
-								<i class="fab fa-whatsapp"></i>
+					<div class="row flex-wrap">
+						Ligando para {{ person.name }} -
+						<div class="contacto-phone" *ngFor="let itemPhone of person.phones; let last = last">
+							<div class="cursor-pointer">
+								<a target="_BLANK" href="https://api.whatsapp.com/send/?phone=55{{person.phone}}&text={{strategy?.url_sale}}" title="Enviar link">
+									<i [ngClass]="itemPhone.bo_whatsapp ? 'fab fa-whatsapp' : 'fa fa-mobile-alt'"></i> {{ itemPhone.phone | mask: "(00)00000-0000" }}
+									<span *ngIf="!last" class="mr-10">,</span>
+								</a>
+								</div>
 							</div>
-						</a>
+					</div>
+					<div class="row">
 						<a target="_BLANK" href="{{strategy?.url_sale}}" title="Fazer a venda.">
 							<div class="card">
 								<i class="fab fa-wpforms"></i>
@@ -802,7 +811,7 @@
 					</button>
 				</div>
 				<div class="calendarDateChosen">
-					<h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+					<h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'pt-br' }}</h3>
 				</div>
 				<div class="calendarDateType">
 					<div class="row flex-direction-row">
@@ -859,7 +868,15 @@
 										Referente
 									</option>
 									<option *ngFor="let item of customersLd" [value]="item.id">
-										{{ item?.name }} - {{ item?.phone }}
+										<div class="row flex-wrap">
+											{{ item?.name }} -
+											<div class="contacto-phone ml-5" *ngFor="let itemPhone of item.phones; let last = last">
+												<div class="cursor-pointer">
+														<i [ngClass]="itemPhone.bo_whatsapp ? 'fab fa-whatsapp' : 'fa fa-mobile-alt'"></i> {{ itemPhone.phone | mask: "(00)00000-0000" }}
+														<span *ngIf="!last" class="mr-10">,</span>
+													</div>
+												</div>
+										</div>
 									</option>
 								</select>
 							</div>

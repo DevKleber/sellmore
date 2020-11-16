@@ -52,6 +52,7 @@ class Customers extends Model
         }
 
         $arCustomers = [];
+        $count = 0;
         foreach ($arFather as $key => $value) {
             $customersParent = self::where('id_usuario', $id_usuario)
                 ->where('id', $value)
@@ -61,15 +62,21 @@ class Customers extends Model
             if (!$customersParent) {
                 continue;
             }
-
-            $arCustomers[$key] = $customersParent;
-            $arCustomers[$key]['referidos'] = self::where('id_usuario', $id_usuario)
+            $referidos = self::where('id_usuario', $id_usuario)
                 ->where('id_parent', $value)
                 ->where('bo_ativo', true)
                 ->orderBy('status')
                 ->orderBy('name')
                 ->get()
             ;
+
+            $arCustomers[$count] = $customersParent;
+            $arCustomers[$count]['phones'] = \App\Phone::where('id_customers', $customersParent->id)->get();
+            $arCustomers[$count]['referidos'] = $referidos;
+            foreach ($arCustomers[$count]['referidos'] as $keyRef => $value) {
+                $arCustomers[$count]['referidos'][$keyRef]['phones'] = \App\Phone::where('id_customers', $value->id)->get();
+            }
+            ++$count;
         }
 
         return ['arCustomers' => $arCustomers, 'statistics' => self::statistics($arCustomers)];
@@ -138,6 +145,44 @@ class Customers extends Model
             }
 
             return $contatos;
+        }
+    }
+
+    public static function verifyCustomerExist($telefones, $id_usuario)
+    {
+        foreach ($telefones as $value) {
+            $customers = \App\Customers::join('customers_phone', 'customers_phone.id_customers', '=', 'customers.id')
+                ->where('customers_phone.phone', $value['phone'])
+                ->where('id_usuario', $id_usuario)
+                ->get()
+            ;
+            if ($customers->count()) {
+                $customersArray = $customers->toArray();
+
+                $indicadoPor = \App\Customers::where('id', $customersArray[0]['id_parent'])->first();
+                if (!$indicadoPor) { // indico por um lead que não tem lead.
+                    throw new \Exception("Número de telefone já existe ({$customersArray[0]['name']})", 1);
+                    // return  response(['response' => "Número de telefone já existe ({$customersArray[0]['name']})"], 400);
+                }
+
+                throw new \Exception('Referido já indicado pelo(a) '.$indicadoPor->name, 1);
+                // return  response( ['response' => 'Referido já indicado pelo(a) '.$indicadoPor->name], 400 );
+            }
+
+            return true;
+        }
+    }
+
+    public static function insertFkPhone($telefones, $customers)
+    {
+        foreach ($telefones as $value) {
+            $value['id_customers'] = $customers->id;
+            $customersPhone = \App\Phone::create($value);
+            if (!$customersPhone) {
+                \DB::rollBack();
+
+                throw new \Exception('Erro ao inserir telefone', 1);
+            }
         }
     }
 }

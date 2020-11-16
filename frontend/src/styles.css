@@ -188,6 +188,21 @@ button {
 .card-light:hover {
 	box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
+.card-input {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+	transition: 0.3s;
+
+	background: var(--backgroundInput) !important;
+	color: var(--backgroundInputColor) !important;
+	border: none !important;
+	padding: 15px !important;
+	font-size: 1.1em !important;
+	margin: 6px 0px;
+}
+
+.card-input:hover {
+	box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
 
 .light { background-color: #fff!important; color: var(--backgroundColor);}
 
@@ -200,3 +215,7 @@ button {
 .swal2-container {
 	z-index: 9999!important;
   }
+
+a:link{
+	text-decoration: none;
+}

@@ -10,7 +10,9 @@ class CalendarController extends Controller
     public function index()
     {
         $calendar = \App\Calendar::join('customers', 'customers.id', '=', 'calendar.id_customers')
-            ->where('calendar.id_usuario', auth('api')->user()->id)->where('calendar.bo_ativo', true)
+            ->where('calendar.id_usuario', auth('api')->user()->id)
+            ->where('calendar.bo_ativo', true)
+            ->select('calendar.*', 'customers.*', 'customers.id as id_customer')
             ->get()
         ;
         if (!$calendar) {
@@ -20,10 +22,16 @@ class CalendarController extends Controller
         foreach ($calendar as $key => $value) {
             $end_date = date('Y-m-d H:i:s', strtotime("{$value->date} +30 minute"));
             $hour = date('H:i:s', strtotime("{$value->date}"));
+            $cutomersPhone = \App\Phone::where('id_customers', $value->id_customer)->select('phone')->get();
+            $arNumbers = [];
+            foreach ($cutomersPhone as $keyPhone => $valuePhone) {
+                $arNumbers[] = $valuePhone->phone;
+            }
+            $numbersPhone = implode(',', $arNumbers);
 
             $ar[$key]['start'] = $value->date;
             $ar[$key]['end'] = $end_date;
-            $ar[$key]['title'] = "{$value->name} {$value->phone}  Ligar às {$hour}";
+            $ar[$key]['title'] = "{$value->name} {$numbersPhone}  Ligar às {$hour}";
             $ar[$key]['color'] = '#00eb84';
             $ar[$key]['allDay'] = false;
         }
@@ -47,10 +55,16 @@ class CalendarController extends Controller
         $end_date = date('Y-m-d H:i:s', strtotime("{$calendar->date} +30 minute"));
         $hour = date('H:i:s', strtotime("{$calendar->date}"));
         $cutomers = \App\Customers::find($request['id_customers']);
+        $cutomersPhone = \App\Phone::where('id_customers', $cutomers->id)->select('phone')->get();
+        $arNumbers = [];
+        foreach ($cutomersPhone as $key => $value) {
+            $arNumbers[] = $value->phone;
+        }
+        $numbersPhone = implode(',', $arNumbers);
 
         $ar['start'] = $calendar->date;
         $ar['end'] = $end_date;
-        $ar['title'] = "{$cutomers->name} {$cutomers->phone}  Ligar às {$hour}";
+        $ar['title'] = "{$cutomers->name} {$numbersPhone}  Ligar às {$hour}";
         $ar['color'] = '#00eb84';
         $ar['allDay'] = false;
 
