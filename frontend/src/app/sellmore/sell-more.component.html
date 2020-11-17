@@ -13,7 +13,8 @@
 					</div>
 
 					<div class="inputText">
-						<input type="text" (keydown)="isSearch=true" class="w-100" placeholder="Buscar" formControlName="searchControl" />
+						<input type="text" (keydown)="isSearch=true" class="w-100" placeholder="Buscar"
+							formControlName="searchControl" />
 					</div>
 				</div>
 			</form>
@@ -44,17 +45,18 @@
 
 	</header>
 	<div class="content pad40" *ngIf="customersFilter.length || searchForm.value.searchControl.length">
-		<div class="totalFilter">Filtro: {{searchForm.value.searchControl}} <span class="totalRegisterFilter">{{customersFilter.length}}</span></div>
+		<div class="totalFilter">Filtro: {{searchForm.value.searchControl}} <span
+				class="totalRegisterFilter">{{customersFilter.length}}</span></div>
 
 		<div class="" *ngIf="!customersFilter.length && !isSearch">
 			<div class="row center-center" style="flex-direction: column;">
-				<ng-lottie [options]="options" style="width: 800px;" ></ng-lottie>
+				<ng-lottie [options]="options" style="width: 800px;"></ng-lottie>
 				<h2>Nenhum resultado encontrado</h2>
 			</div>
 		</div>
 
 		<div class="display-row">
-			<div class="row customersFilter" *ngFor="let item of customersFilter" >
+			<div class="row customersFilter" *ngFor="let item of customersFilter">
 				<div class="row">
 					<div class="filterName">
 						<div class="filterNameRow">
@@ -129,7 +131,8 @@
 						<div class="name">{{ itemLead?.value.name }}</div>
 
 						<div class="row flex-wrap">
-							<div class="contacto-phone" *ngFor="let itemPhone of itemLead.value.phones; let last = last">
+							<div class="contacto-phone"
+								*ngFor="let itemPhone of itemLead.value.phones; let last = last">
 								<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }}
 								<span *ngIf="!last" class="mr-10">,</span>
 							</div>
@@ -222,7 +225,8 @@
 										{{ item.value.name }}
 									</div>
 									<div class="row flex-wrap">
-										<div class="contacto-phone" *ngFor="let itemPhone of item.value.phones; let last = last">
+										<div class="contacto-phone"
+											*ngFor="let itemPhone of item.value.phones; let last = last">
 											<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }}
 											<span *ngIf="!last" class="mr-10">,</span>
 										</div>
@@ -369,7 +373,7 @@
 			</div>
 			<div class="modal-body" style="overflow: auto; max-height: 75vh;">
 
-				<div class="content" >
+				<div class="content">
 					<form [formGroup]="form" novalidate>
 						<div class="input">
 							<div class="inputIcon">
@@ -388,7 +392,8 @@
 									mask="(00)00000-0000" />
 							</div>
 						</div> -->
-						<textarea placeholder="Observação" class="textarea" formControlName="observation" style="height: 265px;">
+						<textarea placeholder="Observação" class="textarea" formControlName="observation"
+							style="height: 265px;">
 						</textarea>
 						<div class="input">
 							<div class="inputIcon">
@@ -409,11 +414,13 @@
 
 						<!-- fk phone -->
 
-						<button class="btn-secondary mb-15" data-target="#modalPhoneNumber" data-toggle="modal" style="border: none!important;">
+						<button class="btn-secondary mb-15" data-target="#modalPhoneNumber" data-toggle="modal"
+							style="border: none!important;">
 							<i class="fa fa-plus " style="margin-right: 5px;"> </i>Adicionar número de telefone
 						</button>
 
-						<div class="card-input mb-15" *ngFor="let telefone of form.value.telefones; let j = index" [attr.data-index]="j">
+						<div class="card-input mb-15" *ngFor="let telefone of form.value.telefones; let j = index"
+							[attr.data-index]="j">
 							<div class="row">
 								<div class="phone-icon">
 									<ng-container *ngIf="telefone?.bo_whatsapp == 1; else IconTelefone">
@@ -474,7 +481,7 @@
 			<div class="modal-body">
 				<div class="content">
 
-					<form  novalidate>
+					<form novalidate>
 						<!-- {{countryCodeSelected}} -->
 						<div class='form-group is-empty col-md-12'>
 
@@ -484,13 +491,8 @@
 									<i class="fa fa-globe-americas"></i>
 								</div>
 								<div class="inputText">
-									<ng-select
-										[items]="countryCodes"
-										bindLabel="nome"
-										autofocus
-										bindValue="countryCode"
-										[(ngModel)]="countryCodeSelected"
-										[ngModelOptions]="{standalone: true}">
+									<ng-select [items]="countryCodes" bindLabel="nome" autofocus bindValue="countryCode"
+										[(ngModel)]="countryCodeSelected" [ngModelOptions]="{standalone: true}">
 									</ng-select>
 
 								</div>
@@ -500,13 +502,15 @@
 									<i class="fa fa-mobile-alt"></i>
 								</div>
 								<div class="inputText">
-									<input [(ngModel)]="phone" mask="(00) 00000-0000" [ngModelOptions]="{standalone: true}">
+									<input [(ngModel)]="phone" mask="(00) 00000-0000"
+										[ngModelOptions]="{standalone: true}">
 
 								</div>
 							</div>
 							<app-input-container errorMessage='Campo obrigatório' label='Whatsapp'>
 								<div class="onoffswitch">
-									<input type="checkbox" [(ngModel)]="bo_whatsapp" class="onoffswitch-checkbox" id="myonoffswitch" [ngModelOptions]="{standalone: true}">
+									<input type="checkbox" [(ngModel)]="bo_whatsapp" class="onoffswitch-checkbox"
+										id="myonoffswitch" [ngModelOptions]="{standalone: true}">
 									<label class="onoffswitch-label" for="myonoffswitch"></label>
 								</div>
 							</app-input-container>
@@ -639,19 +643,45 @@
 						Ligando para {{ person.name }} -
 						<div class="contacto-phone" *ngFor="let itemPhone of person.phones; let last = last">
 							<div class="cursor-pointer">
-								<a target="_BLANK" href="https://api.whatsapp.com/send/?phone={{itemPhone.country_code}}{{itemPhone.phone}}&text={{strategy?.url_sale}}" title="Enviar link">
-									<i [ngClass]="itemPhone.bo_whatsapp ? 'fab fa-whatsapp' : 'fa fa-mobile-alt'"></i> <small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }}
+								<a target="_BLANK"
+									href="https://api.whatsapp.com/send/?phone={{itemPhone.country_code}}{{itemPhone.phone}}&text={{strategy?.url_sale}}"
+									title="Enviar link">
+									<i [ngClass]="itemPhone.bo_whatsapp ? 'fab fa-whatsapp' : 'fa fa-mobile-alt'"></i>
+									<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }}
 									<span *ngIf="!last" class="mr-10">,</span>
 								</a>
-								</div>
 							</div>
+						</div>
+					</div>
+					<div class="row" *ngIf="person.status != 'a'">
+						<div class="filterstatus"> <strong>Status:</strong> {{person.status | helpers:'statusString' }}</div>
 					</div>
 					<div class="row">
+
 						<a target="_BLANK" href="{{strategy?.url_sale}}" title="Fazer a venda.">
-							<div class="card">
+							<div class="card mr-5 cursor-pointer">
 								<i class="fab fa-wpforms"></i>
 							</div>
 						</a>
+						<ng-container *ngIf="person.status == 'a'">
+							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'pc')">
+								<i class="fa fa-credit-card icon-waiting" matTooltip="Problemas com cartão de crédito">
+								</i>
+							</div>
+							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'ld')">
+								<i class="fa fa-headset icon-waiting" matTooltip="Ligar depois">
+								</i>
+							</div>
+							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'n')">
+								<i class="fa fa-thumbs-down icon-waiting" matTooltip="Não deu negócio 😭">
+								</i>
+							</div>
+							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'c')">
+								<i class="fa fa-thumbs-up icon-waiting" matTooltip="Vendido 😃">
+								</i>
+							</div>
+						</ng-container>
+
 					</div>
 				</h2>
 			</div>
@@ -689,7 +719,8 @@
 								</div>
 								<div class="row">
 
-									<div class="parentPhone" *ngFor="let itemPhone of itemParent.phones; let last = last">
+									<div class="parentPhone"
+										*ngFor="let itemPhone of itemParent.phones; let last = last">
 										<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }}
 										<span *ngIf="!last" class="mr-10">,</span>
 									</div>
@@ -898,12 +929,15 @@
 									<option *ngFor="let item of customersLd" [value]="item.id">
 										<div class="row flex-wrap">
 											{{ item?.name }} -
-											<div class="contacto-phone ml-5" *ngFor="let itemPhone of item.phones; let last = last">
+											<div class="contacto-phone ml-5"
+												*ngFor="let itemPhone of item.phones; let last = last">
 												<div class="cursor-pointer">
-														<i [ngClass]="itemPhone.bo_whatsapp ? 'fab fa-whatsapp' : 'fa fa-mobile-alt'"></i> <small>+{{itemPhone.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }}
-														<span *ngIf="!last" class="mr-10">,</span>
-													</div>
+													<i
+														[ngClass]="itemPhone.bo_whatsapp ? 'fab fa-whatsapp' : 'fa fa-mobile-alt'"></i>
+													<small>+{{itemPhone.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }}
+													<span *ngIf="!last" class="mr-10">,</span>
 												</div>
+											</div>
 										</div>
 									</option>
 								</select>
@@ -941,5 +975,6 @@
 </div>
 
 <div class="row" style="position: fixed; top: 0;width: 100%; height: 100%;" *ngIf="showCongrats">
-	<ng-lottie [options]="optionsSold" class="center-center" (complete)="showCongrats=false" style="width: 100%;"></ng-lottie>
+	<ng-lottie [options]="optionsSold" class="center-center" (complete)="showCongrats=false" style="width: 100%;">
+	</ng-lottie>
 </div>
