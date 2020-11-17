@@ -61,7 +61,13 @@
 							{{ item.name }}
 							<small class="filtercreated_at">{{item.bo_ativo | booleanMessage:'bo_ativo'}}</small>
 						</div>
-						<div class="filterPhone"> {{ item.phone | mask: "(00)00000-0000" }} </div>
+						<div class="row flex-wrap">
+							<div class="filterPhone" *ngFor="let itemPhone of item.phones; let last = last">
+								<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }}
+								<span *ngIf="!last" class="mr-10">,</span>
+							</div>
+						</div>
+
 					</div>
 					<div class="menuFilter">
 						<i class="fa fa-bars icon-finished cursor-pointer" style="margin-left: 15px" matTooltip="Menu"
@@ -124,7 +130,7 @@
 
 						<div class="row flex-wrap">
 							<div class="contacto-phone" *ngFor="let itemPhone of itemLead.value.phones; let last = last">
-								{{ itemPhone.phone | mask: "(00)00000-0000" }}
+								<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }}
 								<span *ngIf="!last" class="mr-10">,</span>
 							</div>
 						</div>
@@ -217,7 +223,7 @@
 									</div>
 									<div class="row flex-wrap">
 										<div class="contacto-phone" *ngFor="let itemPhone of item.value.phones; let last = last">
-											{{ itemPhone.phone | mask: "(00)00000-0000" }}
+											<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }}
 											<span *ngIf="!last" class="mr-10">,</span>
 										</div>
 									</div>
@@ -249,7 +255,7 @@
 											<i class="fab fa-whatsapp"></i> Importar contatos
 										</button>
 										<!-- <button mat-menu-item>
-											<a target="_BLANK" href="https://wa.me/55{{item?.value.phone}}">
+											<a target="_BLANK" href="https://wa.me/{{item?.value.}}{{item?.value.phone}}">
 												<i class="fab fa-whatsapp"></i>
 												Abrir no Whatsapp
 											</a>
@@ -361,8 +367,9 @@
 					</ng-template>
 				</h3>
 			</div>
-			<div class="modal-body">
-				<div class="content">
+			<div class="modal-body" style="overflow: auto; max-height: 75vh;">
+
+				<div class="content" >
 					<form [formGroup]="form" novalidate>
 						<div class="input">
 							<div class="inputIcon">
@@ -372,7 +379,7 @@
 								<input type="text" class="w-100" formControlName="name" placeholder="Nome" />
 							</div>
 						</div>
-						<div class="input">
+						<!-- <div class="input">
 							<div class="inputIcon">
 								<i class="fa fa-mobile-alt"></i>
 							</div>
@@ -380,7 +387,7 @@
 								<input type="text" class="w-100" formControlName="phone" placeholder="Telefone"
 									mask="(00)00000-0000" />
 							</div>
-						</div>
+						</div> -->
 						<textarea placeholder="Observação" class="textarea" formControlName="observation" style="height: 265px;">
 						</textarea>
 						<div class="input">
@@ -402,7 +409,7 @@
 
 						<!-- fk phone -->
 
-						<button class="btn-secondary mb-15" data-target="#modalPhoneNumber" data-toggle="modal">
+						<button class="btn-secondary mb-15" data-target="#modalPhoneNumber" data-toggle="modal" style="border: none!important;">
 							<i class="fa fa-plus " style="margin-right: 5px;"> </i>Adicionar número de telefone
 						</button>
 
@@ -418,7 +425,7 @@
 
 								</div>
 								<div class="phone-number">
-									{{telefone?.phone | mask: "(00) 00000-0000"}}
+									<small>+{{telefone?.country_code}}</small>{{telefone?.phone | mask: "(00) 00000-0000"}}
 								</div>
 								<div class="phone-remove ">
 									<i class="fa fa-trash cursor-pointer" (click)="deleteTelefone(j)"></i>
@@ -429,6 +436,7 @@
 						<!-- end fk phone -->
 					</form>
 				</div>
+
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal" #closemodalStickyAdd>
@@ -447,6 +455,7 @@
 					</button>
 				</ng-template>
 			</div>
+
 		</div>
 	</div>
 </div>
@@ -460,21 +469,39 @@
 				<h3 class="modal-title" id="modalNewPhoneNumber">
 					<p>Adicionando telefone</p>
 				</h3>
+
 			</div>
 			<div class="modal-body">
 				<div class="content">
+
 					<form  novalidate>
+						<!-- {{countryCodeSelected}} -->
 						<div class='form-group is-empty col-md-12'>
 
 
 							<div class="input">
 								<div class="inputIcon">
+									<i class="fa fa-globe-americas"></i>
+								</div>
+								<div class="inputText">
+									<ng-select
+										[items]="countryCodes"
+										bindLabel="nome"
+										autofocus
+										bindValue="countryCode"
+										[(ngModel)]="countryCodeSelected"
+										[ngModelOptions]="{standalone: true}">
+									</ng-select>
+
+								</div>
+							</div>
+							<div class="input">
+								<div class="inputIcon">
 									<i class="fa fa-mobile-alt"></i>
 								</div>
 								<div class="inputText">
-									<input class='form-control' [(ngModel)]="phone" mask="(00) 00000-0000"
-									[ngModelOptions]="{standalone: true}"
-									placeholder=''>
+									<input [(ngModel)]="phone" mask="(00) 00000-0000" [ngModelOptions]="{standalone: true}">
+
 								</div>
 							</div>
 							<app-input-container errorMessage='Campo obrigatório' label='Whatsapp'>
@@ -612,8 +639,8 @@
 						Ligando para {{ person.name }} -
 						<div class="contacto-phone" *ngFor="let itemPhone of person.phones; let last = last">
 							<div class="cursor-pointer">
-								<a target="_BLANK" href="https://api.whatsapp.com/send/?phone=55{{person.phone}}&text={{strategy?.url_sale}}" title="Enviar link">
-									<i [ngClass]="itemPhone.bo_whatsapp ? 'fab fa-whatsapp' : 'fa fa-mobile-alt'"></i> {{ itemPhone.phone | mask: "(00)00000-0000" }}
+								<a target="_BLANK" href="https://api.whatsapp.com/send/?phone={{itemPhone.country_code}}{{itemPhone.phone}}&text={{strategy?.url_sale}}" title="Enviar link">
+									<i [ngClass]="itemPhone.bo_whatsapp ? 'fab fa-whatsapp' : 'fa fa-mobile-alt'"></i> <small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }}
 									<span *ngIf="!last" class="mr-10">,</span>
 								</a>
 								</div>
@@ -660,11 +687,12 @@
 										</i>
 									</span>
 								</div>
-								<div class="parentPhone">
-									{{
-										itemParent.phone
-											| mask: "(00)00000-0000"
-									}}
+								<div class="row">
+
+									<div class="parentPhone" *ngFor="let itemPhone of itemParent.phones; let last = last">
+										<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }}
+										<span *ngIf="!last" class="mr-10">,</span>
+									</div>
 								</div>
 								<div class="parentDesc">
 									{{ itemParent.observation }}
@@ -872,7 +900,7 @@
 											{{ item?.name }} -
 											<div class="contacto-phone ml-5" *ngFor="let itemPhone of item.phones; let last = last">
 												<div class="cursor-pointer">
-														<i [ngClass]="itemPhone.bo_whatsapp ? 'fab fa-whatsapp' : 'fa fa-mobile-alt'"></i> {{ itemPhone.phone | mask: "(00)00000-0000" }}
+														<i [ngClass]="itemPhone.bo_whatsapp ? 'fab fa-whatsapp' : 'fa fa-mobile-alt'"></i> <small>+{{itemPhone.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }}
 														<span *ngIf="!last" class="mr-10">,</span>
 													</div>
 												</div>

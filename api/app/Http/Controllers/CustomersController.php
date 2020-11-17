@@ -26,7 +26,7 @@ class CustomersController extends Controller
         }
         $id_usuario = auth('api')->user()->id;
 
-        return \App\Customers::where('id_usuario', $id_usuario)
+        $customers = \App\Customers::where('id_usuario', $id_usuario)
             ->where(function ($q) use ($query) {
                 $q->where('name', 'LIKE', '%'.$query.'%')
                     ->orWhere('phone', 'LIKE', '%'.$query.'%')
@@ -35,6 +35,13 @@ class CustomersController extends Controller
             ->orderBy('name')
             ->get()
         ;
+        $ar = [];
+        foreach ($customers as $key => $value) {
+            $ar[$key] = $value;
+            $ar[$key]['phones'] = \App\Phone::where('id_customers', $value->id)->get();
+        }
+
+        return $ar;
     }
 
     public function getCustomersLd()
@@ -67,7 +74,15 @@ class CustomersController extends Controller
             $ar[$value->id] = $value;
         }
 
-        return $this->buildTree($ar, $id);
+        $parents = $this->buildTree($ar, $id);
+        $ar = [];
+        foreach ($parents as $key => $value) {
+            $ar[$key] = $value;
+            $ar[$key]['phones'] = $value;
+            $ar[$key]['phones'] = \App\Phone::where('id_customers', $value->id)->get();
+        }
+
+        return $parents;
     }
 
     public function buildTree($ar, $id, $branch = [])
@@ -88,26 +103,24 @@ class CustomersController extends Controller
         $duplicado = [];
         $imported = [];
         foreach ($contacts as $key => $value) {
-            $totalWhatsappNumber = isset($value['numeros']['whatsapp']) ? Helpers::count($value['numeros']['whatsapp']) : 0;
-            $totalPhoneNumber = isset($value['numeros']['phone']) ? Helpers::count($value['numeros']['phone']) : 0;
-
-            $numberToSaveWhatsapp = ($totalWhatsappNumber - 1);
-            $numberToSavePhoneNumber = ($totalPhoneNumber - 1);
-
             $whatsapp = $value['numeros']['whatsapp'] ?? [];
             $phone = $value['numeros']['phone'] ?? [];
-            $number = '';
 
-            if ($totalWhatsappNumber > 0) {
-                $number = $whatsapp[$numberToSaveWhatsapp];
-                unset($whatsapp[$numberToSaveWhatsapp]);
-            } elseif ($totalPhoneNumber > 0) {
-                $number = $phone[$numberToSavePhoneNumber];
-                unset($phone[$numberToSavePhoneNumber]);
+            try {
+                \App\Customers::verifyCustomerExist($whatsapp, $id_usuario);
+            } catch (\Throwable $th) {
+                $duplicado[] = $value['nome'].' - '.$th->getMessage();
+
+                continue;
             }
 
-            $pais = substr($number, 0, 2); //numero do pais
-            $number = substr($number, 2);
+            try {
+                \App\Customers::verifyCustomerExist($phone, $id_usuario);
+            } catch (\Throwable $th) {
+                $duplicado[] = $value['nome'].' - '.$th->getMessage();
+
+                continue;
+            }
 
             $ar['name'] = Helpers::remove_emoji($value['nome']); // removendo emoji
             $ar['address'] = null;
@@ -116,31 +129,45 @@ class CustomersController extends Controller
             $ar['id_parent'] = $id;
             $ar['observation'] = '';
 
-            try {
-                \App\Customers::verifyCustomerExist($number, $id_usuario);
-            } catch (\Throwable $th) {
-                return  response(['response' => $th->getMessage()], 400);
+            $customer = \App\Customers::create($ar);
+            if (!$customer) {
+                \DB::rollBack();
+
+                return  response(['response' => 'Erro ao importar contatos'], 400);
             }
+            $imported[] = $customer;
 
-            $arPhones['bo_whatsapp'] = null;
-            $arPhones['id_customers'] = $id;
-            $arPhones['phone'] = $number;
+            foreach ($whatsapp as $key => $value) {
+                $arPhones['bo_whatsapp'] = true;
+                $arPhones['id_customers'] = $id;
+                $arPhones['phone'] = $value['phone'];
+                $arPhones['country_code'] = $value['countryCode'];
 
-            try {
-                \App\Customers::insertFkPhone($request['telefones'], $arPhones);
-            } catch (\Throwable $th) {
-                return  response(['response' => $th->getMessage()], 400);
+                try {
+                    \App\Customers::insertFkPhone([$arPhones], $customer);
+                } catch (\Throwable $th) {
+                    \DB::rollBack();
+
+                    return  response(['response' => $th->getMessage()], 400);
+                }
             }
+            foreach ($phone as $key => $value) {
+                $arPhones['bo_whatsapp'] = false;
+                $arPhones['id_customers'] = $id;
+                $arPhones['phone'] = $value['phone'];
+                $arPhones['country_code'] = $value['countryCode'];
 
-            // $imported[] = \App\Customers::create($ar);
-            // if (!$imported) {
-            //     \DB::rollBack();
+                try {
+                    \App\Customers::insertFkPhone([$arPhones], $customer);
+                } catch (\Throwable $th) {
+                    \DB::rollBack();
 
-            //     return  response(['response' => 'Erro ao importar contatos'], 400);
-            // }
+                    return  response(['response' => $th->getMessage()], 400);
+                }
+            }
         }
-        \DB::rollBack();
-        // \DB::commit();
+        // \DB::rollBack();
+        \DB::commit();
 
         return ['res' => $imported, 'repetidos' => $duplicado];
     }

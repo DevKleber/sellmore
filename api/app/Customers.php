@@ -125,21 +125,35 @@ class Customers extends Model
                 $contatos[$key] = [
                     'nome' => explode('FN:', $value[3])[1],
                 ];
-
+                $countPhone = 0;
                 foreach ($value as $item) {
                     $numeros = explode('TEL', $item);
 
                     if (count($numeros) > 1) {
                         $numeroWaid = explode('waid=', $numeros[1]);
+                        $countryCode = explode(' ', explode('+', $numeros[1])[1])[0];
                         if (count($numeroWaid) > 1) {
                             $numeroWhatsapp = explode(':', $numeroWaid[1])[0];
                             $numero = preg_replace('/[^0-9]/', '', $numeroWhatsapp);
-                            $contatos[$key]['numeros']['whatsapp'][] = Helpers::numeroNonoDigito($numero);
+
+                            $numeroWithoutCountryCode = substr($numero, strlen($countryCode));
+                            $contatos[$key]['numeros']['whatsapp'][$countPhone]['phone'] = $numeroWithoutCountryCode;
+                            if ('55' == $countryCode) {
+                                $contatos[$key]['numeros']['whatsapp'][$countPhone]['phone'] = Helpers::numeroNonoDigito($numeroWithoutCountryCode);
+                            }
+                            $contatos[$key]['numeros']['whatsapp'][$countPhone]['countryCode'] = $countryCode;
                         } else {
                             $numeroNormal = explode('TEL:', $numeros[1])[0];
                             $numero = preg_replace('/[^0-9]/', '', $numeroNormal);
-                            $contatos[$key]['numeros']['phone'][] = Helpers::numeroNonoDigito($numero);
+                            $numeroWithoutCountryCode = substr($numero, strlen($countryCode));
+
+                            $contatos[$key]['numeros']['phone'][$countPhone]['phone'] = $numeroWithoutCountryCode;
+                            if ('55' == $countryCode) {
+                                $contatos[$key]['numeros']['phone'][$countPhone]['phone'] = Helpers::numeroNonoDigito($numeroWithoutCountryCode);
+                            }
+                            $contatos[$key]['numeros']['phone'][$countPhone]['countryCode'] = $countryCode;
                         }
+                        ++$countPhone;
                     }
                 }
             }
@@ -152,7 +166,7 @@ class Customers extends Model
     {
         foreach ($telefones as $value) {
             $customers = \App\Customers::join('customers_phone', 'customers_phone.id_customers', '=', 'customers.id')
-                ->where('customers_phone.phone', $value['phone'])
+                ->where('customers_phone.phone', $value['phone'] ?? $value)
                 ->where('id_usuario', $id_usuario)
                 ->get()
             ;

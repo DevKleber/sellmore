@@ -38,9 +38,11 @@ import { LoaderService } from '../shared/loader/loader.service';
 	styleUrls: ['./sell-more.component.css'],
 })
 export class SellMoreComponent implements OnInit {
+	countryCodes: any[] = [];
 	customers: any[] = [];
 	customersFilter: any[] = [];
 
+	countryCodeSelected: string = '55';
 	phone: string = '';
 	bo_whatsapp: boolean = true;
 
@@ -120,6 +122,7 @@ export class SellMoreComponent implements OnInit {
 		this.initialForms();
 		this.user = this.loginService.getUser();
 		this.find();
+		this.countryCodes = this.helper.getAllCountryCode();
 	}
 	find() {
 		this.searchControl.valueChanges
@@ -167,9 +170,13 @@ export class SellMoreComponent implements OnInit {
 			searchControl: this.searchControl,
 		});
 	}
-	addFKPhone(phone = this.phone, bo_whatsapp = this.bo_whatsapp) {
+	addFKPhone(
+		phone = this.phone,
+		bo_whatsapp = this.bo_whatsapp,
+		countryCode = this.countryCodeSelected
+	) {
 		let items = this.form.get('telefones') as FormArray;
-		items.push(this.telefoneItem(phone, bo_whatsapp));
+		items.push(this.telefoneItem(phone, bo_whatsapp, countryCode));
 		this.closeModalPhone.nativeElement.click();
 		this.phone = '';
 		this.bo_whatsapp = false;
@@ -178,11 +185,12 @@ export class SellMoreComponent implements OnInit {
 		const control = <FormArray>this.form.controls['telefones'];
 		control.removeAt(i);
 	}
-	telefoneItem(phone = '', bo_whatsapp = false): FormGroup {
+	telefoneItem(phone = '', bo_whatsapp = false, countryCode = ''): FormGroup {
 		if (phone != '') {
 			return this.formBuilder.group({
 				phone: this.formBuilder.control(phone),
 				bo_whatsapp: this.formBuilder.control(bo_whatsapp),
+				country_code: this.formBuilder.control(countryCode),
 			});
 		}
 	}
