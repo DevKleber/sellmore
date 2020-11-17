@@ -243,8 +243,7 @@
 									<i *ngIf="item.status == 'pc'"
 										class="fa fa-credit-card icon-finished icon-finished-no">
 									</i>
-									<i *ngIf="item.status == 'ld'"
-										class="fa fa-headset icon-finished icon-finished-no">
+									<i *ngIf="item.status == 'ld'" class="fa fa-headset icon-finished icon-finished-no">
 									</i>
 									<i *ngIf="item.status == 'n'"
 										class="fa fa-thumbs-down icon-finished icon-finished-no">
@@ -282,11 +281,9 @@
 							</ng-container>
 							<ng-template #waitingChildren>
 								<div class="waiting">
-									<i
-										class="icon-waiting"
+									<i class="icon-waiting"
 										[ngClass]="item.bo_preference ? 'fa fa-star' : 'far fa-star'"
-										(click)="preference(item)"
-										matTooltip="Dar preferencia">
+										(click)="preference(item)" matTooltip="Dar preferencia">
 									</i>
 
 									<i (click)="changeStatus(item, 'pc')" class="fa fa-credit-card icon-waiting"
@@ -662,7 +659,8 @@
 						</div>
 					</div>
 					<div class="row" *ngIf="person.status != 'a'">
-						<div class="filterstatus"> <strong>Status:</strong> {{person.status | helpers:'statusString' }}</div>
+						<div class="filterstatus"> <strong>Status:</strong> {{person.status | helpers:'statusString' }}
+						</div>
 					</div>
 					<div class="row">
 
@@ -672,20 +670,24 @@
 							</div>
 						</a>
 						<ng-container *ngIf="person.status == 'a'">
-							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'pc')" title="Problemas com cartão de crédito">
-								<i class="fa fa-credit-card icon-waiting" >
+							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'pc')"
+								title="Problemas com cartão de crédito">
+								<i class="fa fa-credit-card icon-waiting">
 								</i>
 							</div>
-							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'ld')" title="Ligar depois">
-								<i class="fa fa-headset icon-waiting" >
+							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'ld')"
+								title="Ligar depois">
+								<i class="fa fa-headset icon-waiting">
 								</i>
 							</div>
-							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'n')" title="Não deu negócio 😭">
-								<i class="fa fa-thumbs-down icon-waiting" >
+							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'n')"
+								title="Não deu negócio 😭">
+								<i class="fa fa-thumbs-down icon-waiting">
 								</i>
 							</div>
-							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'c')" title="Vendido 😃">
-								<i class="fa fa-thumbs-up icon-waiting" >
+							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'c')"
+								title="Vendido 😃">
+								<i class="fa fa-thumbs-up icon-waiting">
 								</i>
 							</div>
 						</ng-container>
@@ -773,15 +775,27 @@
 					<p class="mb-15">
 						Faça sua parte. Ajude-nos a manter o servidor sempre on-line.
 					</p>
-					<div class="row center-center">
-						<img style="text-align: center;" src="/assets/img/system/donate.png" alt="">
+					<div class="row center-center mb-25">
+						<div class="pix mr-25">
+							<div class="row center-center">
+								<img style="text-align: center;" src="/assets/img/system/pix.png" width="128px" alt="">
+							</div>
+							<button class="w-100">
+								PIX
+							</button>
+						</div>
+						<div class="paypal">
+							<div class="row center-center">
+								<img style="text-align: center;" src="/assets/img/system/donate.png" alt="">
+							</div>
+							<button class="w-100">
+								<a href="https://www.paypal.com/donate?hosted_button_id=JPB4P9HQXT3KS" target="_BLANK"
+									style="color:#fff !important">
+									Acessar link Paypal
+								</a>
+							</button>
+						</div>
 					</div>
-					<button class="w-100">
-						<a href="https://www.paypal.com/donate?hosted_button_id=JPB4P9HQXT3KS" target="_BLANK"
-							style="color:#fff !important">
-							Faça uma doação de qualquer valor com o Paypal
-						</a>
-					</button>
 					<div class="row center-center">
 						<h2>Ou</h2>
 					</div>
