@@ -46,6 +46,9 @@ export class SellMoreService {
 	changeStatus(form, id) {
 		return this.http.put(`${API}/status/customers/${id}`, form);
 	}
+	preference(form) {
+		return this.http.post(`${API}/preference`, form);
+	}
 
 	bug(form) {
 		return this.http.post<any>(`${API}/issue`, form);

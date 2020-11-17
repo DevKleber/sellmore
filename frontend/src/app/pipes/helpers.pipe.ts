@@ -26,6 +26,9 @@ export class HelpersPipe implements PipeTransform {
 		return texto;
 	}
 	statusString(value) {
+		if (value == undefined) {
+			return;
+		}
 		const status = [
 			{ id: 'pc', status: 'Problemas com cartão' },
 			{ id: 'ld', status: 'Ligar depois' },
@@ -36,7 +39,9 @@ export class HelpersPipe implements PipeTransform {
 		var result = status.filter(function (el) {
 			return el.id == value;
 		});
-		return result[0].status;
+		if (result) {
+			return result[0].status;
+		}
 	}
 
 	isDevMode(value, isdev) {

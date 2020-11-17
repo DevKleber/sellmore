@@ -9,7 +9,7 @@ class Customers extends Model
 {
     protected $table = 'customers';
     protected $primaryKey = 'id';
-    protected $fillable = ['name', 'phone', 'address', 'status', 'id_usuario', 'id_parent', 'observation', 'bo_ativo'];
+    protected $fillable = ['name', 'phone', 'address', 'status', 'id_usuario', 'id_parent', 'observation', 'bo_ativo', 'bo_preference'];
 
     public static function getStatus()
     {
@@ -65,8 +65,8 @@ class Customers extends Model
             $referidos = self::where('id_usuario', $id_usuario)
                 ->where('id_parent', $value)
                 ->where('bo_ativo', true)
-                ->orderBy('status')
-                ->orderBy('name')
+                ->orderBy('bo_preference', 'desc')
+                ->orderBy('updated_at', 'desc')
                 ->get()
             ;
 
@@ -198,5 +198,21 @@ class Customers extends Model
                 throw new \Exception('Erro ao inserir telefone', 1);
             }
         }
+    }
+
+    public static function updatePreference($customer, $bo_true = true)
+    {
+        $id_usuario = auth('api')->user()->id;
+        $customers = \App\Customers::where('id', $customer['id'])->where('id_usuario', $id_usuario)->first();
+
+        if (!$customers) {
+            return response(['response' => 'Referido não encontrado'], 400);
+        }
+        $customers->bo_preference = $bo_true;
+        if (!$customers->save()) {
+            return response(['response' => 'Erro ao arquivar referido'], 400);
+        }
+
+        return response(['response' => 'Referido arquivado']);
     }
 }

@@ -215,18 +215,19 @@
 				</div>
 				<perfect-scrollbar>
 					<div class="children">
+
 						<div class="item" *ngFor="
-								let item of itemLead.value.referidos | keyvalue
+								let item of itemLead.value.referidos
 							">
-							<div class="contacto cursor-pointer" (click)="callTo(item.value)" data-toggle="modal"
+							<div class="contacto cursor-pointer" (click)="callTo(item)" data-toggle="modal"
 								data-target="#modalCall">
 								<span>
 									<div class="contacto-name">
-										{{ item.value.name }}
+										{{ item.name }}
 									</div>
 									<div class="row flex-wrap">
 										<div class="contacto-phone"
-											*ngFor="let itemPhone of item.value.phones; let last = last">
+											*ngFor="let itemPhone of item.phones; let last = last">
 											<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }}
 											<span *ngIf="!last" class="mr-10">,</span>
 										</div>
@@ -235,43 +236,43 @@
 							</div>
 
 							<ng-container *ngIf="
-									item.value.status != 'a';
+									item.status != 'a';
 									else waitingChildren
 								">
 								<div class="finished">
-									<i *ngIf="item.value.status == 'pc'"
+									<i *ngIf="item.status == 'pc'"
 										class="fa fa-credit-card icon-finished icon-finished-no">
 									</i>
-									<i *ngIf="item.value.status == 'ld'"
+									<i *ngIf="item.status == 'ld'"
 										class="fa fa-headset icon-finished icon-finished-no">
 									</i>
-									<i *ngIf="item.value.status == 'n'"
+									<i *ngIf="item.status == 'n'"
 										class="fa fa-thumbs-down icon-finished icon-finished-no">
 									</i>
-									<i *ngIf="item.value.status == 'c'"
+									<i *ngIf="item.status == 'c'"
 										class="fa fa-thumbs-up icon-finished icon-finished-yes">
 									</i>
 									<i class="fa fa-bars icon-finished" style="margin-left: 15px" matTooltip="Menu"
 										[matMenuTriggerFor]="menu"></i>
 									<mat-menu #menu="matMenu">
-										<button mat-menu-item (click)="newChildren(item?.value)" data-toggle="modal"
+										<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
 											data-target="#modalImportContact">
 											<i class="fab fa-whatsapp"></i> Importar contatos
 										</button>
 										<!-- <button mat-menu-item>
-											<a target="_BLANK" href="https://wa.me/{{item?.value.}}{{item?.value.phone}}">
+											<a target="_BLANK" href="https://wa.me/{{item?.}}{{item?.phone}}">
 												<i class="fab fa-whatsapp"></i>
 												Abrir no Whatsapp
 											</a>
 										</button> -->
-										<button mat-menu-item (click)="updateOpenForm(item.value)" data-toggle="modal"
+										<button mat-menu-item (click)="updateOpenForm(item)" data-toggle="modal"
 											data-target="#modalStickyAdd">
 											<i class="fas fa-edit"></i> Alterar
 										</button>
-										<button mat-menu-item (click)="inativar(item.value)">
+										<button mat-menu-item (click)="inativar(item)">
 											<i class="fas fa-eye-slash"></i> Arquivar
 										</button>
-										<button mat-menu-item (click)="newChildren(item.value)" data-toggle="modal"
+										<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
 											data-target="#modalStickyAdd">
 											<i class="fa fa-chalkboard-teacher"></i>
 											Tornar Lead
@@ -281,35 +282,42 @@
 							</ng-container>
 							<ng-template #waitingChildren>
 								<div class="waiting">
-									<i (click)="changeStatus(item.value, 'pc')" class="fa fa-credit-card icon-waiting"
+									<i
+										class="icon-waiting"
+										[ngClass]="item.bo_preference ? 'fa fa-star' : 'far fa-star'"
+										(click)="preference(item)"
+										matTooltip="Dar preferencia">
+									</i>
+
+									<i (click)="changeStatus(item, 'pc')" class="fa fa-credit-card icon-waiting"
 										matTooltip="Problemas com cartão de crédito">
 									</i>
-									<i (click)="changeStatus(item.value, 'ld')" class="fa fa-headset icon-waiting"
+									<i (click)="changeStatus(item, 'ld')" class="fa fa-headset icon-waiting"
 										matTooltip="Ligar depois"></i>
-									<i (click)="changeStatus(item.value, 'n')" class="fa fa-thumbs-down icon-waiting"
+									<i (click)="changeStatus(item, 'n')" class="fa fa-thumbs-down icon-waiting"
 										matTooltip="Não deu negócio 😭"></i>
-									<i (click)="changeStatus(item.value, 'c')" class="fa fa-thumbs-up icon-waiting"
+									<i (click)="changeStatus(item, 'c')" class="fa fa-thumbs-up icon-waiting"
 										matTooltip="Vendido 😃"></i>
 									<i class="fa fa-bars icon-waiting" matTooltip="Menu" [matMenuTriggerFor]="menu"></i>
 									<mat-menu #menu="matMenu">
-										<button mat-menu-item (click)="newChildren(item?.value)" data-toggle="modal"
+										<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
 											data-target="#modalImportContact">
 											<i class="fab fa-whatsapp"></i> Importar contatos
 										</button>
 										<!-- <button mat-menu-item>
-											<a target="_BLANK" href="https://wa.me/55{{item?.value.phone}}">
+											<a target="_BLANK" href="https://wa.me/55{{item?.phone}}">
 												<i class="fab fa-whatsapp"></i>
 												Abrir no Whatsapp
 											</a>
 										</button> -->
-										<button mat-menu-item (click)="updateOpenForm(item.value)" data-toggle="modal"
+										<button mat-menu-item (click)="updateOpenForm(item)" data-toggle="modal"
 											data-target="#modalStickyAdd">
 											<i class="fas fa-edit"></i> Alterar
 										</button>
-										<button mat-menu-item (click)="inativar(item.value)">
+										<button mat-menu-item (click)="inativar(item)">
 											<i class="fas fa-eye-slash"></i> Arquivar
 										</button>
-										<button mat-menu-item (click)="newChildren(item.value)" data-toggle="modal"
+										<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
 											data-target="#modalStickyAdd">
 											<i class="fa fa-chalkboard-teacher"></i>
 											Tornar Lead
@@ -323,7 +331,7 @@
 
 				<div class="info center-center">
 					<div class="quantitative">
-						{{ itemLead.value.referidos.length | json }} referidos
+						{{ itemLead.value.referidos.length }} referidos
 						<br />
 						N à contactar
 					</div>

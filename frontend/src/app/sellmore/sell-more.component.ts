@@ -298,6 +298,13 @@ export class SellMoreComponent implements OnInit {
 			}
 		});
 	}
+	preference(customer) {
+		customer.bo_preference = customer.bo_preference ? false : true;
+		this.sellMoreService.preference(customer).subscribe((res) => {
+			// this.notificationService.notifySweet('Status salvo!');
+			this.loaderService.isLoad(false);
+		});
+	}
 	callTo(person) {
 		this.loaderService.isLoad(true);
 		this.updateOpenForm(person);

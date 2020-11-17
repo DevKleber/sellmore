@@ -27,6 +27,8 @@ Route::group(['middleware' => 'apiJwt'], function () {
     Route::put('status/customers/{id}', 'CustomersController@changeStatus');
     Route::post('import-contact/customers/{id}', 'CustomersController@importContact');
 
+    Route::post('preference', 'CustomersController@giveOrRemovePreference');
+
     Route::get('strategy', 'StrategyController@index');
     Route::put('strategy', 'StrategyController@update');
 });

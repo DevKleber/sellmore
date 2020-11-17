@@ -286,4 +286,9 @@ class CustomersController extends Controller
 
         return response(['response' => 'Referido arquivado']);
     }
+
+    public function giveOrRemovePreference(Request $request)
+    {
+        return \App\Customers::updatePreference($request->all(), $request['bo_preference']);
+    }
 }
