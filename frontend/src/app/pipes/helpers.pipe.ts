@@ -19,6 +19,10 @@ export class HelpersPipe implements PipeTransform {
 				return this.statusString(value);
 				break;
 			}
+			case 'phoneByCountry': {
+				return this.phoneByCountry(value, args1);
+				break;
+			}
 			default: {
 				break;
 			}
@@ -49,5 +53,25 @@ export class HelpersPipe implements PipeTransform {
 			return value.replace(/public\//g, '');
 		}
 		return value;
+	}
+	phoneByCountry(value, prefix) {
+		var arPrefix = {
+			1: { reg: /(\d{3})(\d{3})(\d{4})/, mask: '($1) $2-$3' },
+			44: { reg: /(\d{5})(\d{6})/, mask: '$1 $2' },
+			351: { reg: /(\d{3})(\d{3})(\d{3})/, mask: '$1 $2-$3' },
+			33: {
+				reg: /(\d{1})(\d{2})(\d{2})(\d{2})(\d{2})/,
+				mask: '$1 $2 $3 $4 $5',
+			},
+			34: {
+				reg: /(\d{3})(\d{2})(\d{2})(\d{2})/,
+				mask: '$1 $2 $3 $4',
+			},
+			55: { reg: /(\d{2})(\d{5})(\d{4})/, mask: '($1) $2-$3' },
+		};
+		let ex = arPrefix[prefix];
+		if (ex == undefined) return value;
+
+		return value.replace(ex.reg, ex.mask);
 	}
 }

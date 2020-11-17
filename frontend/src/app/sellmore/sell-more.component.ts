@@ -42,6 +42,7 @@ export class SellMoreComponent implements OnInit {
 	customers: any[] = [];
 	customersFilter: any[] = [];
 
+	maskToInsert: string = '(00) 00000-0000';
 	countryCodeSelected: string = '55';
 	phone: string = '';
 	bo_whatsapp: boolean = true;
@@ -123,6 +124,9 @@ export class SellMoreComponent implements OnInit {
 		this.user = this.loginService.getUser();
 		this.find();
 		this.countryCodes = this.helper.getAllCountryCode();
+	}
+	maskPhoneToInsert(event) {
+		this.maskToInsert = event['mask'];
 	}
 	find() {
 		this.searchControl.valueChanges

@@ -65,7 +65,7 @@
 						</div>
 						<div class="row flex-wrap">
 							<div class="filterPhone" *ngFor="let itemPhone of item.phones; let last = last">
-								<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }}
+								<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
 								<span *ngIf="!last" class="mr-10">,</span>
 							</div>
 						</div>
@@ -133,7 +133,7 @@
 						<div class="row flex-wrap">
 							<div class="contacto-phone"
 								*ngFor="let itemPhone of itemLead.value.phones; let last = last">
-								<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }}
+								<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
 								<span *ngIf="!last" class="mr-10">,</span>
 							</div>
 						</div>
@@ -228,7 +228,8 @@
 									<div class="row flex-wrap">
 										<div class="contacto-phone"
 											*ngFor="let itemPhone of item.phones; let last = last">
-											<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }}
+											<small>+{{itemPhone?.country_code}}</small> {{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
+											<!-- <small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }} -->
 											<span *ngIf="!last" class="mr-10">,</span>
 										</div>
 									</div>
@@ -437,7 +438,7 @@
 
 								</div>
 								<div class="phone-number">
-									<small>+{{telefone?.country_code}}</small>{{telefone?.phone | mask: "(00) 00000-0000"}}
+									<small>+{{telefone?.country_code}}</small>{{telefone?.phone | helpers: "phoneByCountry" :telefone.country_code}}
 								</div>
 								<div class="phone-remove ">
 									<i class="fa fa-trash cursor-pointer" (click)="deleteTelefone(j)"></i>
@@ -496,8 +497,14 @@
 									<i class="fa fa-globe-americas"></i>
 								</div>
 								<div class="inputText">
-									<ng-select [items]="countryCodes" bindLabel="nome" autofocus bindValue="countryCode"
-										[(ngModel)]="countryCodeSelected" [ngModelOptions]="{standalone: true}">
+									<ng-select
+										(change)="maskPhoneToInsert($event)"
+										[items]="countryCodes"
+										bindLabel="nome"
+										autofocus
+										bindValue="countryCode"
+										[(ngModel)]="countryCodeSelected"
+										[ngModelOptions]="{standalone: true}">
 									</ng-select>
 
 								</div>
@@ -507,7 +514,7 @@
 									<i class="fa fa-mobile-alt"></i>
 								</div>
 								<div class="inputText">
-									<input [(ngModel)]="phone" mask="(00) 00000-0000"
+									<input [(ngModel)]="phone" mask="{{maskToInsert}}"
 										[ngModelOptions]="{standalone: true}">
 
 								</div>
@@ -652,7 +659,7 @@
 									href="https://api.whatsapp.com/send/?phone={{itemPhone.country_code}}{{itemPhone.phone}}&text={{strategy?.url_sale}}"
 									title="Enviar link">
 									<i [ngClass]="itemPhone.bo_whatsapp ? 'fab fa-whatsapp' : 'fa fa-mobile-alt'"></i>
-									<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }}
+									<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
 									<span *ngIf="!last" class="mr-10">,</span>
 								</a>
 							</div>
@@ -731,7 +738,7 @@
 
 									<div class="parentPhone"
 										*ngFor="let itemPhone of itemParent.phones; let last = last">
-										<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }}
+										<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
 										<span *ngIf="!last" class="mr-10">,</span>
 									</div>
 								</div>
@@ -956,7 +963,7 @@
 												<div class="cursor-pointer">
 													<i
 														[ngClass]="itemPhone.bo_whatsapp ? 'fab fa-whatsapp' : 'fa fa-mobile-alt'"></i>
-													<small>+{{itemPhone.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }}
+													<small>+{{itemPhone.country_code}}</small>{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
 													<span *ngIf="!last" class="mr-10">,</span>
 												</div>
 											</div>
