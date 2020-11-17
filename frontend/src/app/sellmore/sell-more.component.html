@@ -664,20 +664,20 @@
 							</div>
 						</a>
 						<ng-container *ngIf="person.status == 'a'">
-							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'pc')">
-								<i class="fa fa-credit-card icon-waiting" matTooltip="Problemas com cartão de crédito">
+							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'pc')" title="Problemas com cartão de crédito">
+								<i class="fa fa-credit-card icon-waiting" >
 								</i>
 							</div>
-							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'ld')">
-								<i class="fa fa-headset icon-waiting" matTooltip="Ligar depois">
+							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'ld')" title="Ligar depois">
+								<i class="fa fa-headset icon-waiting" >
 								</i>
 							</div>
-							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'n')">
-								<i class="fa fa-thumbs-down icon-waiting" matTooltip="Não deu negócio 😭">
+							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'n')" title="Não deu negócio 😭">
+								<i class="fa fa-thumbs-down icon-waiting" >
 								</i>
 							</div>
-							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'c')">
-								<i class="fa fa-thumbs-up icon-waiting" matTooltip="Vendido 😃">
+							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'c')" title="Vendido 😃">
+								<i class="fa fa-thumbs-up icon-waiting" >
 								</i>
 							</div>
 						</ng-container>
