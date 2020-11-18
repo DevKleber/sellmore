@@ -20,7 +20,7 @@ import { API_SITE_PATH_IMG } from '../app.api';
 import Swal from 'sweetalert2';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { AnimationItem } from 'lottie-web';
+
 import { AnimationOptions } from 'ngx-lottie';
 
 import {
@@ -117,14 +117,6 @@ export class SellMoreComponent implements OnInit {
 	) {}
 
 	ngOnInit() {
-		var isOpera = navigator.userAgent.indexOf(' OPR/') >= 0;
-		console.log(isOpera);
-
-		console.log(navigator.appName);
-		console.log(navigator.appCodeName);
-		console.log(navigator.platform);
-		console.log(window.navigator);
-		console.log(screen.width + 'x' + screen.height);
 		this.getCustomers();
 		this.getStrategy();
 		// this.getCategories();

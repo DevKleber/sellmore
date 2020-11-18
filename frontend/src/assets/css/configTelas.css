@@ -1,3 +1,9 @@
+/* .navegatorWithMenuLeft div.customersHd{
+
+}
+.navegatorWithMenuLeft div.customersFullHd{
+
+} */
 @media (width: 640px) {
 }
 @media (width: 800px) {
@@ -38,12 +44,16 @@
 } */
 @media only screen and (min-width: 1281px) and (max-width: 1368px) {
 
-	.customers {
+	.customers,.customersFilter {
+		width: 30.8% !important;
+	}
+
+	/* .customers {
 		width: 392px !important;
 	}
 	.customersFilter{
 		width: 392px!important;
-	}
+	} */
 
 	.children .item .contacto .contacto-name {
 		font-size: 16px!important;
