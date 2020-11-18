@@ -26,6 +26,7 @@ body {
 	top: 0;
 	background: var(--background);
 	color: var(--backgroundColor);
+	font-size: 13px;
 }
 
 .mat-dialog-container {

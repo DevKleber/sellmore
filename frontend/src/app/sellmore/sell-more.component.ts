@@ -117,6 +117,14 @@ export class SellMoreComponent implements OnInit {
 	) {}
 
 	ngOnInit() {
+		var isOpera = navigator.userAgent.indexOf(' OPR/') >= 0;
+		console.log(isOpera);
+
+		console.log(navigator.appName);
+		console.log(navigator.appCodeName);
+		console.log(navigator.platform);
+		console.log(window.navigator);
+		console.log(screen.width + 'x' + screen.height);
 		this.getCustomers();
 		this.getStrategy();
 		// this.getCategories();

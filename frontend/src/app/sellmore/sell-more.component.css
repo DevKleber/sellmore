@@ -50,11 +50,13 @@
 	position: fixed;
 	padding: 15px;
 	height: 95px;
-	width: 100%;
+	/* width: 100%; */
+	width: 310px;
 	display: flex;
 	align-items: center;
 	justify-content: flex-end;
 	bottom: 0;
+	right: 0;
 }
 .footerItens {
 	width: 80px;
@@ -244,7 +246,7 @@
 }
 
 .icon-finished {
-	font-size: 33px;
+	font-size: 27px;
 }
 .icon-finished-yes {
 	color: var(--backgroundSecondary);
@@ -319,7 +321,7 @@ div.status i {
 	overflow: auto;
 }
 .parentName {
-	font-size: 2em;
+	font-size: 1.7em;
 	font-weight: bold;
 }
 .parentPhone {
