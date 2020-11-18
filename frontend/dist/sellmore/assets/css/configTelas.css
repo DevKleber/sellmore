@@ -20,11 +20,46 @@
 		width: 47.3% !important;
 	}
 }
-@media only screen and (min-width: 1281px) and (max-width: 1366px) {
+/* @media only screen and (min-width: 1281px) and (max-width: 1360px) {
+	.customers {
+		width: 378px !important;
+	}
+	.customersFilter{
+		width: 378px!important;
+	}
+}
+@media only screen and (min-width: 1361px) and (max-width: 1366px) {
 	.customers {
 		width: 392px !important;
 	}
+	.customersFilter{
+		width: 392px!important;
+	}
+} */
+@media only screen and (min-width: 1281px) and (max-width: 1368px) {
+
+	.customers {
+		width: 392px !important;
+	}
+	.customersFilter{
+		width: 392px!important;
+	}
+
+	.children .item .contacto .contacto-name {
+		font-size: 16px!important;
+	}
+	.footerItens{
+		width: 60px!important;
+		height: 60px!important;
+		border-radius: 30px!important;
+		font-size: 2em!important;
+	}
+	.sellMore footer {
+		width: 245px!important;
+	}
 }
+
+
 @media only screen and (min-width: 1367px) and (max-width: 1600px) {
 	.customers {
 		width: 469px !important;
