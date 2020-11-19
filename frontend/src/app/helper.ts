@@ -339,6 +339,7 @@ export class Helper {
 		return dados;
 	}
 	decrypt(dados) {
+		if (dados == null) return {};
 		var result;
 		dados = dados.replace(/গ/g, 'A');
 		dados = dados.replace(/খ/g, 'B');

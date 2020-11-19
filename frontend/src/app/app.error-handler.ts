@@ -18,8 +18,9 @@ export class ApplicationErrorHandler extends ErrorHandler {
 	}
 
 	handleError(errorResponse: HttpErrorResponse | any) {
+		this.loaderService.isLoad(false);
+
 		if (errorResponse instanceof HttpErrorResponse) {
-			this.loaderService.isLoad(false);
 			const error =
 				typeof errorResponse.error !== 'object'
 					? JSON.parse(errorResponse.error)
@@ -45,7 +46,12 @@ export class ApplicationErrorHandler extends ErrorHandler {
 							error.error === 'token_not_provider' ||
 							error.error === 'Authorization Token not found'
 						) {
-							this.ns.notifyError(error.error);
+							if (
+								error.error != 'Authorization Token not found'
+							) {
+								this.ns.notifyError(error.error);
+							}
+							this.loaderService.isLoad(false);
 							const loginService = this.injector.get(
 								LoginService
 							);

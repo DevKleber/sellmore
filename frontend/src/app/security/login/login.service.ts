@@ -34,6 +34,10 @@ export class LoginService {
 	}
 	getUser() {
 		let user = localStorage.getItem('user');
+		if (user == null) {
+			this.logoutForce();
+			return false;
+		}
 		let userDecrip = this.helper.decrypt(user);
 		let client = JSON.parse(atob(userDecrip));
 		return client;
