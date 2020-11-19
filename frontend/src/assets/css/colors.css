@@ -1,4 +1,5 @@
 :root {
+	--backgroundColorLight:#fff;
 	--background: #efefed;
 	--backgroundColor: #2a004f;
 	--backgroundColorMoreDark: #5b6d80;
@@ -29,10 +30,13 @@
 	--backgroundSecondaryHover: #00c972;
 	--backgroundSecondaryColor: #fff;
 
+	--card-lightBackground: #fff;
+	--card-lightColor: #636363;
+
 	/* --backgroundButton: #04d361;
     --backgroundButtonHover: #0df576;
     --backgroundButtonDisabled: #95fcc1;
     --backgroundButtonDisabledColor: #212025;
     --backgroundButtonColor: #fff;
-    --primary: #04d361; */
+	--primary: #04d361; */
 }

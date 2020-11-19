@@ -19,6 +19,15 @@
 				</div>
 			</form>
 		</div>
+		<button (click)="setDarkMode()" class="iconTheme">
+			<ng-container *ngIf="themeIsDark; else elseTemplateDarkLight">
+				<i class="far fa-moon"></i>
+			</ng-container>
+			<ng-template #elseTemplateDarkLight>
+				<i class="fas fa-moon"></i>
+			</ng-template>
+		</button>
+
 		<button class="btn-secondary" style="margin-top: 0!important; padding: 10px 32px!important; margin-right: 5px;"
 			data-toggle="modal" data-target="#modalBug">
 			Reportar bug

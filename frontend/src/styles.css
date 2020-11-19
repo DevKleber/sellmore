@@ -182,8 +182,9 @@ button {
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 	transition: 0.3s;
 	border-radius: 5px; /* 5px rounded corners */
-	background: #fff;
-	color: #636363;
+	background: var(--card-lightBackground);
+	color: var(--card-lightColor);
+
 	padding: 15px;
 }
 
@@ -206,7 +207,7 @@ button {
 	box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
-.light { background-color: #fff!important; color: var(--backgroundColor);}
+.light { background-color: var(--backgroundColorLight)!important; color: var(--backgroundColor);}
 
 .mat-tooltip {
     /* your own custom styles here */
@@ -220,4 +221,10 @@ button {
 
 a:link{
 	text-decoration: none;
+}
+
+.iconTheme{
+	color: var(--backgroundColor) !important;
+	background: none!important;
+	margin-top: 0!important; padding: 10px 32px!important; margin-right: 5px;
 }

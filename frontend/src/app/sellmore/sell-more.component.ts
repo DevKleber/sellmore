@@ -15,6 +15,7 @@ import {
 import { SellMoreService } from './sell-more.service';
 import { LoginService } from '../security/login/login.service';
 import { NotificationService } from '../shared/messages/notification.service';
+import { ThemeService } from '../shared/theme/theme.service';
 import { Helper } from '../helper';
 import { API_SITE_PATH_IMG } from '../app.api';
 import Swal from 'sweetalert2';
@@ -38,6 +39,7 @@ import { LoaderService } from '../shared/loader/loader.service';
 	styleUrls: ['./sell-more.component.css'],
 })
 export class SellMoreComponent implements OnInit {
+	themeIsDark: boolean;
 	countryCodes: any[] = [];
 	customers: any[] = [];
 	customersFilter: any[] = [];
@@ -112,6 +114,7 @@ export class SellMoreComponent implements OnInit {
 		private loginService: LoginService,
 		private formBuilder: FormBuilder,
 		public helper: Helper,
+		public themeService: ThemeService,
 		public notificationService: NotificationService,
 		public loaderService: LoaderService
 	) {}
@@ -124,6 +127,10 @@ export class SellMoreComponent implements OnInit {
 		this.user = this.loginService.getUser();
 		this.find();
 		this.countryCodes = this.helper.getAllCountryCode();
+		this.themeIsDark = this.themeService.themeActive();
+	}
+	setDarkMode() {
+		this.themeIsDark = this.themeService.setDarkMode();
 	}
 	maskPhoneToInsert(event) {
 		this.maskToInsert = event['mask'];
