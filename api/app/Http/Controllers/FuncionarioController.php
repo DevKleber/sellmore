@@ -56,6 +56,15 @@ class FuncionarioController extends Controller
             return  response(['response' => 'Erro ao salvar usuário'], 400);
         }
 
+        $strategy['id_usuario'] = $funcionario->id;
+        $strategy['strategy'] = "∘ Apresentação\n\n∘ Conexão\n\n∘ DI\n\n∘ Speech\n\n∘ Fechamento\n\n∘ Referidos\n\n∘ Validaçao";
+        $strategy['url_sale'] = 'https://wup.onl/';
+
+        $strategy = \App\Strategy::create($strategy);
+        if (!$strategy) {
+            return  response(['response' => 'Erro ao salvar Strategy'], 400);
+        }
+
         \DB::commit();
 
         return response(['response' => 'Salvo com sucesso', 'dados' => $funcionario]);
