@@ -6,8 +6,7 @@
 		</div>
 		<div class="search">
 			<form [formGroup]='searchForm'>
-
-				<div class="input" style="width: 490px !important">
+				<div class="input searchInput">
 					<div class="inputIcon">
 						<i class="fa fa-search"></i>
 					</div>
@@ -19,10 +18,10 @@
 				</div>
 			</form>
 		</div>
-		<button *ngIf="user?.id === 1" [routerLink]="[ '/access_log']" class="iconTheme">
+		<button *ngIf="user?.id === 1" [routerLink]="[ '/access_log']" class="iconTheme mobileNo">
 			LOG
 		</button>
-		<button (click)="setDarkMode()" class="iconTheme">
+		<button (click)="setDarkMode()" class="iconTheme mobileNo">
 			<ng-container *ngIf="themeIsDark; else elseTemplateDarkLight">
 				<i class="far fa-moon"></i>
 			</ng-container>
@@ -31,11 +30,11 @@
 			</ng-template>
 		</button>
 
-		<button class="btn-secondary" style="margin-top: 0!important; padding: 10px 32px!important; margin-right: 5px;"
+		<button class="btn-secondary mobileNo" style="margin-top: 0!important; padding: 10px 32px!important; margin-right: 5px;"
 			data-toggle="modal" data-target="#modalBug">
 			Reportar bug
 		</button>
-		<button class="btn-secondary" style="margin-top: 0!important; padding: 10px 32px!important;" data-toggle="modal"
+		<button class="btn-secondary mobileNo" style="margin-top: 0!important; padding: 10px 32px!important;" data-toggle="modal"
 			data-target="#modalDonate">
 			Doar
 		</button>
@@ -62,7 +61,7 @@
 
 		<div class="" *ngIf="!customersFilter.length && !isSearch">
 			<div class="row center-center" style="flex-direction: column;">
-				<ng-lottie [options]="options" style="width: 800px;"></ng-lottie>
+				<ng-lottie [options]="options" class="lottieSearch"></ng-lottie>
 				<h2>Nenhum resultado encontrado</h2>
 			</div>
 		</div>

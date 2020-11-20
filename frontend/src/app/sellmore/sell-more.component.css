@@ -12,6 +12,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	flex-wrap: wrap;
 	/* flex-direction: row; */
 	/* justify-content: space-between; */
 }
@@ -404,3 +405,10 @@ div.status i {
 	justify-content: center;
 }
 /* end fk add phone */
+
+.searchInput{
+	width: 490px;
+}
+.lottieSearch{
+	width: 800px;
+}
