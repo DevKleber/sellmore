@@ -495,13 +495,16 @@ export class SellMoreComponent implements OnInit {
 		this.sellMoreService.getCustomersLd().subscribe((res) => {
 			this.customersLd = res;
 		});
-		this.sellMoreService.getCalenda().subscribe((res: CalendarEvent[]) => {
+		this.sellMoreService.getCalenda().subscribe((res) => {
 			res['dados'].forEach((element) => {
+				let dateStart = new Date(element.start);
+				let dateEnd = new Date(element.end);
+
 				this.events = [
 					...this.events,
 					{
-						start: new Date(element.start),
-						end: new Date(element.end),
+						start: dateStart,
+						end: dateEnd,
 						title: element.title,
 						color: element.color,
 						allDay: false,
@@ -513,6 +516,7 @@ export class SellMoreComponent implements OnInit {
 					},
 				];
 			});
+			// this.notificationService.notifySweet(JSON.stringify(this.events));
 			console.log(this.events);
 			// this.events = res['dados'];
 			this.loaderService.isLoad(false);

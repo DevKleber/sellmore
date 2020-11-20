@@ -20,7 +20,7 @@ class CalendarController extends Controller
         }
         $ar = [];
         foreach ($calendar as $key => $value) {
-            $end_date = date('Y-m-d H:i:s', strtotime("{$value->date} +30 minute"));
+            $end_date = date('Y/m/d H:i:s', strtotime("{$value->date} +30 minute"));
             $hour = date('H:i:s', strtotime("{$value->date}"));
             $cutomersPhone = \App\Phone::where('id_customers', $value->id_customer)->select('phone')->get();
             $arNumbers = [];
@@ -29,7 +29,9 @@ class CalendarController extends Controller
             }
             $numbersPhone = implode(',', $arNumbers);
 
-            $ar[$key]['start'] = $value->date;
+            $startDate = str_replace('-', '/', $value->date);
+
+            $ar[$key]['start'] = $startDate;
             $ar[$key]['end'] = $end_date;
             $ar[$key]['title'] = "{$value->name} {$numbersPhone}  Ligar às {$hour}";
             $ar[$key]['color'] = '#00eb84';
