@@ -43,6 +43,24 @@
 	.mobileNo{
 		display: none!important;
 	}
+	.modal .modal-exlg {
+		width: 95%!important;
+	}
+	.calendarOptions {
+		flex-wrap: wrap!important;
+	}
+
+	.calendarDate,.calendarDateType,.calendarDateChosen{
+		width: 100%!important;
+		align-items: center!important;
+		justify-content: center!important;
+	}
+	#modalCalendar.modal.fade.in div.modal-dialog.modal-exlg div.modal-body div div.card-light  div.row{
+		flex-wrap: wrap!important;
+	}
+	#modalCalendar.modal.fade.in div.modal-dialog.modal-exlg div.modal-body div div.card-light  div.row .input{
+		margin-right: 0px!important;
+	}
 }
 
 @media only screen and (min-width: 961px) and (max-width: 1024px) {
