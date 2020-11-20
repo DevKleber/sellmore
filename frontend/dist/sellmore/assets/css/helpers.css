@@ -35,6 +35,9 @@
 .flex-wrap {
 	flex-wrap: wrap;
 }
+.flexAll {
+	flex: 1;
+}
 .center-center {
 	align-items: center;
 	justify-content: center;
