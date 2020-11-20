@@ -4,25 +4,59 @@
 .navegatorWithMenuLeft div.customersFullHd{
 
 } */
+
+
 @media (width: 640px) {
 }
 @media (width: 800px) {
 }
 @media (width: 960px) {
 }
+@media only screen and (min-width: 1px) and (max-width: 550px) {
+
+	.sellMore header .logo {
+		width: 65px!important;
+	}
+	.sellMore header .profile {
+		width: 65px!important;
+	}
+
+	.searchInput{
+		/* width: 145px!important; */
+		width: auto!important;
+		flex: 1!important;
+	}
+	.customers,.customersFilter {
+		width: 100% !important;
+		margin: 15px 0px!important;
+	}
+	.footerItens{
+		width: 60px!important;
+		height: 60px!important;
+		border-radius: 30px!important;
+		font-size: 2em!important;
+		margin-left: 10px;
+	}
+	.lottieSearch{
+		width: 100%!important;
+	}
+	.mobileNo{
+		display: none!important;
+	}
+}
 
 @media only screen and (min-width: 961px) and (max-width: 1024px) {
-	.customers {
+	.customers,.customersFilter {
 		width: 46.5% !important;
 	}
 }
 @media only screen and (min-width: 1025px) and (max-width: 1152px) {
-	.customers {
+	.customers,.customersFilter {
 		width: 47% !important;
 	}
 }
 @media only screen and (min-width: 1153px) and (max-width: 1280px) {
-	.customers {
+	.customers,.customersFilter {
 		width: 47.3% !important;
 	}
 }
