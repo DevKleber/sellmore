@@ -19,6 +19,9 @@
 				</div>
 			</form>
 		</div>
+		<button *ngIf="user?.id === 1" [routerLink]="[ '/access_log']" class="iconTheme">
+			LOG
+		</button>
 		<button (click)="setDarkMode()" class="iconTheme">
 			<ng-container *ngIf="themeIsDark; else elseTemplateDarkLight">
 				<i class="far fa-moon"></i>
