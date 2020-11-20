@@ -20,6 +20,9 @@ export const ROUTES: Routes = [
 				(m) => m.NotFoundModule
 			),
 	},
-
+	{
+		path: 'access_log',
+		loadChildren: () => import('./log/log.module').then((m) => m.LogModule),
+	},
 	{ path: '**', redirectTo: 'not-found', pathMatch: 'full' },
 ];

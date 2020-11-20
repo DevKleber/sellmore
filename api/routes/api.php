@@ -31,4 +31,6 @@ Route::group(['middleware' => 'apiJwt'], function () {
 
     Route::get('strategy', 'StrategyController@index');
     Route::put('strategy', 'StrategyController@update');
+
+    Route::resource('access_log','LogController');
 });

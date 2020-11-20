@@ -15,6 +15,7 @@ import {
 import { SellMoreService } from './sell-more.service';
 import { LoginService } from '../security/login/login.service';
 import { NotificationService } from '../shared/messages/notification.service';
+import { LogService } from '../log/log.service';
 import { ThemeService } from '../shared/theme/theme.service';
 import { Helper } from '../helper';
 import { API_SITE_PATH_IMG } from '../app.api';
@@ -116,7 +117,8 @@ export class SellMoreComponent implements OnInit {
 		public helper: Helper,
 		public themeService: ThemeService,
 		public notificationService: NotificationService,
-		public loaderService: LoaderService
+		public loaderService: LoaderService,
+		private logService: LogService
 	) {}
 
 	ngOnInit() {
@@ -128,6 +130,21 @@ export class SellMoreComponent implements OnInit {
 		this.find();
 		this.countryCodes = this.helper.getAllCountryCode();
 		this.themeIsDark = this.themeService.themeActive();
+		this.saveLogAccess();
+	}
+	saveLogAccess() {
+		let form = {
+			display_resolution: `${screen.width} x ${screen.height}`,
+			os: navigator.platform,
+			device: null,
+			language: navigator.language,
+			browser: null,
+			ip: null,
+			user_agent: navigator.userAgent,
+			id_customers: null,
+		};
+
+		this.logService.save(form);
 	}
 	setDarkMode() {
 		this.themeIsDark = this.themeService.setDarkMode();

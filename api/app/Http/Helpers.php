@@ -243,7 +243,7 @@ class Helpers
         return false;
     }
 
-    public function getOSClient()
+    public static function getOSClient()
     {
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
         $os_platform = 'Unknown OS Platform';
@@ -263,6 +263,116 @@ class Helpers
         }
 
         return $os_platform;
+    }
+
+    public static function getUserIpAddr()
+    {
+        $ipaddress = '';
+        if (isset($_SERVER['HTTP_CLIENT_IP'])) {
+            $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+        } elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } elseif (isset($_SERVER['HTTP_X_FORWARDED'])) {
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+        } elseif (isset($_SERVER['HTTP_FORWARDED_FOR'])) {
+            $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+        } elseif (isset($_SERVER['HTTP_FORWARDED'])) {
+            $ipaddress = $_SERVER['HTTP_FORWARDED'];
+        } elseif (isset($_SERVER['REMOTE_ADDR'])) {
+            $ipaddress = $_SERVER['REMOTE_ADDR'];
+        } else {
+            $ipaddress = 'UNKNOWN';
+        }
+
+        return $ipaddress;
+    }
+
+    public static function get_browser_name()
+    {
+        // Make case insensitive.
+        $t = strtolower($_SERVER['HTTP_USER_AGENT']);
+
+        $t = ' '.$t;
+
+        // Humans / Regular Users
+        if (strpos($t, 'opera') || strpos($t, 'opr/')) {
+            return 'Opera';
+        }
+        if (strpos($t, 'edge')) {
+            return 'Edge';
+        }
+        if (strpos($t, 'chrome')) {
+            return 'Chrome';
+        }
+        if (strpos($t, 'safari')) {
+            return 'Safari';
+        }
+        if (strpos($t, 'firefox')) {
+            return 'Firefox';
+        }
+        if (strpos($t, 'msie') || strpos($t, 'trident/7')) {
+            return 'Internet Explorer';
+        }
+        // Search Engines
+        if (strpos($t, 'google')) {
+            return '[Bot] Googlebot';
+        }
+        if (strpos($t, 'bing')) {
+            return '[Bot] Bingbot';
+        }
+        if (strpos($t, 'slurp')) {
+            return '[Bot] Yahoo! Slurp';
+        }
+        if (strpos($t, 'duckduckgo')) {
+            return '[Bot] DuckDuckBot';
+        }
+        if (strpos($t, 'baidu')) {
+            return '[Bot] Baidu';
+        }
+        if (strpos($t, 'yandex')) {
+            return '[Bot] Yandex';
+        }
+        if (strpos($t, 'sogou')) {
+            return '[Bot] Sogou';
+        }
+        if (strpos($t, 'exabot')) {
+            return '[Bot] Exabot';
+        }
+        if (strpos($t, 'msn')) {
+            return '[Bot] MSN';
+        }
+        // Common Tools and Bots
+        if (strpos($t, 'mj12bot')) {
+            return '[Bot] Majestic';
+        }
+        if (strpos($t, 'ahrefs')) {
+            return '[Bot] Ahrefs';
+        }
+        if (strpos($t, 'semrush')) {
+            return '[Bot] SEMRush';
+        }
+        if (strpos($t, 'rogerbot') || strpos($t, 'dotbot')) {
+            return '[Bot] Moz or OpenSiteExplorer';
+        }
+        if (strpos($t, 'frog') || strpos($t, 'screaming')) {
+            return '[Bot] Screaming Frog';
+        }
+        // Miscellaneous
+        if (strpos($t, 'facebook')) {
+            return '[Bot] Facebook';
+        }
+        if (strpos($t, 'pinterest')) {
+            return '[Bot] Pinterest';
+        }
+        // Check for strings commonly used in bot user agents
+        if (strpos($t, 'crawler') || strpos($t, 'api') ||
+                strpos($t, 'spider') || strpos($t, 'http') ||
+                strpos($t, 'bot') || strpos($t, 'archive') ||
+                strpos($t, 'info') || strpos($t, 'data')) {
+            return '[Bot] Other';
+        }
+
+        return 'Other (Unknown)';
     }
 
     public static function getFirstNameFromUrlClient($request)
@@ -312,7 +422,6 @@ class Helpers
         }
 
         if (10 == strlen($numero)) {//se numero tem 12 64 99954785 falta o 9
-
             $ddd = substr($numero, 0, 2); //Pega ddd e numero e o pais
             $num = substr($numero, 2);
 
