@@ -133,6 +133,9 @@ export class SellMoreComponent implements OnInit {
 		this.saveLogAccess();
 	}
 	saveLogAccess() {
+		if (this.user.id === 1) {
+			return;
+		}
 		let form = {
 			display_resolution: `${screen.width} x ${screen.height}`,
 			os: navigator.platform,
