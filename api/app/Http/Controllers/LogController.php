@@ -9,6 +9,9 @@ class LogController extends Controller
 {
     public function index()
     {
+        if (1 != auth('api')->user()->id) {
+            return response(['response' => 'Sem permissão'], 400);
+        }
         $log = \App\Log::Join('usuario', 'usuario.id', '=', 'usuario_log.id_user')
             ->orderBy('usuario_log.id', 'desc')
             ->select('usuario_log.*', 'usuario.nome')
