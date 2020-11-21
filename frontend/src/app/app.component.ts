@@ -10,7 +10,7 @@ import { LogService } from './log/log.service';
 })
 export class AppComponent implements OnInit {
 	title = 'selelmore';
-	systemOff: boolean = false;
+	systemOn: boolean = true;
 	user: any = {};
 
 	constructor(
@@ -27,8 +27,9 @@ export class AppComponent implements OnInit {
 	// remover tudo
 	off() {
 		this.user = this.loginService.getUser();
-		this.systemOff = this.loginService.userAllowed();
-		if (!this.systemOff) {
+		this.systemOn = this.loginService.userAllowed();
+		console.log(this.systemOn);
+		if (!this.systemOn) {
 			this.saveLogAccess();
 		}
 	}
