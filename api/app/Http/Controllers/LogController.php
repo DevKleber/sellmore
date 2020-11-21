@@ -12,16 +12,71 @@ class LogController extends Controller
         if (1 != auth('api')->user()->id) {
             return response(['response' => 'Sem permissão'], 400);
         }
+
         $log = \App\Log::Join('usuario', 'usuario.id', '=', 'usuario_log.id_user')
             ->orderBy('usuario_log.id', 'desc')
             ->select('usuario_log.*', 'usuario.nome')
             ->get()
         ;
-        if (!$log) {
-            return response(['response' => 'Não existe Log'], 400);
-        }
 
-        return response(['dados' => $log]);
+        $totalCustomerActive = \App\Customers::Join('usuario', 'usuario.id', '=', 'customers.id_usuario')
+            ->selectRaw('id_usuario, nome, count(*) as total')
+            ->groupBy(['id_usuario', 'nome'])
+            ->where('customers.bo_ativo', true)
+            ->orderByRaw('total desc ')
+            ->get()
+        ;
+        $totalCustomerSeller = \App\Customers::Join('usuario', 'usuario.id', '=', 'customers.id_usuario')
+            ->selectRaw('id_usuario, nome, count(*) as total')
+            ->groupBy(['id_usuario', 'nome'])
+            ->where('customers.status', 'c')
+            ->orderByRaw('total desc ')
+            ->get()
+        ;
+
+        $totalAccessByUser = \App\Log::Join('usuario', 'usuario.id', '=', 'usuario_log.id_user')
+            ->selectRaw('id_user, nome, count(*) as total')
+            ->groupBy(['id_user', 'nome'])
+            ->orderByRaw('total desc ')
+            ->get()
+        ;
+
+        $totalDisplay = \App\Log::selectRaw('display_resolution, count(*) as total')
+            ->groupBy(['display_resolution'])
+            ->orderByRaw('total desc ')
+            ->get()
+        ;
+        $totalBrowser = \App\Log::selectRaw('browser, count(*) as total')
+            ->groupBy(['browser'])
+            ->orderByRaw('total desc ')
+            ->get()
+        ;
+        $totalDevice = \App\Log::selectRaw('device, count(*) as total')
+            ->groupBy(['device'])
+            ->orderByRaw('total desc ')
+            ->get()
+        ;
+        $totalDevice = \App\Log::selectRaw('device, count(*) as total')
+            ->groupBy(['device'])
+            ->orderByRaw('total desc ')
+            ->get()
+        ;
+        $totalLanguage = \App\Log::selectRaw('`language`, count(*) as total')
+            ->groupBy(['language'])
+            ->orderByRaw('total desc ')
+            ->get()
+        ;
+
+        return response([
+            'dados' => $log,
+            'totalCustomerActive' => $totalCustomerActive,
+            'totalCustomerSeller' => $totalCustomerSeller,
+            'totalAccessByUser' => $totalAccessByUser,
+            'totalDisplay' => $totalDisplay,
+            'totalBrowser' => $totalBrowser,
+            'totalDevice' => $totalDevice,
+            'totalLanguage' => $totalLanguage,
+        ]);
     }
 
     public function store(Request $request)
