@@ -27,10 +27,9 @@ export class AppComponent implements OnInit {
 	// remover tudo
 	off() {
 		this.user = this.loginService.getUser();
-		this.saveLogAccess();
-		if (this.user.id > 6) {
-			this.systemOff = true;
-			return false;
+		this.systemOff = this.loginService.userAllowed();
+		if (!this.systemOff) {
+			this.saveLogAccess();
 		}
 	}
 	saveLogAccess() {

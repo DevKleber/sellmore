@@ -32,6 +32,18 @@ export class LoginService {
 	me() {
 		return this.http.get(`${API}/me`);
 	}
+	userAllowed() {
+		let user = localStorage.getItem('user');
+		if (user == null) {
+			return false;
+		}
+		let userDecrip = this.helper.decrypt(user);
+		let client = JSON.parse(atob(userDecrip));
+		if (client.id > 6) {
+			return false;
+		}
+		return true;
+	}
 	getUser() {
 		let user = localStorage.getItem('user');
 		if (user == null) {
