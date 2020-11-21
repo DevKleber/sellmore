@@ -10,6 +10,13 @@ import { LoaderService } from '../shared/loader/loader.service';
 })
 export class LogComponent implements OnInit {
 	logs: Log[];
+	totalCustomerActive: any[] = [];
+	totalCustomerSeller: any[] = [];
+	totalAccessByUser: any[] = [];
+	totalDisplay: any[] = [];
+	totalBrowser: any[] = [];
+	totalDevice: any[] = [];
+	totalLanguage: any[] = [];
 
 	constructor(
 		private logService: LogService,
@@ -23,6 +30,14 @@ export class LogComponent implements OnInit {
 	getLogs() {
 		this.logService.getLogs().subscribe((Log) => {
 			this.logs = Log['dados'];
+			this.totalCustomerActive = Log['totalCustomerActive'];
+			this.totalCustomerSeller = Log['totalCustomerSeller'];
+			this.totalAccessByUser = Log['totalAccessByUser'];
+			this.totalDisplay = Log['totalDisplay'];
+			this.totalBrowser = Log['totalBrowser'];
+			this.totalDevice = Log['totalDevice'];
+			this.totalLanguage = Log['totalLanguage'];
+
 			this.loaderService.isLoad(false);
 		});
 	}
