@@ -22,6 +22,7 @@ Route::group(['middleware' => 'apiJwt'], function () {
 
     Route::get('search', 'CustomersController@customerSearch');
     Route::resource('customers', 'CustomersController');
+    Route::put('customersActivate/{id}', 'CustomersController@activate');
     Route::get('getCustomersLd', 'CustomersController@getCustomersLd');
     Route::get('parents/customers/{id}', 'CustomersController@getAllParents');
     Route::put('status/customers/{id}', 'CustomersController@changeStatus');
@@ -32,5 +33,5 @@ Route::group(['middleware' => 'apiJwt'], function () {
     Route::get('strategy', 'StrategyController@index');
     Route::put('strategy', 'StrategyController@update');
 
-    Route::resource('access_log','LogController');
+    Route::resource('access_log', 'LogController');
 });

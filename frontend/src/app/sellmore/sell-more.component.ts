@@ -431,9 +431,44 @@ export class SellMoreComponent implements OnInit {
 			confirmButtonText: 'Sim, arquivar!',
 		}).then((result) => {
 			if (result.isConfirmed) {
+				referido.bo_ativo = false;
 				this.loaderService.isLoad(true);
 				this.sellMoreService.inativar(referido.id).subscribe((res) => {
+					this.removeCustomersLocal(referido);
 					this.loaderService.isLoad(false);
+					this.notificationService.notifySweet(res['response']);
+				});
+			}
+		});
+	}
+	ativar(referido) {
+		let isLead = false;
+		Object.entries(this.customers).forEach((element) => {
+			if (element[1].id === referido.id) {
+				isLead = true;
+				return true;
+			}
+		});
+
+		Swal.fire({
+			title: `Ativar ${referido.name} ?`,
+			text: `${
+				isLead
+					? `Atenção, a pessoa escolhida é, também, um lead e possui referidos em sua cadeia de conexões (card). Se prosseguir com a ativação do(a) ${referido.name}, o seu card será mostrado por completo. Esta ação não altera os referidos que se tornaram lead. Deseja prosseguir?`
+					: ''
+			}`,
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Sim, ativar!',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				referido.bo_ativo = true;
+				this.loaderService.isLoad(true);
+				this.sellMoreService.ativar(referido.id).subscribe((res) => {
+					this.loaderService.isLoad(false);
+					this.getCustomers();
 					this.notificationService.notifySweet(res['response']);
 				});
 			}
@@ -610,5 +645,18 @@ export class SellMoreComponent implements OnInit {
 
 	closeOpenMonthViewDay() {
 		this.activeDayIsOpen = false;
+	}
+	removeCustomersLocal(referido) {
+		let isFind = false;
+		Object.entries(this.customers).forEach((lead, indexLead) => {
+			lead[1].referidos.forEach((children, indexReferido) => {
+				if (children.id === referido.id) {
+					lead[1].referidos.splice(indexReferido, 1);
+					isFind = true;
+					return true;
+				}
+			});
+			if (isFind) return;
+		});
 	}
 }

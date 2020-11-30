@@ -63,6 +63,9 @@ export class SellMoreService {
 	inativar(id: string) {
 		return this.http.delete(`${API}/customers/${id}`);
 	}
+	ativar(id) {
+		return this.http.put(`${API}/customersActivate/${id}`, []);
+	}
 
 	file(form, id) {
 		return this.http.post<any>(

@@ -100,9 +100,19 @@
 								data-target="#modalStickyAdd">
 								<i class="fas fa-edit"></i> Alterar
 							</button>
-							<button mat-menu-item (click)="inativar(item)">
-								<i class="fas fa-eye-slash"></i> Arquivar
-							</button>
+							<ng-container *ngIf="!item.bo_ativo; else elseTemplateActiveOrInative">
+								<button mat-menu-item (click)="ativar(item)">
+									<i class="fas fa-eye-slash"></i> Ativar
+								</button>
+
+							</ng-container>
+							<ng-template #elseTemplateActiveOrInative>
+								<button mat-menu-item (click)="inativar(item)">
+									<i class="fas fa-eye-slash"></i> Arquivar
+								</button>
+
+							</ng-template>
+
 							<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
 								data-target="#modalStickyAdd">
 								<i class="fa fa-chalkboard-teacher"></i>

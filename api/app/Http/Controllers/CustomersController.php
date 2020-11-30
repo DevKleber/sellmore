@@ -286,6 +286,21 @@ class CustomersController extends Controller
 
         return response(['response' => 'Referido arquivado']);
     }
+    public function activate($id)
+    {
+        $id_usuario = auth('api')->user()->id;
+        $customers = \App\Customers::where('id', $id)->where('id_usuario', $id_usuario)->first();
+
+        if (!$customers) {
+            return response(['response' => 'Referido não encontrado'], 400);
+        }
+        $customers->bo_ativo = true;
+        if (!$customers->save()) {
+            return response(['response' => 'Erro ao arquivar referido'], 400);
+        }
+
+        return response(['response' => 'Referido ativado']);
+    }
 
     public function giveOrRemovePreference(Request $request)
     {
