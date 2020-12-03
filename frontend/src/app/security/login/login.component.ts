@@ -44,6 +44,10 @@ export class LoginComponent implements OnInit {
 		// console.log(atob(this.navigateTo));
 	}
 	changeToNewAccount() {
+		this.notificationService.notifyInfo(
+			'No momento, estamos fechados para novos usuários.'
+		);
+		return;
 		this.isNewAccount = true;
 	}
 	changeToLogin() {

@@ -19,4 +19,7 @@ export class NotificationService {
 	notifyAlert(message: string) {
 		swal.fire(`${message}`, '', 'success');
 	}
+	notifyInfo(message: string) {
+		swal.fire(`${message}`, '', 'info');
+	}
 }
