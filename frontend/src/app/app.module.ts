@@ -39,7 +39,8 @@ import { LoginComponent } from './security/login/login.component';
 		SharedModule.forRoot(),
 
 		// RouterModule.forRoot(ROUTES, { preloadingStrategy: PreloadAllModules })
-		RouterModule.forRoot(ROUTES),
+		// RouterModule.forRoot(ROUTES),
+		RouterModule.forRoot(ROUTES, { useHash: true }), // .../#/crisis-center/
 	],
 	providers: [{ provide: ErrorHandler, useClass: ApplicationErrorHandler }],
 	bootstrap: [AppComponent],
