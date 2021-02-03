@@ -147,6 +147,7 @@ class Customers extends Model
                             $contatos[$key]['numeros']['phone'][$countPhone]['phone'] = $numeroWithoutCountryCode;
                             if ('55' == $countryCode) {
                                 if (strlen($numeroWithoutCountryCode) > 11) { //Se numero tem 13 digitos 64 9 99967545
+                                    $contatos[$key]['numeros']['phone'][$countPhone]['countryCode'] = $countryCode;
                                     continue;
                                 }
                                 $contatos[$key]['numeros']['phone'][$countPhone]['phone'] = Helpers::numeroNonoDigito($numeroWithoutCountryCode);
