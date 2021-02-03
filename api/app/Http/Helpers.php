@@ -57,7 +57,7 @@ class Helpers
             return date('Y-m-d', strtotime(str_replace('/', '-', $date)));
         }
 
-        return substr($date, 4, 4).'-'.substr($date, 2, 2).'-'.substr($date, 0, 2);
+        return substr($date, 4, 4) . '-' . substr($date, 2, 2) . '-' . substr($date, 0, 2);
     }
 
     public static function convertHourWithoutSeparatorToDatabase($date)
@@ -70,7 +70,7 @@ class Helpers
         $minute = substr($date, 2, 2);
         $seconds = substr($date, 4, 2);
 
-        return $hour.':'.$minute.':'.$seconds;
+        return $hour . ':' . $minute . ':' . $seconds;
     }
 
     public static function removerCaracteresPhone($conteudo)
@@ -206,10 +206,10 @@ class Helpers
         //Recupera a extensão do arquivo
         $extension = $doc->getClientOriginalExtension();
         //Definindo um nome unico para o arquivo
-        $name = date('His_Ymd').'_'.str_replace(' ', '', $filename);
+        $name = date('His_Ymd') . '_' . str_replace(' ', '', $filename);
 
         //Diretório onde será salvo os arquivos
-        $destinationPath = 'img/'.$folder;
+        $destinationPath = 'img/' . $folder;
         //Move o arquivo para a pasta indicada
         if ($doc->move($destinationPath, $name)) {
             return ['file' => $name];
@@ -230,10 +230,10 @@ class Helpers
             $extension = $doc->getClientOriginalExtension();
 
             //Definindo um nome unico para o arquivo
-            $name = date('His_Ymd').'_'.str_replace(' ', '', $filename);
+            $name = date('His_Ymd') . '_' . str_replace(' ', '', $filename);
 
             //Diretório onde será salvo os arquivos
-            $destinationPath = 'img/'.$folder;
+            $destinationPath = 'img/' . $folder;
             //Move o arquivo para a pasta indicada
             if ($doc->move($destinationPath, $name)) {
                 return ['file' => $name];
@@ -292,7 +292,7 @@ class Helpers
         // Make case insensitive.
         $t = strtolower($_SERVER['HTTP_USER_AGENT']);
 
-        $t = ' '.$t;
+        $t = ' ' . $t;
 
         // Humans / Regular Users
         if (strpos($t, 'opera') || strpos($t, 'opr/')) {
@@ -365,10 +365,12 @@ class Helpers
             return '[Bot] Pinterest';
         }
         // Check for strings commonly used in bot user agents
-        if (strpos($t, 'crawler') || strpos($t, 'api') ||
-                strpos($t, 'spider') || strpos($t, 'http') ||
-                strpos($t, 'bot') || strpos($t, 'archive') ||
-                strpos($t, 'info') || strpos($t, 'data')) {
+        if (
+            strpos($t, 'crawler') || strpos($t, 'api') ||
+            strpos($t, 'spider') || strpos($t, 'http') ||
+            strpos($t, 'bot') || strpos($t, 'archive') ||
+            strpos($t, 'info') || strpos($t, 'data')
+        ) {
             return '[Bot] Other';
         }
 
@@ -417,24 +419,25 @@ class Helpers
 
     public static function numeroNonoDigito($numero)
     {
-        if (11 == strlen($numero)) {//Se numero tem 13 digitos 64 9 99967545
+        if (11 == strlen($numero)) { //Se numero tem 13 digitos 64 9 99967545
             return $numero;
         }
 
-        if (10 == strlen($numero)) {//se numero tem 12 64 99954785 falta o 9
+        if (10 == strlen($numero)) { //se numero tem 12 64 99954785 falta o 9
             $ddd = substr($numero, 0, 2); //Pega ddd e numero e o pais
             $num = substr($numero, 2);
 
-            if (2 == $num[0] || 3 == $num[0]) {//Verifica se é celular, se nao for retorno o proprio numero
+            if (2 == $num[0] || 3 == $num[0]) { //Verifica se é celular, se nao for retorno o proprio numero
                 return $numero;
             }
 
-            if (8 == strlen($num)) {//se for celular, so tem 8 numeros, adiciona o 9
+            if (8 == strlen($num)) { //se for celular, so tem 8 numeros, adiciona o 9
                 $num = "9{$num}";
             }
 
             return "{$ddd}{$num}";
         }
+        return false;
     }
 
     public static function useCurl($options, $data = null)

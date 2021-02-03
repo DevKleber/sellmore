@@ -32,8 +32,7 @@ class Customers extends Model
             ->where('bo_ativo', true)
             ->orderBy('id')
             ->select('id')
-            ->get()
-        ;
+            ->get();
         foreach ($parentsRoot as $value) {
             $arFather[$value->id] = $value->id;
         }
@@ -43,8 +42,7 @@ class Customers extends Model
             ->select('id_parent')
             ->whereNotNull('id_parent')
             ->where('bo_ativo', true)
-            ->get()
-        ;
+            ->get();
         $parents->merge($parentsRoot);
 
         foreach ($parents as $value) {
@@ -57,8 +55,7 @@ class Customers extends Model
             $customersParent = self::where('id_usuario', $id_usuario)
                 ->where('id', $value)
                 ->where('bo_ativo', true)
-                ->first()
-            ;
+                ->first();
             if (!$customersParent) {
                 continue;
             }
@@ -67,8 +64,7 @@ class Customers extends Model
                 ->where('bo_ativo', true)
                 ->orderBy('bo_preference', 'desc')
                 ->orderBy('updated_at', 'desc')
-                ->get()
-            ;
+                ->get();
 
             $arCustomers[$count] = $customersParent;
             $arCustomers[$count]['phones'] = \App\Phone::where('id_customers', $customersParent->id)->get();
@@ -147,8 +143,12 @@ class Customers extends Model
                             $numero = preg_replace('/[^0-9]/', '', $numeroNormal);
                             $numeroWithoutCountryCode = substr($numero, strlen($countryCode));
 
+
                             $contatos[$key]['numeros']['phone'][$countPhone]['phone'] = $numeroWithoutCountryCode;
                             if ('55' == $countryCode) {
+                                if (strlen($numeroWithoutCountryCode) > 11) { //Se numero tem 13 digitos 64 9 99967545
+                                    continue;
+                                }
                                 $contatos[$key]['numeros']['phone'][$countPhone]['phone'] = Helpers::numeroNonoDigito($numeroWithoutCountryCode);
                             }
                             $contatos[$key]['numeros']['phone'][$countPhone]['countryCode'] = $countryCode;
@@ -165,11 +165,13 @@ class Customers extends Model
     public static function verifyCustomerExist($telefones, $id_usuario)
     {
         foreach ($telefones as $value) {
+            if (!$value['phone']) {
+                continue;
+            }
             $customers = \App\Customers::join('customers_phone', 'customers_phone.id_customers', '=', 'customers.id')
                 ->where('customers_phone.phone', $value['phone'] ?? $value)
                 ->where('id_usuario', $id_usuario)
-                ->get()
-            ;
+                ->get();
             if ($customers->count()) {
                 $customersArray = $customers->toArray();
 
@@ -179,7 +181,7 @@ class Customers extends Model
                     // return  response(['response' => "Número de telefone já existe ({$customersArray[0]['name']})"], 400);
                 }
 
-                throw new \Exception('Referido já indicado pelo(a) '.$indicadoPor->name, 1);
+                throw new \Exception('Referido já indicado pelo(a) ' . $indicadoPor->name, 1);
                 // return  response( ['response' => 'Referido já indicado pelo(a) '.$indicadoPor->name], 400 );
             }
 
