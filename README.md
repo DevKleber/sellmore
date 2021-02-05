@@ -1,4 +1,4 @@
-# SELL MORE
+# Wiseller
 
 ## Participants
 
@@ -17,3 +17,5 @@ composer global require laravel/installer
 MYSQL
 
 ## Demonstration
+
+![Demo](https://i.imgur.com/KkUmZWG.png)
