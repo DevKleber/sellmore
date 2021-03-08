@@ -18,6 +18,13 @@ class LogController extends Controller
             ->select('usuario_log.*', 'usuario.nome')
             ->get()
         ;
+        $logDay = \App\Log::Join('usuario', 'usuario.id', '=', 'usuario_log.id_user')
+            ->groupBy('usuario.nome')
+            ->select('usuario.nome')
+            ->orderBy('usuario.nome')
+            ->where('usuario_log.created_at','>=', date("Y-m-d 00:00:00"))
+            ->get()
+        ;
 
         $totalCustomerActive = \App\Customers::Join('usuario', 'usuario.id', '=', 'customers.id_usuario')
             ->selectRaw('id_usuario, nome, count(*) as total')
@@ -69,6 +76,7 @@ class LogController extends Controller
 
         return response([
             'dados' => $log,
+            'logDay' => $logDay,
             'totalCustomerActive' => $totalCustomerActive,
             'totalCustomerSeller' => $totalCustomerSeller,
             'totalAccessByUser' => $totalAccessByUser,

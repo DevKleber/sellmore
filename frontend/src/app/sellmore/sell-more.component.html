@@ -149,7 +149,7 @@
 			<div class="customers" *ngFor="let itemLead of customers | keyvalue; let even = even">
 				<div class="parent center-center">
 					<div class="contact">
-						<div class="name">{{ itemLead?.value.name }}</div>
+						<div class="name">{{ itemLead?.value.name }} </div>
 
 						<div class="row flex-wrap">
 							<div class="contacto-phone"
@@ -244,7 +244,7 @@
 								data-target="#modalCall">
 								<span>
 									<div class="contacto-name">
-										{{ item.name }}
+										{{ item.name }} <i *ngIf="item.status != 'a' && item.bo_preference" class="fa fa-star"></i>
 									</div>
 									<div class="row flex-wrap">
 										<div class="contacto-phone"
@@ -262,6 +262,14 @@
 									else waitingChildren
 								">
 								<div class="finished">
+
+									<!-- <i class="icon-waiting" ngIf="item.bo_preference"
+										[ngClass]="item.bo_preference ? 'fa fa-star' : 'far fa-star'"
+										(click)="preference(item)" matTooltip="Dar preferencia">
+									</i> -->
+
+
+
 									<i *ngIf="item.status == 'pc'"
 										class="fa fa-credit-card icon-finished icon-finished-no">
 									</i>
@@ -812,7 +820,7 @@
 								PIX
 							</button>
 						</div>
-						<div class="paypal">
+						<!-- <div class="paypal">
 							<div class="row center-center">
 								<img style="text-align: center;" src="/assets/img/system/donate.png" alt="">
 							</div>
@@ -822,7 +830,7 @@
 									Acessar link Paypal
 								</a>
 							</button>
-						</div>
+						</div> -->
 					</div>
 					<div class="row center-center">
 						<h2>Ou</h2>
@@ -870,7 +878,9 @@
 					Reporte aqui um erro que tenha encontrado, assim que possível ele será corrigido. <br>
 					Para que possamos identificar o erro, digite em detalhes tudo que aconteceu<br><br>
 				</p>
-
+				<p class="mb-15">
+					<a target="_BLANK" href="https://trello.com/b/GQpoOLdf/sell-more"> <i class="fab fa-trello"></i> Veja no que estamos trabalhando</a>
+				</p>
 
 				<form [formGroup]="formBug" novalidate>
 					<div class="inputText">

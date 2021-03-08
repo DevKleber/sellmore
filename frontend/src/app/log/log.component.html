@@ -9,7 +9,6 @@
 			</div>
 		</div>
 
-
 		<div class="row">
 			<div class="left card-light">
 				<div class="logs ">
@@ -26,7 +25,7 @@
 										<th>Browser</th>
 										<th>Language</th>
 										<th>IP</th>
-										<th>User Agent</th>
+										<!-- <th>User Agent</th> -->
 									</tr>
 								</thead>
 								<tbody>
@@ -39,7 +38,7 @@
 										<td>{{log?.browser}}</td>
 										<td>{{log?.language}}</td>
 										<td>{{log?.ip}}</td>
-										<td>{{log?.user_agent}}</td>
+										<!-- <td>{{log?.user_agent}}</td> -->
 									</tr>
 								</tbody>
 							</div>
@@ -48,6 +47,25 @@
 				</div>
 			</div>
 			<div class="right ">
+
+
+				<div class="cardRight card-light">
+					<h2>Acessos do dia {{logDay.length}}</h2>
+					<perfect-scrollbar>
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Nome</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr *ngFor="let item of logDay">
+									<td>{{item?.nome}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</perfect-scrollbar>
+				</div>
 
 				<div class="cardRight card-light">
 					<h2>Clientes por usuário {{totalCustomerActive.length}}</h2>
