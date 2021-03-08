@@ -1,6 +1,6 @@
 {
 	"name": "memorize",
-	"version": "1.0.5",
+	"version": "1.0.7",
 	"titleVersion": "Nova versão instalada",
 	"contentVersion": "<br /><br /> A partir desta atualização fica mais fácil você encontrar seus referidos. Agora, sua lista de contatos é organizada em ordem alfabética e agrupada da seguinte forma: primeiro você verá seus referidos marcados como prioritários à ligar; segundo, os referidos com status em aberto (ou seja, aqueles que ainda não foram contatados); e por último os referidos que já possuem uma ação confirmada. <br /><br /> Além disso, mudamos a ordenação dos cards. Sempre que adicionar um novo card, este irá para o final da lista (à sua direita), mantendo a sua lista muito mais organizada. <br /><br /> Ah .. e nessa versão, ainda, fizemos diversos ajustes e melhorias de desempenho 😀",
 	"scripts": {

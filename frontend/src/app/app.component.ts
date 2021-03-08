@@ -38,6 +38,15 @@ export class AppComponent implements OnInit {
 	}
 
 	messageNewVersion() {
+		const url = window.location.href;
+		let arUrl = url.split('/');
+		const route = arUrl.slice(-1).pop();
+
+		if (route == 'login') {
+			window.location.reload();
+			return;
+		}
+
 		const pessoa = this.loginService.getUser();
 
 		Swal.fire({
