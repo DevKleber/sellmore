@@ -11,6 +11,7 @@ class Customers extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['name', 'phone', 'address', 'status', 'id_usuario', 'id_parent', 'observation', 'bo_ativo', 'bo_preference'];
 
+
     public static function getStatus()
     {
         return [
@@ -24,13 +25,14 @@ class Customers extends Model
 
     public static function getAll()
     {
+        $arPhones = self::getPhoneByUser();
         $id_usuario = auth('api')->user()->id;
         $arFather = [];
 
         $parentsRoot = self::where('id_usuario', $id_usuario)
             ->whereNull('id_parent')
             ->where('bo_ativo', true)
-            ->orderBy('id')
+            ->orderBy('updated_at')
             ->select('id')
             ->get();
         foreach ($parentsRoot as $value) {
@@ -45,9 +47,16 @@ class Customers extends Model
             ->get();
         $parents->merge($parentsRoot);
 
-        foreach ($parents as $value) {
+        foreach ($parents as $keyParents => $value) {
             $arFather[$value->id_parent] = $value->id_parent;
         }
+        $arTempFather = $arFather;
+        $arFather =[];
+        //ordenando pais
+        foreach ($arTempFather as $key => $value) {
+            $arFather[] = $value;
+        }
+        sort($arFather);
 
         $arCustomers = [];
         $count = 0;
@@ -62,20 +71,38 @@ class Customers extends Model
             $referidos = self::where('id_usuario', $id_usuario)
                 ->where('id_parent', $value)
                 ->where('bo_ativo', true)
+                ->orderBy('status', 'asc')
                 ->orderBy('bo_preference', 'desc')
-                ->orderBy('updated_at', 'desc')
+                ->orderBy('name', 'asc')
                 ->get();
 
-            $arCustomers[$count] = $customersParent;
-            $arCustomers[$count]['phones'] = \App\Phone::where('id_customers', $customersParent->id)->get();
-            $arCustomers[$count]['referidos'] = $referidos;
-            foreach ($arCustomers[$count]['referidos'] as $keyRef => $value) {
-                $arCustomers[$count]['referidos'][$keyRef]['phones'] = \App\Phone::where('id_customers', $value->id)->get();
+            $arCustomers[$key] = $customersParent;
+            // $arCustomers[$key]['phones'] = \App\Phone::where('id_customers', $customersParent->id)->get();
+            $arCustomers[$key]['phones'] = $arPhones[$customersParent->id]??[];
+            $arCustomers[$key]['referidos'] = $referidos;
+            foreach ($arCustomers[$key]['referidos'] as $keyRef => $value) {
+                // $arCustomers[$key]['referidos'][$keyRef]['phones'] = \App\Phone::where('id_customers', $value->id)->get();
+                $arCustomers[$key]['referidos'][$keyRef]['phones'] = $arPhones[$value->id]??[];
             }
             ++$count;
         }
 
         return ['arCustomers' => $arCustomers, 'statistics' => self::statistics($arCustomers)];
+    }
+
+    public static function getPhoneByUser(){
+        $idUsuario = auth('api')->user()->id;
+
+        $customersPhones = \App\Customers::join('customers_phone', 'customers_phone.id_customers', '=', 'customers.id')
+                ->where('id_usuario', $idUsuario)
+                ->select('customers.id_usuario','customers_phone.*')
+                ->get();
+
+        $arPhones = [];
+        foreach ($customersPhones as $phone) {
+            $arPhones[$phone->id_customers][] = $phone;
+        }
+        return $arPhones;
     }
 
     public static function statistics($arCustomers)
