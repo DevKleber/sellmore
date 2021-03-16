@@ -145,6 +145,9 @@ class Customers extends Model
             }
             $contatos = [];
             foreach ($ar as $key => $value) {
+                if(count($value) <=2){
+                    continue;
+                }
                 $contatos[$key] = [
                     'nome' => explode('FN:', $value[3])[1],
                 ];
