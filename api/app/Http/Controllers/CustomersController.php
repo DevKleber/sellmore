@@ -7,9 +7,10 @@ use Illuminate\Http\Request;
 
 class CustomersController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $arCustomers = \App\Customers::getAll();
+        $options['showNaotemInteresse'] = $request->input('showNaotemInteresse') ?? true;
+        $arCustomers = \App\Customers::getAll($options);
 
         if (!$arCustomers) {
             return response(['response' => 'Não existe Customers'], 200);
@@ -25,20 +26,28 @@ class CustomersController extends Controller
             return response([]);
         }
         $id_usuario = auth('api')->user()->id;
-
         $customers = \App\Customers::where('id_usuario', $id_usuario)
+            ->join('customers_phone', 'customers_phone.id_customers', '=', 'customers.id')
             ->where(function ($q) use ($query) {
                 $q->where('name', 'LIKE', '%'.$query.'%')
-                    ->orWhere('phone', 'LIKE', '%'.$query.'%')
+                    ->orWhere('customers_phone.phone', 'LIKE', '%'.$query.'%')
                 ;
             })
             ->orderBy('name')
-            ->get()
-        ;
-        $ar = [];
+            ->select('customers.*')
+            ->get();
+
+        $arCustomers = [];
         foreach ($customers as $key => $value) {
-            $ar[$key] = $value;
-            $ar[$key]['phones'] = \App\Phone::where('id_customers', $value->id)->get();
+            $arCustomers[$value->id] = $value;
+        }
+
+        $ar = [];
+        $index =0;
+        foreach ($arCustomers as $key => $value) {
+            $ar[$index] = $value;
+            $ar[$index]['phones'] = \App\Phone::where('id_customers', $value->id)->get();
+            $index++;
         }
 
         return $ar;

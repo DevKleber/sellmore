@@ -25,8 +25,11 @@ export class AppComponent implements OnInit {
 	}
 	verifyVersion() {
 		if (version != this.getVersionLocalStorage()) {
-			this.setVersionLocalStorage(version);
-			this.messageNewVersion();
+			const pessoa = this.loginService.getUser();
+			if (pessoa?.nome) {
+				this.setVersionLocalStorage(version);
+				this.messageNewVersion();
+			}
 		}
 	}
 

@@ -31,8 +31,16 @@ export class SellMoreService {
 	getCustomersLd(search?: string): Observable<any[]> {
 		return this.http.get<any[]>(`${API}/getCustomersLd`);
 	}
-	getCustomers(search?: string): Observable<any[]> {
-		return this.http.get<any[]>(`${API}/customers`);
+	getCustomers(showNaotemInteresse: string = 'true'): Observable<any[]> {
+		let params: HttpParams = undefined;
+		if (showNaotemInteresse) {
+			params = new HttpParams().set(
+				'showNaotemInteresse',
+				showNaotemInteresse
+			);
+		}
+
+		return this.http.get<any[]>(`${API}/customers`, { params: params });
 	}
 	getStrategy(): Observable<any[]> {
 		return this.http.get<any[]>(`${API}/strategy`);

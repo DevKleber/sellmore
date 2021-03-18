@@ -40,6 +40,7 @@ import { LoaderService } from '../shared/loader/loader.service';
 	styleUrls: ['./sell-more.component.css'],
 })
 export class SellMoreComponent implements OnInit {
+	showNaotemInteresse: string = 'false';
 	themeIsDark: boolean;
 	countryCodes: any[] = [];
 	customers: any[] = [];
@@ -122,7 +123,7 @@ export class SellMoreComponent implements OnInit {
 	) {}
 
 	ngOnInit() {
-		this.getCustomers();
+		this.getCustomers(this.getShowNaoTemInteresseLocalStorage());
 		this.getStrategy();
 		// this.getCategories();
 		this.initialForms();
@@ -225,10 +226,36 @@ export class SellMoreComponent implements OnInit {
 			});
 		}
 	}
+	mostrarOcultarReferidosNaoInteresse() {
+		const showOrHide = this.getShowNaoTemInteresseLocalStorage();
+		const changeValue = showOrHide == 'true' ? 'false' : 'true';
+		this.setShowNaoTemInteresseLocalStorage(changeValue);
+		this.showNaotemInteresse = changeValue;
+		this.getCustomers(changeValue);
+	}
+	getShowNaoTemInteresseLocalStorage() {
+		const wiseller_showNaotemInteresse = localStorage.getItem(
+			'wiseller_showNaotemInteresse'
+		);
 
-	getCustomers() {
+		if (wiseller_showNaotemInteresse == null) {
+			this.setShowNaoTemInteresseLocalStorage('true');
+			this.showNaotemInteresse = 'true';
+			return 'true';
+		}
+		this.showNaotemInteresse = wiseller_showNaotemInteresse;
+		return wiseller_showNaotemInteresse;
+	}
+	setShowNaoTemInteresseLocalStorage(showNaotemInteresse) {
+		localStorage.setItem(
+			'wiseller_showNaotemInteresse',
+			showNaotemInteresse
+		);
+	}
+
+	getCustomers(showOrHide?: string) {
 		this.loaderService.isLoad(true);
-		this.sellMoreService.getCustomers().subscribe((res) => {
+		this.sellMoreService.getCustomers(showOrHide).subscribe((res) => {
 			this.loaderService.isLoad(false);
 			this.customers = res['arCustomers'];
 			this.statistics = res['statistics'];

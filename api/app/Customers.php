@@ -5,6 +5,7 @@ namespace App;
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
 
+
 class Customers extends Model
 {
     protected $table = 'customers';
@@ -22,9 +23,9 @@ class Customers extends Model
             'c' => 'Comprou',
         ];
     }
-
-    public static function getAll()
+    public static function getAll($options=[])
     {
+        $showNaotemInteresse = $options['showNaotemInteresse'] === 'true'? true: false;
         $arPhones = self::getPhoneByUser();
         $id_usuario = auth('api')->user()->id;
         $arFather = [];
@@ -68,13 +69,18 @@ class Customers extends Model
             if (!$customersParent) {
                 continue;
             }
-            $referidos = self::where('id_usuario', $id_usuario)
+            $queryReferidos = self::where('id_usuario', $id_usuario)
                 ->where('id_parent', $value)
-                ->where('bo_ativo', true)
-                ->orderBy('status', 'asc')
+                ->where('bo_ativo', true);
+
+            if(!$showNaotemInteresse){
+                $queryReferidos->where('status' ,'<>', 'n');
+            }
+            $queryReferidos->orderBy('status', 'asc')
                 ->orderBy('bo_preference', 'desc')
-                ->orderBy('name', 'asc')
-                ->get();
+                ->orderBy('name', 'asc');
+
+            $referidos = $queryReferidos->get();
 
             $arCustomers[$key] = $customersParent;
             // $arCustomers[$key]['phones'] = \App\Phone::where('id_customers', $customersParent->id)->get();

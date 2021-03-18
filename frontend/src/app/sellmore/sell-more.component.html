@@ -49,6 +49,17 @@
 				<i class="fas fa-id-card-alt"></i>
 				{{user?.nome}}
 			</button>
+			<button mat-menu-item matTooltip="Mostrar/Ocultar referidos que não tem interesse" (click)="mostrarOcultarReferidosNaoInteresse()">
+				<ng-container *ngIf="showNaotemInteresse == 'false'; else elseTemplateMenuNaoInteresse">
+					<i class="fas fa-eye"></i>
+					Mostrar referidos que não tem interesse
+				</ng-container>
+				<ng-template #elseTemplateMenuNaoInteresse>
+					<i class="fas fa-eye-slash"></i>
+					Ocultar referidos que não tem interesse
+				</ng-template>
+
+			</button>
 			<button mat-menu-item (click)="logout()">
 				<i class="fas fa-sign-out-alt"></i> Sair
 			</button>
@@ -134,13 +145,16 @@
 		</div>
 	</div>
 	<div class="content pad40" *ngIf="!customersFilter.length && !searchForm.value.searchControl.length">
-		<div class="row flex-direction-column">
-			<div class="totalLead">{{statistics?.a}} referidos à contactar</div>
-			<div class="totalOthers">{{statistics?.c}} {{statistics?.c <= 1 ?   'venda': 'vendas'}}</div>
-			<div class="totalOthers">{{statistics?.ld}} ligar depois</div>
-			<div class="totalOthers">
-				{{statistics?.pc}}
-				{{statistics?.pc <= 1 ? 'problema com cartão' : 'problemas com cartão'}}
+		<div class="row flex-direction-row" style="justify-content: space-between;">
+			<div class="row flex-direction-column">
+				<div class="totalLead">{{statistics?.a}} referidos à contactar</div>
+				<div class="totalOthers">{{statistics?.c}} {{statistics?.c <= 1 ?   'venda': 'vendas'}}</div>
+				<div class="totalOthers">{{statistics?.ld}} ligar depois</div>
+				<div class="totalOthers">
+					{{statistics?.pc}}
+					{{statistics?.pc <= 1 ? 'problema com cartão' : 'problemas com cartão'}}
+				</div>
+
 			</div>
 
 		</div>
@@ -237,9 +251,10 @@
 				<perfect-scrollbar>
 					<div class="children">
 
-						<div class="item" *ngFor="
-								let item of itemLead.value.referidos
-							">
+						<div class="item" *ngFor=" let item of itemLead.value.referidos ">
+
+
+
 							<div class="contacto cursor-pointer" (click)="callTo(item)" data-toggle="modal"
 								data-target="#modalCall">
 								<span>
@@ -257,18 +272,13 @@
 								</span>
 							</div>
 
-							<ng-container *ngIf="
-									item.status != 'a';
-									else waitingChildren
-								">
+							<ng-container *ngIf=" item.status != 'a'; else waitingChildren ">
 								<div class="finished">
 
 									<!-- <i class="icon-waiting" ngIf="item.bo_preference"
 										[ngClass]="item.bo_preference ? 'fa fa-star' : 'far fa-star'"
 										(click)="preference(item)" matTooltip="Dar preferencia">
 									</i> -->
-
-
 
 									<i *ngIf="item.status == 'pc'"
 										class="fa fa-credit-card icon-finished icon-finished-no">
