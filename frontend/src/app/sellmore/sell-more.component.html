@@ -705,38 +705,46 @@
 						</div>
 					</div>
 					<div class="row" *ngIf="person.status != 'a'">
-						<div class="filterstatus"> <strong>Status:</strong> {{person.status | helpers:'statusString' }}
+						<div class="filterstatus"> <strong>Status atual:</strong> {{person.status | helpers:'statusString' }}
 						</div>
 					</div>
-					<div class="row">
 
-						<a target="_BLANK" href="{{strategy?.url_sale}}" title="Fazer a venda.">
-							<div class="card mr-5 cursor-pointer">
-								<i class="fab fa-wpforms"></i>
+					<div class="row">
+						<br>
+						<div class="flex-direction-column">
+							<div class="row" *ngIf="strategy?.url_sale">
+								<a target="_BLANK" href="{{strategy?.url_sale}}" title="Fazer a venda.">
+									<div class="card mr-5 cursor-pointer">
+										<i class="fab fa-wpforms"></i>
+									</div>
+								</a>
 							</div>
-						</a>
-						<ng-container *ngIf="person.status == 'a'">
-							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'pc')"
-								title="Problemas com cartão de crédito">
-								<i class="fa fa-credit-card icon-waiting">
-								</i>
+
+							<br>
+							<h4>Deseja alterar o status?</h4>
+							<div class="row flex-direction-row" >
+								<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'pc')"
+									title="Problemas com cartão de crédito" *ngIf="person.status != 'pc'">
+									<i class="fa fa-credit-card icon-waiting">
+									</i>
+								</div>
+								<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'ld')"
+									title="Ligar depois"  *ngIf="person.status != 'ld'">
+									<i class="fa fa-headset icon-waiting">
+									</i>
+								</div>
+								<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'n')"
+									title="Não deu negócio 😭"  *ngIf="person.status != 'n'">
+									<i class="fa fa-thumbs-down icon-waiting">
+									</i>
+								</div>
+								<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'c')"
+									title="Vendido 😃"  *ngIf="person.status != 'c'">
+									<i class="fa fa-thumbs-up icon-waiting">
+									</i>
+								</div>
 							</div>
-							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'ld')"
-								title="Ligar depois">
-								<i class="fa fa-headset icon-waiting">
-								</i>
-							</div>
-							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'n')"
-								title="Não deu negócio 😭">
-								<i class="fa fa-thumbs-down icon-waiting">
-								</i>
-							</div>
-							<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'c')"
-								title="Vendido 😃">
-								<i class="fa fa-thumbs-up icon-waiting">
-								</i>
-							</div>
-						</ng-container>
+						</div>
 
 					</div>
 				</h2>
