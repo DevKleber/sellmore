@@ -2,7 +2,7 @@
 	"name": "memorize",
 	"version": "1.0.8",
 	"titleVersion": "Nova versão instalada",
-	"contentVersion": "Trouxemos novas funcionalidades e fizemos algumas correções. Agora, você poderá ocultar aqueles referidos que não tiveram interesse na compra, melhorando o desempenho da plataforma. Para isso, basta você clicar em sua foto de perfil (no canto superior direito) e selecionar a opção “Ocultar referidos que não tem interesse”. Caso queira vê-los novamente na tela, basta seguir o mesmo caminho. <br /> Além disso, corrigimos o campo de busca pelo telefone. <video class='post video-post' id='video-element' poster='//i.imgur.com/OkHzvH4h.jpg' controls autoplay muted='muted' webkit-playsinline='' style='width: 523px; height: 281.113px;'> <source type='video/mp4' src='//i.imgur.com/OkHzvH4.mp4'> </video> <hr /> <br /><br /><br />Versão anterior: 1.0.7<br /> A partir desta atualização fica mais fácil você encontrar seus referidos. Agora, sua lista de contatos é organizada em ordem alfabética e agrupada da seguinte forma: primeiro você verá seus referidos marcados como prioritários à ligar; segundo, os referidos com status em aberto (ou seja, aqueles que ainda não foram contatados); e por último os referidos que já possuem uma ação confirmada. <br /><br /> Além disso, mudamos a ordenação dos cards. Sempre que adicionar um novo card, este irá para o final da lista (à sua direita), mantendo a sua lista muito mais organizada. <br /><br /> Ah .. e nessa versão, ainda, fizemos diversos ajustes e melhorias de desempenho 😀",
+	"contentVersion": "",
 	"scripts": {
 		"ng": "ng",
 		"start": "ng serve",

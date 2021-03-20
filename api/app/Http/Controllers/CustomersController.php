@@ -9,7 +9,12 @@ class CustomersController extends Controller
 {
     public function index(Request $request)
     {
-        $options['showNaotemInteresse'] = $request->input('showNaotemInteresse') ?? true;
+        $options['boShowProblemasCartao'] = $request->input('boShowProblemasCartao');
+        $options['boShowLigarDepois'] = $request->input('boShowLigarDepois');
+        $options['boShowNaotemInteresse'] = $request->input('boShowNaotemInteresse');
+        $options['boShowComprou'] = $request->input('boShowComprou');
+        $options['boShowAberto'] = $request->input('boShowAberto');
+
         $arCustomers = \App\Customers::getAll($options);
 
         if (!$arCustomers) {

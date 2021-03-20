@@ -412,3 +412,7 @@ div.status i {
 .lottieSearch{
 	width: 800px;
 }
+
+.showEachStatus > div{
+	padding: 10px;
+}

@@ -25,7 +25,16 @@ class Customers extends Model
     }
     public static function getAll($options=[])
     {
-        $showNaotemInteresse = $options['showNaotemInteresse'] === 'true'? true: false;
+
+        $boShowProblemasCartao = $options['boShowProblemasCartao'] === 'true'? true: false;
+        $boShowLigarDepois = $options['boShowLigarDepois'] === 'true'? true: false;
+        $boShowNaotemInteresse = $options['boShowNaotemInteresse'] === 'true'? true: false;
+        $boShowComprou = $options['boShowComprou'] === 'true'? true: false;
+        $boShowAberto = $options['boShowAberto'] === 'true'? true: false;
+        if(!self::hasAnyFilter($boShowProblemasCartao, $boShowLigarDepois, $boShowNaotemInteresse, $boShowComprou, $boShowAberto)){
+            return[];
+        }
+
         $arPhones = self::getPhoneByUser();
         $id_usuario = auth('api')->user()->id;
         $arFather = [];
@@ -69,16 +78,35 @@ class Customers extends Model
             if (!$customersParent) {
                 continue;
             }
+
             $queryReferidos = self::where('id_usuario', $id_usuario)
                 ->where('id_parent', $value)
                 ->where('bo_ativo', true);
 
-            if(!$showNaotemInteresse){
-                $queryReferidos->where('status' ,'<>', 'n');
-            }
+            $queryReferidos->where(function ($queryReferidos) use ( $boShowProblemasCartao, $boShowLigarDepois, $boShowNaotemInteresse, $boShowComprou, $boShowAberto ) {
+
+                if($boShowProblemasCartao){
+                    $queryReferidos->orWhere('status' , 'pc');
+                }
+                if($boShowLigarDepois){
+                    $queryReferidos->orWhere('status' , 'ld');
+                }
+                if($boShowNaotemInteresse){
+                    $queryReferidos->orWhere('status' , 'n');
+                }
+                if($boShowComprou){
+                    $queryReferidos->orWhere('status' , 'c');
+                }
+                if($boShowAberto){
+                    $queryReferidos->orWhere('status' , 'a');
+                }
+            });
+
+
             $queryReferidos->orderBy('status', 'asc')
                 ->orderBy('bo_preference', 'desc')
                 ->orderBy('name', 'asc');
+
 
             $referidos = $queryReferidos->get();
 
@@ -94,6 +122,15 @@ class Customers extends Model
         }
 
         return ['arCustomers' => $arCustomers, 'statistics' => self::statistics($arCustomers)];
+    }
+
+    private static function hasAnyFilter($boShowProblemasCartao, $boShowLigarDepois, $boShowNaotemInteresse, $boShowComprou, $boShowAberto){
+        if(
+            $boShowProblemasCartao || $boShowLigarDepois || $boShowNaotemInteresse || $boShowComprou || $boShowAberto
+        ){
+            return true;
+        }
+        return false;
     }
 
     public static function getPhoneByUser(){

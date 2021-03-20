@@ -1,4 +1,4 @@
-<div class="sellMore">
+<div class="sellMore" >
 	<header>
 		<div class="logo">
 			<img src="/assets/img/system/sellmore.png" width="55px" />
@@ -49,7 +49,7 @@
 				<i class="fas fa-id-card-alt"></i>
 				{{user?.nome}}
 			</button>
-			<button mat-menu-item matTooltip="Mostrar/Ocultar referidos que não tem interesse" (click)="mostrarOcultarReferidosNaoInteresse()">
+			<button mat-menu-item matTooltip="Mostrar/Ocultar referidos que não tem interesse" >
 				<ng-container *ngIf="showNaotemInteresse == 'false'; else elseTemplateMenuNaoInteresse">
 					<i class="fas fa-eye"></i>
 					Mostrar referidos que não tem interesse
@@ -145,7 +145,7 @@
 		</div>
 	</div>
 	<div class="content pad40" *ngIf="!customersFilter.length && !searchForm.value.searchControl.length">
-		<div class="row flex-direction-row" style="justify-content: space-between;">
+		<div class="row flex-direction-row flex-wrap" style="justify-content: space-between;">
 			<div class="row flex-direction-column">
 				<div class="totalLead">{{statistics?.a}} referidos à contactar</div>
 				<div class="totalOthers">{{statistics?.c}} {{statistics?.c <= 1 ?   'venda': 'vendas'}}</div>
@@ -156,10 +156,56 @@
 				</div>
 
 			</div>
+			<div class="row flex-direction-row flex-wrap center-center showEachStatus">
+				<div class="">
+					<label for="">Em aberto</label>
+					<div class="onoffswitch">
+						<input type="checkbox" (change)="setStatusLocalStorage()" [(ngModel)]="boShowAberto" class="onoffswitch-checkbox"
+							id="boShowAberto" [ngModelOptions]="{standalone: true}">
+						<label class="onoffswitch-label" for="boShowAberto"></label>
+					</div>
+				</div>
+				<div class="">
+					<label for="">Problemas com cartão</label>
+					<div class="onoffswitch">
+						<input type="checkbox" (change)="setStatusLocalStorage()" [(ngModel)]="boShowProblemasCartao" class="onoffswitch-checkbox"
+							id="boShowProblemasCartao" [ngModelOptions]="{standalone: true}">
+						<label class="onoffswitch-label" for="boShowProblemasCartao"></label>
+					</div>
+				</div>
+				<div class="">
+					<label for="">Ligar depois</label>
+					<div class="onoffswitch">
+						<input type="checkbox" (change)="setStatusLocalStorage()" [(ngModel)]="boShowLigarDepois" class="onoffswitch-checkbox"
+							id="boShowLigarDepois" [ngModelOptions]="{standalone: true}">
+						<label class="onoffswitch-label" for="boShowLigarDepois"></label>
+					</div>
+				</div>
+				<div class="">
+					<label for="">Não tem interesse</label>
+					<div class="onoffswitch">
+						<input type="checkbox" (change)="setStatusLocalStorage()" [(ngModel)]="boShowNaotemInteresse" class="onoffswitch-checkbox"
+							id="idBoShowNaotemInteresse" [ngModelOptions]="{standalone: true}">
+						<label class="onoffswitch-label" for="idBoShowNaotemInteresse"></label>
+					</div>
+				</div>
+				<div class="">
+					<label for="">Comprou</label>
+					<div class="onoffswitch">
+						<input type="checkbox" (change)="setStatusLocalStorage()" [(ngModel)]="boShowComprou" class="onoffswitch-checkbox"
+							id="boShowComprou" [ngModelOptions]="{standalone: true}">
+						<label class="onoffswitch-label" for="boShowComprou"></label>
+					</div>
+				</div>
+
+
+			</div>
 
 		</div>
 
-		<div class="row flex-wrap" id="customersBody">
+		<div class="row flex-wrap" id="customersBody"
+			*ngIf="boShowProblemasCartao || boShowLigarDepois || boShowNaotemInteresse || boShowComprou || boShowAberto"
+		>
 			<div class="customers" *ngFor="let itemLead of customers | keyvalue; let even = even">
 				<div class="parent center-center">
 					<div class="contact">

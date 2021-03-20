@@ -40,6 +40,12 @@ import { LoaderService } from '../shared/loader/loader.service';
 	styleUrls: ['./sell-more.component.css'],
 })
 export class SellMoreComponent implements OnInit {
+	boShowProblemasCartao: boolean = false;
+	boShowLigarDepois: boolean = false;
+	boShowNaotemInteresse: boolean = false;
+	boShowComprou: boolean = false;
+	boShowAberto: boolean = false;
+
 	showNaotemInteresse: string = 'false';
 	themeIsDark: boolean;
 	countryCodes: any[] = [];
@@ -123,7 +129,9 @@ export class SellMoreComponent implements OnInit {
 	) {}
 
 	ngOnInit() {
-		this.getCustomers(this.getShowNaoTemInteresseLocalStorage());
+		this.getStatusLocalStorage();
+
+		this.getCustomers();
 		this.getStrategy();
 		// this.getCategories();
 		this.initialForms();
@@ -226,40 +234,54 @@ export class SellMoreComponent implements OnInit {
 			});
 		}
 	}
-	mostrarOcultarReferidosNaoInteresse() {
-		const showOrHide = this.getShowNaoTemInteresseLocalStorage();
-		const changeValue = showOrHide == 'true' ? 'false' : 'true';
-		this.setShowNaoTemInteresseLocalStorage(changeValue);
-		this.showNaotemInteresse = changeValue;
-		this.getCustomers(changeValue);
-	}
-	getShowNaoTemInteresseLocalStorage() {
-		const wiseller_showNaotemInteresse = localStorage.getItem(
-			'wiseller_showNaotemInteresse'
-		);
 
-		if (wiseller_showNaotemInteresse == null) {
-			this.setShowNaoTemInteresseLocalStorage('true');
-			this.showNaotemInteresse = 'true';
-			return 'true';
-		}
-		this.showNaotemInteresse = wiseller_showNaotemInteresse;
-		return wiseller_showNaotemInteresse;
+	getStatusLocalStorage() {
+		const {
+			boShowProblemasCartao,
+			boShowLigarDepois,
+			boShowNaotemInteresse,
+			boShowComprou,
+			boShowAberto,
+		} = JSON.parse(localStorage.getItem('wiseller_boShowStatus'));
+
+		this.boShowProblemasCartao = boShowProblemasCartao;
+		this.boShowLigarDepois = boShowLigarDepois;
+		this.boShowNaotemInteresse = boShowNaotemInteresse;
+		this.boShowComprou = boShowComprou;
+		this.boShowAberto = boShowAberto;
 	}
-	setShowNaoTemInteresseLocalStorage(showNaotemInteresse) {
+	setStatusLocalStorage() {
+		const jsonShowStatus = {
+			boShowProblemasCartao: this.boShowProblemasCartao,
+			boShowLigarDepois: this.boShowLigarDepois,
+			boShowNaotemInteresse: this.boShowNaotemInteresse,
+			boShowComprou: this.boShowComprou,
+			boShowAberto: this.boShowAberto,
+		};
+
 		localStorage.setItem(
-			'wiseller_showNaotemInteresse',
-			showNaotemInteresse
+			'wiseller_boShowStatus',
+			JSON.stringify(jsonShowStatus)
 		);
+
+		this.getCustomers();
 	}
 
-	getCustomers(showOrHide?: string) {
+	getCustomers() {
 		this.loaderService.isLoad(true);
-		this.sellMoreService.getCustomers(showOrHide).subscribe((res) => {
-			this.loaderService.isLoad(false);
-			this.customers = res['arCustomers'];
-			this.statistics = res['statistics'];
-		});
+		this.sellMoreService
+			.getCustomers(
+				this.boShowProblemasCartao,
+				this.boShowLigarDepois,
+				this.boShowNaotemInteresse,
+				this.boShowComprou,
+				this.boShowAberto
+			)
+			.subscribe((res) => {
+				this.loaderService.isLoad(false);
+				this.customers = res['arCustomers'];
+				this.statistics = res['statistics'];
+			});
 	}
 	getStrategy() {
 		this.loaderService.isLoad(true);

@@ -31,14 +31,25 @@ export class SellMoreService {
 	getCustomersLd(search?: string): Observable<any[]> {
 		return this.http.get<any[]>(`${API}/getCustomersLd`);
 	}
-	getCustomers(showNaotemInteresse: string = 'true'): Observable<any[]> {
-		let params: HttpParams = undefined;
-		if (showNaotemInteresse) {
-			params = new HttpParams().set(
-				'showNaotemInteresse',
-				showNaotemInteresse
-			);
-		}
+	getCustomers(
+		boShowProblemasCartao: boolean,
+		boShowLigarDepois: boolean,
+		boShowNaotemInteresse: boolean,
+		boShowComprou: boolean,
+		boShowAberto: boolean
+	): Observable<any[]> {
+		let params = new HttpParams();
+		params = params.append(
+			'boShowProblemasCartao',
+			String(boShowProblemasCartao)
+		);
+		params = params.append('boShowLigarDepois', String(boShowLigarDepois));
+		params = params.append(
+			'boShowNaotemInteresse',
+			String(boShowNaotemInteresse)
+		);
+		params = params.append('boShowComprou', String(boShowComprou));
+		params = params.append('boShowAberto', String(boShowAberto));
 
 		return this.http.get<any[]>(`${API}/customers`, { params: params });
 	}
