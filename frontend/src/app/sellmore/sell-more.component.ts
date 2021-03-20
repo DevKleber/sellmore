@@ -103,7 +103,7 @@ export class SellMoreComponent implements OnInit {
 
 	@ViewChild('openCalendar', { static: true }) openCalendar: ElementRef;
 	@ViewChild('closeModalPhone', { static: true }) closeModalPhone: ElementRef;
-	@HostListener('window:scroll', [])
+
 	options: AnimationOptions = {
 		path: '/assets/animations/json/results.json',
 	};
