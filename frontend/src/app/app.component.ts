@@ -58,16 +58,24 @@ export class AppComponent implements OnInit {
 		Swal.fire({
 			title: `${titleVersion} ${version}`,
 			width: 600,
+			showCancelButton: true,
+
 			html: `
 			<div style="text-align: left;">
-				Olá, ${pessoa?.nome}.<br />
-				${contentVersion}
+				Olá, ${pessoa?.nome}, temos novidades.<br />
 			</div>
 			`,
 			icon: 'info',
 			confirmButtonColor: '#3085d6',
-			confirmButtonText: 'Ok!',
+			cancelButtonText: 'OK!',
+			confirmButtonText: 'Ver as novidades!',
 		}).then((result) => {
+			if (result.isConfirmed) {
+				window.open(
+					'https://www.notion.so/Wiseller-Vers-o-1-0-8-e77c48f6ea4047a3938f4030974d4d1d',
+					'_blank'
+				);
+			}
 			window.location.reload();
 		});
 	}
