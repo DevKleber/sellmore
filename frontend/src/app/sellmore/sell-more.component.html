@@ -206,7 +206,9 @@
 		<div class="row flex-wrap" id="customersBody"
 			*ngIf="boShowProblemasCartao || boShowLigarDepois || boShowNaotemInteresse || boShowComprou || boShowAberto"
 		>
+		<!-- <pre>{{ customersDynamic | json }}</pre> -->
 			<div class="customers" *ngFor="let itemLead of customers | keyvalue; let even = even">
+			<!-- <div class="customers" *ngFor="let itemLead of customersDynamic | keyvalue; let even = even"> -->
 				<div class="parent center-center">
 					<div class="contact">
 						<div class="name">{{ itemLead?.value.name }} </div>

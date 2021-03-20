@@ -4,6 +4,7 @@ import {
 	isDevMode,
 	ElementRef,
 	ViewChild,
+	HostListener,
 } from '@angular/core';
 import { isSameDay, isSameMonth } from 'date-fns';
 import {
@@ -40,6 +41,9 @@ import { LoaderService } from '../shared/loader/loader.service';
 	styleUrls: ['./sell-more.component.css'],
 })
 export class SellMoreComponent implements OnInit {
+	position: number = 0;
+	quantidade: number = 2;
+
 	boShowProblemasCartao: boolean = false;
 	boShowLigarDepois: boolean = false;
 	boShowNaotemInteresse: boolean = false;
@@ -49,6 +53,7 @@ export class SellMoreComponent implements OnInit {
 	showNaotemInteresse: string = 'false';
 	themeIsDark: boolean;
 	countryCodes: any[] = [];
+	customersDynamic: any[] = [];
 	customers: any[] = [];
 	customersFilter: any[] = [];
 
@@ -98,7 +103,7 @@ export class SellMoreComponent implements OnInit {
 
 	@ViewChild('openCalendar', { static: true }) openCalendar: ElementRef;
 	@ViewChild('closeModalPhone', { static: true }) closeModalPhone: ElementRef;
-
+	@HostListener('window:scroll', [])
 	options: AnimationOptions = {
 		path: '/assets/animations/json/results.json',
 	};
@@ -141,6 +146,41 @@ export class SellMoreComponent implements OnInit {
 		this.themeIsDark = this.themeService.themeActive();
 		this.saveLogAccess();
 	}
+
+	// @HostListener('window:scroll', [])
+	// onScroll(): void {
+	// 	if (this.bottomReached()) {
+	// 		const arCustomers = Object.entries(this.customers);
+	// 		console.log('size:', arCustomers.length);
+
+	// 		let item = arCustomers.slice(
+	// 			this.position,
+	// 			this.position + this.quantidade
+	// 		);
+
+	// 		item.forEach((element) => {
+	// 			console.log(element);
+
+	// 			this.customersDynamic.push(element[1]);
+	// 		});
+
+	// 		this.position += this.quantidade;
+	// 	}
+	// }
+
+	// bottomReached(): boolean {
+	// 	const triggerAt: number = 128;
+	// 	/* perform an event when the user has scrolled over the point of 128px from the bottom */
+	// 	if (
+	// 		document.body.scrollHeight -
+	// 			(window.innerHeight + window.scrollY) <=
+	// 		triggerAt
+	// 	) {
+	// 		return true;
+	// 	}
+	// 	return false;
+	// }
+
 	saveLogAccess() {
 		if (this.user.id === 1) {
 			return;
@@ -236,13 +276,24 @@ export class SellMoreComponent implements OnInit {
 	}
 
 	getStatusLocalStorage() {
+		let localStorageWisellerBoShowStatus = localStorage.getItem(
+			'wiseller_boShowStatus'
+		);
+
+		if (localStorageWisellerBoShowStatus === null) {
+			this.setStatusLocalStorage();
+			localStorageWisellerBoShowStatus = localStorage.getItem(
+				'wiseller_boShowStatus'
+			);
+		}
+
 		const {
 			boShowProblemasCartao,
 			boShowLigarDepois,
 			boShowNaotemInteresse,
 			boShowComprou,
 			boShowAberto,
-		} = JSON.parse(localStorage.getItem('wiseller_boShowStatus'));
+		} = JSON.parse(localStorageWisellerBoShowStatus);
 
 		this.boShowProblemasCartao = boShowProblemasCartao;
 		this.boShowLigarDepois = boShowLigarDepois;
