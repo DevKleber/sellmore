@@ -134,6 +134,7 @@ export class SellMoreComponent implements OnInit {
 	) {}
 
 	ngOnInit() {
+		this.verifyVersion();
 		this.getStatusLocalStorage();
 
 		this.getCustomers();
@@ -145,6 +146,49 @@ export class SellMoreComponent implements OnInit {
 		this.countryCodes = this.helper.getAllCountryCode();
 		this.themeIsDark = this.themeService.themeActive();
 		this.saveLogAccess();
+	}
+	verifyVersion() {
+		this.sellMoreService.getVersion().subscribe((res) => {
+			if (res.version != this.getVersionLocalStorage()) {
+				this.setVersionLocalStorage(res.version);
+				this.messageNewVersion(res.version);
+			}
+		});
+	}
+
+	getVersionLocalStorage() {
+		return localStorage.getItem('wiseller_version');
+	}
+	setVersionLocalStorage(version) {
+		return localStorage.setItem('wiseller_version', version);
+	}
+
+	messageNewVersion(version) {
+		const pessoa = this.loginService.getUser();
+
+		Swal.fire({
+			title: `Nova versão instalada ${version}`,
+			width: 600,
+			showCancelButton: true,
+
+			html: `
+			<div style="text-align: left;">
+				Olá, ${pessoa?.nome}, temos novidades.<br />
+			</div>
+			`,
+			icon: 'info',
+			confirmButtonColor: '#3085d6',
+			cancelButtonText: 'OK!',
+			confirmButtonText: 'Ver as novidades!',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				window.open(
+					'https://www.notion.so/Wiseller-Vers-o-1-0-8-e77c48f6ea4047a3938f4030974d4d1d',
+					'_blank'
+				);
+			}
+			window.location.reload();
+		});
 	}
 
 	// @HostListener('window:scroll', [])

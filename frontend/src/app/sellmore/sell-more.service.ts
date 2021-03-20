@@ -14,6 +14,9 @@ export class SellMoreService {
 
 	constructor(private http: HttpClient, private router: Router) {}
 
+	getVersion(): Observable<any> {
+		return this.http.get<any>(`${API}/currentVersion`);
+	}
 	getCalenda(search?: string): Observable<any[]> {
 		return this.http.get<any[]>(`${API}/calendar`);
 	}
