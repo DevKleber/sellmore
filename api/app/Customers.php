@@ -180,22 +180,31 @@ class Customers extends Model
             $i = 0;
             $ar = [];
             foreach ($array_texto as $line_num => $line) {
+
                 $ar[$i][] = $line;
 
-                if (preg_match('/END/', $line)) {
+                if (preg_match('/END:/', $line)) {
                     ++$i;
                 }
+
             }
             $contatos = [];
             foreach ($ar as $key => $value) {
                 if(count($value) <=2){
                     continue;
                 }
-                $contatos[$key] = [
-                    'nome' => explode('FN:', $value[3])[1],
-                ];
+
+                // $contatos[$key] = [
+                //     'nome' => explode('FN:', $value[3])[1],
+                // ];
+
                 $countPhone = 0;
                 foreach ($value as $item) {
+                    $fn = explode('FN:', $item);
+                    if (count($fn) > 1) {
+                        $contatos[$key] = [ 'nome' => $fn[1]];
+                    }
+
                     $numeros = explode('TEL', $item);
 
                     if (count($numeros) > 1) {
