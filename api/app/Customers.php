@@ -209,12 +209,20 @@ class Customers extends Model
 
                     if (count($numeros) > 1) {
                         $numeroWaid = explode('waid=', $numeros[1]);
-                        $countryCode = explode(' ', explode('+', $numeros[1])[1])[0];
+
+                        $explodByAddition = explode('+', $numeros[1])[1] ?? ' ';
+                        $countryCode = explode(' ', $explodByAddition)[0] ?? '';
+
                         if (count($numeroWaid) > 1) {
                             $numeroWhatsapp = explode(':', $numeroWaid[1])[0];
                             $numero = preg_replace('/[^0-9]/', '', $numeroWhatsapp);
 
                             $numeroWithoutCountryCode = substr($numero, strlen($countryCode));
+
+                            if($numeroWithoutCountryCode == ''){
+                                continue;
+                            }
+
                             $contatos[$key]['numeros']['whatsapp'][$countPhone]['phone'] = $numeroWithoutCountryCode;
                             if ('55' == $countryCode) {
                                 $contatos[$key]['numeros']['whatsapp'][$countPhone]['phone'] = Helpers::numeroNonoDigito($numeroWithoutCountryCode);
@@ -225,7 +233,9 @@ class Customers extends Model
                             $numero = preg_replace('/[^0-9]/', '', $numeroNormal);
                             $numeroWithoutCountryCode = substr($numero, strlen($countryCode));
 
-
+                            if($numeroWithoutCountryCode == ''){
+                                continue;
+                            }
                             $contatos[$key]['numeros']['phone'][$countPhone]['phone'] = $numeroWithoutCountryCode;
                             if ('55' == $countryCode) {
                                 if (strlen($numeroWithoutCountryCode) > 11) { //Se numero tem 13 digitos 64 9 99967545
