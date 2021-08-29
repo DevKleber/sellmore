@@ -23,6 +23,9 @@ export class SellMoreService {
 	saveCalendar(form) {
 		return this.http.post<any>(`${API}/calendar`, form);
 	}
+	deleteCalendar(id) {
+		return this.http.delete<any>(`${API}/calendar/${id}`);
+	}
 
 	customersFind(search?: string): Observable<any[]> {
 		let params: HttpParams = undefined;

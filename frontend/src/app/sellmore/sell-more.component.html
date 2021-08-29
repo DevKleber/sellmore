@@ -1,7 +1,7 @@
 <div class="sellMore" >
 	<header>
 		<div class="logo">
-			<img src="/assets/img/system/sellmore.png" width="55px" />
+			<img src="/assets/img/system/wiseller.png" width="55px" />
 			<!-- <img src="/assets/img/logo/logo.svg" alt="" srcset="" width="56px" /> -->
 		</div>
 		<div class="search">
@@ -300,7 +300,6 @@
 						<perfect-scrollbar>
 							<div class="children">
 								<div class="item" *ngFor=" let item of itemLead.value.referidos; index as indexItem;">
-
 									<div class="contacto cursor-pointer" (click)="callTo(item, {itemLead, referido : indexItem})" data-toggle="modal"
 										data-target="#modalCall">
 										<span>
@@ -417,7 +416,7 @@
 							<div class="quantitative">
 								{{ itemLead.value.referidos.length }} referidos
 								<br />
-								N à contactar
+								<!-- N à contactar -->
 							</div>
 							<div class="action">
 								<div class="actionButton" (click)="newChildren(itemLead.value)" data-toggle="modal"
@@ -496,7 +495,7 @@
 					<!-- Everything you see below is just for the demo, you don't need to include it in your app -->
 
 					<!-- <div class="" *ngIf="formCalendar.value.id_customers > 0"> -->
-					<div class="" style="margin-top: 5px;">
+					<div class="" style="margin-top: 5px;"  *ngIf="formCalendar?.value?.title || formCalendar.value.date">
 						<h2> Novo agendamento: clique no dia e informe o horário </h2>
 						<h2> {{formCalendar.value.title}}</h2>
 
@@ -934,7 +933,7 @@
 						<form [formGroup]="form" novalidate>
 							<label for="">
 								Referido criado em: {{person?.created_at | date: 'dd/MM/yyyy H:mm:ss'}} <br>
-								Referido alterada em: {{person?.updated_at | date: 'dd/MM/yyyy H:mm:ss'}}
+								Referido alterado em: {{person?.updated_at | date: 'dd/MM/yyyy H:mm:ss'}}
 							</label>
 							<textarea (change)="update(form.value,false,false,true)" placeholder="Observação" class="textarea"
 								formControlName="observation" style="width: 95%; height: 300px;">
@@ -1241,8 +1240,8 @@
 				<div class="content">
 					<div class="card light" style="margin-left: 10px;">
 						<h3 [innerHtml]="calendarDetail?.title"></h3>
-						<p *ngIf="calendarDetail?.referido?.id">
-							Contato adicionando no dia {{calendarDetail?.referido.created_at | date: 'dd/MM/yyyy H:mm:ss'}} <br>
+						<p *ngIf="calendarDetail?.referido?.id" class="mt-15">
+							Referido adicionado no dia {{calendarDetail?.referido.created_at | date: 'dd/MM/yyyy H:mm:ss'}} <br>
 							Você alterou esse contato no dia {{calendarDetail?.referido.updated_at | date: 'dd/MM/yyyy H:mm:ss'}}
 						</p>
 
@@ -1262,11 +1261,11 @@
 						<br>
 						<small>
 							A opção alterar ainda não está disponível.
-							Caso queira alterar, você terá que remover e inseriri novamente
+							Caso queira alterar, você terá que remover e inserir novamente
 						</small>
 						<div class="buttonsAgendaRemover">
-							<button>Remover agendamento</button>
-							<button>Remover agendamento e filtrar referido</button>
+							<button (click)="removerAgendamento()" data-dismiss="modal">Remover agendamento</button>
+							<button (click)="removerAgendamento(true)" data-dismiss="modal">Remover agendamento e filtrar referido</button>
 						</div>
 					</div>
 

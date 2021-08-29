@@ -4,6 +4,49 @@
 	--backgroundColor: #2a004f;
 	--backgroundColorMoreDark: #5b6d80;
 
+	--colorPrimary: #1D3055;
+
+	--backgroundButton: #1D3055;
+	--backgroundButtonHover: #192947;
+	--backgroundButtonDisabled: #1c0035;
+	--backgroundButtonDisabledColor: #8e8c94;
+	--backgroundButtonColor: #fff;
+
+	--primary: #1A2A39;
+
+	--icons: #6c7883;
+
+	/* --backgroundComponents: #2a004f; */
+	--backgroundComponents: #1D3055;
+	--backgroundComponentsColor: #cbd7e1;
+
+	--backgroundInput: #dfe1e5;
+	--backgroundInputColor: #2a004f;
+
+	--backgroundButtonSecondary: #b3b3b3;
+	--backgroundButtonColorSecondary: #fff;
+
+	--backgroundSecondary: #1AAE9F;
+	--backgroundSecondaryHover: #0b7e72;
+	--backgroundSecondaryColor: #fff;
+
+	--card-lightBackground: #fff;
+	--card-lightColor: #636363;
+
+	/* --backgroundButton: #04d361;
+    --backgroundButtonHover: #0df576;
+    --backgroundButtonDisabled: #95fcc1;
+    --backgroundButtonDisabledColor: #212025;
+    --backgroundButtonColor: #fff;
+	--primary: #04d361; */
+
+
+	/* cores oficiais */
+	/* --backgroundColorLight:#fff;
+	--background: #efefed;
+	--backgroundColor: #2a004f;
+	--backgroundColorMoreDark: #5b6d80;
+
 	--colorPrimary: #2a004f;
 
 	--backgroundButton: #2a004f;
@@ -16,7 +59,6 @@
 
 	--icons: #6c7883;
 
-	/* --backgroundComponents: #182533; */
 	--backgroundComponents: #2a004f;
 	--backgroundComponentsColor: #cbd7e1;
 
@@ -31,12 +73,6 @@
 	--backgroundSecondaryColor: #fff;
 
 	--card-lightBackground: #fff;
-	--card-lightColor: #636363;
+	--card-lightColor: #636363; */
 
-	/* --backgroundButton: #04d361;
-    --backgroundButtonHover: #0df576;
-    --backgroundButtonDisabled: #95fcc1;
-    --backgroundButtonDisabledColor: #212025;
-    --backgroundButtonColor: #fff;
-	--primary: #04d361; */
 }

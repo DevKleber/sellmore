@@ -36,7 +36,7 @@ class CalendarController extends Controller
             $ar[$key]['end'] = $end_date;
             $ar[$key]['title'] = "<small class='displayNone'>{$value->id_customers}:|:;</small> {$value->name} {$numbersPhone} <br />Ligar às {$hour}";
             $ar[$key]['phones'] = $numbersPhone;
-            $ar[$key]['color'] = '#00eb84';
+            $ar[$key]['color'] = '#fff';
             $ar[$key]['allDay'] = false;
         }
 
@@ -71,7 +71,7 @@ class CalendarController extends Controller
         $ar['end'] = $end_date;
         $ar['title'] = "<small class='displayNone'>{$cutomers->id}:|:;</small>  {$cutomers->name} {$numbersPhone}  Ligar às {$hour}";
         $ar['phones'] = $arNumbers;
-        $ar['color'] = '#00eb84';
+        $ar['color'] = '#fff';
         $ar['allDay'] = false;
 
         return response(['response' => 'Salvo com sucesso', 'dados' => $ar]);
@@ -105,16 +105,22 @@ class CalendarController extends Controller
 
     public function destroy($id)
     {
+        $ususario = $request['id_usuario'] = auth('api')->user()->id;
         $calendar = \App\Calendar::find($id);
+
+        if($calendar->id_usuario !== $ususario) {
+            return response(['response' => 'Sem permissão para deletar esse contato.'], 400);
+        }
+
 
         if (!$calendar) {
             return response(['response' => 'Calendar Não encontrado'], 400);
         }
         $calendar->bo_ativo = false;
-        if (!$calendar->save()) {
+        if (!$calendar->delete()) {
             return response(['response' => 'Erro ao deletar Calendar'], 400);
         }
 
-        return response(['response' => 'Calendar Inativado com sucesso']);
+        return response(['response' => 'Deletado com sucesso!']);
     }
 }

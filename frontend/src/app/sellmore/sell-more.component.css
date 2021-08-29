@@ -160,6 +160,7 @@
 	flex-direction: row;
 	flex-wrap: wrap;
 	overflow: scroll;
+	overflow-x: hidden;
 }
 
 .customers {
@@ -226,12 +227,11 @@
 	flex-direction: column;
 }
 .children .item .contacto .contacto-name {
-	color: var(--backgroundSecondary) !important;
 	font-size: 20px;
 	font-weight: bold;
 }
-.children .item .contacto .contacto-phone {
-	color: var(--backgroundSecondary) !important;
+.children .item .contacto .contacto-phone, .children .item .contacto .contacto-name {
+	color: var(--backgroundColorLight) !important;
 }
 
 .children .item .finished {

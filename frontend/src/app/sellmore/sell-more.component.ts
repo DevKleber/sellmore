@@ -823,9 +823,36 @@ export class SellMoreComponent implements OnInit {
 				this.notificationService.notifySweet('Agendado com sucesso!');
 			});
 	}
+	removerAgendamento(filtrarUsuario = false) {
+		const { id } = this.calendarDetail;
+		this.sellMoreService.deleteCalendar(id).subscribe((res) => {
+			this.deleteEvent(this.calendarDetail);
+			this.loaderService.isLoad(false);
+			this.filtrarUsuarioDepoisDeApagarContato(filtrarUsuario);
+		});
+	}
+	filtrarUsuarioDepoisDeApagarContato(filtrarUsuario) {
+		if (filtrarUsuario) {
+			const { title, referido } = this.calendarDetail;
+			let getNumberFromTitle = title.split('<br')[0];
+			getNumberFromTitle = getNumberFromTitle.split('small>')[1];
+			getNumberFromTitle = getNumberFromTitle.replace(/\D/g, '');
+
+			let filter = '';
+			const phone = referido?.phones[0].phone ?? [];
+			if (phone.length > 0) {
+				filter = phone;
+			} else {
+				filter = getNumberFromTitle;
+			}
+
+			this.searchForm.controls['searchControl'].setValue(filter);
+
+			return;
+		}
+	}
 
 	deleteEvent(eventToDelete: CalendarEvent) {
-		console.log('delete event');
 		this.events = this.events.filter((event) => event !== eventToDelete);
 	}
 
