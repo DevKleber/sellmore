@@ -10,7 +10,7 @@ Route::post('user/new', 'FuncionarioController@store');
 Route::post('issue', 'TrelloController@issue');
 
 Route::get('currentVersion', function () {
-    $version = '1.1.0';
+    $version = '1.1.1';
     return ["version" => $version];
 });
 
