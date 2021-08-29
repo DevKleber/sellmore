@@ -44,7 +44,6 @@ class Customers extends Model
             ->where('bo_ativo', true)
             ->orderBy('updated_at')
             ->select('id')
-            ->limit(100)
             ->get();
         foreach ($parentsRoot as $value) {
             $arFather[$value->id] = $value->id;
@@ -55,7 +54,6 @@ class Customers extends Model
             ->select('id_parent')
             ->whereNotNull('id_parent')
             ->where('bo_ativo', true)
-            ->limit(100)
             ->get();
         $parents->merge($parentsRoot);
 
