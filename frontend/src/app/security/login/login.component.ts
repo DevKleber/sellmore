@@ -75,7 +75,7 @@ export class LoginComponent implements OnInit {
 			.login(this.loginForm.value.email, this.loginForm.value.password)
 			.subscribe(
 				(user) => {
-					console.log(user.me['nome']);
+					// console.log(user.me['nome']);
 					location.replace('/');
 					// this.notificationService.notifySweet( `Bem vindo, ${user.me['nome']}` );
 					this.loaderService.isLoad(false);

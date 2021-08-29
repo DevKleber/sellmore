@@ -31,11 +31,13 @@ class CustomersController extends Controller
             return response([]);
         }
         $id_usuario = auth('api')->user()->id;
+
         $customers = \App\Customers::where('id_usuario', $id_usuario)
             ->join('customers_phone', 'customers_phone.id_customers', '=', 'customers.id')
             ->where(function ($q) use ($query) {
                 $q->where('name', 'LIKE', '%'.$query.'%')
                     ->orWhere('customers_phone.phone', 'LIKE', '%'.$query.'%')
+                    ->orWhere('customers.observation', 'LIKE', '%'.$query.'%')
                 ;
             })
             ->orderBy('name')
@@ -63,7 +65,7 @@ class CustomersController extends Controller
         $arCustomers = \App\Customers::where('id_usuario', auth('api')->user()->id)
             ->where('bo_ativo', true)
             ->where('status', 'ld')
-            ->orderBy('id')
+            ->orderBy('name')
             ->get()
         ;
         $ar = [];

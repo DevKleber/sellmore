@@ -126,8 +126,44 @@
 	color: #efefed;
 }
 
+.contentWiseller{
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+}
+.contatos {
+	width: 500px;
+}
+.card-agenda {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	margin-top: 0;
+}
+#customersBody > div.card-agenda.modal-dialog > div.modal-body {
+	padding-top: 5px;
+}
+.buttonsAgendaRemover{
+	display: flex;
+	flex-direction: row;
+}
+#modalDetailCalendar > div > div > div > div > div > div > button {
+	margin: 5px;
+	width: 50%;
+
+}
+
+.viewport {
+	width: 100%;
+	height: 100vh;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	overflow: scroll;
+}
+
 .customers {
-	width: 422px;
+	width: calc(100% - 100px);
 	height: 510px;
 	background-color: var(--backgroundComponents);
 	margin: 15px;
@@ -135,6 +171,7 @@
 	color: #efefed;
 	display: flex;
 	flex-direction: column;
+	transition: all 2s;
 }
 .parent {
 	height: 60px;

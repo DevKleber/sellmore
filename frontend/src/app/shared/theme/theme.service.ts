@@ -27,7 +27,7 @@ export class ThemeService {
 
 	setTheme() {
 		this.darkmode = this.themeActive();
-		console.log(this.darkmode);
+		// console.log(this.darkmode);
 		this.loadCSS();
 	}
 	loadCSS() {

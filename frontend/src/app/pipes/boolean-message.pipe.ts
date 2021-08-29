@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class BooleanMessagePipe implements PipeTransform {
 	transform(value: any, args?: any, args1?: any): any {
-		console.log(args);
+		// console.log(args);
 		return this.tratarBo(value, args);
 	}
 

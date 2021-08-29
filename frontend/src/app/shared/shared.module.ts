@@ -30,6 +30,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
@@ -69,6 +70,7 @@ export function playerFactory() {
 		ReactiveFormsModule,
 		NgSelectModule,
 		MatTooltipModule,
+		ScrollingModule,
 		MatMenuModule,
 		PerfectScrollbarModule,
 		NgxMaskModule.forRoot(),
@@ -91,6 +93,7 @@ export function playerFactory() {
 		Nl2BrPipe,
 		NgSelectModule,
 		MatTooltipModule,
+		ScrollingModule,
 		MatMenuModule,
 		PerfectScrollbarModule,
 		NgxMaskModule,

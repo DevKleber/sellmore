@@ -223,8 +223,21 @@ a:link{
 	text-decoration: none;
 }
 
+.displayNone{
+	display: none!important;
+}
 .iconTheme{
 	color: var(--backgroundColor) !important;
 	background: none!important;
 	margin-top: 0!important; padding: 10px 32px!important; margin-right: 5px;
 }
+.cdk-virtual-scroll-content-wrapper {
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+/* .contentscrollbar > div > div.ps-content{
+	display: flex;
+	flex-wrap: wrap;
+} */

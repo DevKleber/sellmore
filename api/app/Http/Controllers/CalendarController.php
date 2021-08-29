@@ -12,7 +12,7 @@ class CalendarController extends Controller
         $calendar = \App\Calendar::join('customers', 'customers.id', '=', 'calendar.id_customers')
             ->where('calendar.id_usuario', auth('api')->user()->id)
             ->where('calendar.bo_ativo', true)
-            ->select('calendar.*', 'customers.*', 'customers.id as id_customer')
+            ->select('calendar.*','calendar.id as id_calendar', 'customers.*', 'customers.id as id_customer')
             ->get()
         ;
         if (!$calendar) {
@@ -31,9 +31,11 @@ class CalendarController extends Controller
 
             $startDate = str_replace('-', '/', $value->date);
 
+            $ar[$key]['id'] = $value->id_calendar;
             $ar[$key]['start'] = $startDate;
             $ar[$key]['end'] = $end_date;
-            $ar[$key]['title'] = "{$value->name} {$numbersPhone}  Ligar às {$hour}";
+            $ar[$key]['title'] = "<small class='displayNone'>{$value->id_customers}:|:;</small> {$value->name} {$numbersPhone} <br />Ligar às {$hour}";
+            $ar[$key]['phones'] = $numbersPhone;
             $ar[$key]['color'] = '#00eb84';
             $ar[$key]['allDay'] = false;
         }
@@ -64,9 +66,11 @@ class CalendarController extends Controller
         }
         $numbersPhone = implode(',', $arNumbers);
 
+        $ar['id'] = $calendar->id;
         $ar['start'] = $calendar->date;
         $ar['end'] = $end_date;
-        $ar['title'] = "{$cutomers->name} {$numbersPhone}  Ligar às {$hour}";
+        $ar['title'] = "<small class='displayNone'>{$cutomers->id}:|:;</small>  {$cutomers->name} {$numbersPhone}  Ligar às {$hour}";
+        $ar['phones'] = $arNumbers;
         $ar['color'] = '#00eb84';
         $ar['allDay'] = false;
 

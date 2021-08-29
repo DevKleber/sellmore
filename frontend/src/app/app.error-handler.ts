@@ -37,7 +37,7 @@ export class ApplicationErrorHandler extends ErrorHandler {
 						loginService.logoutForce();
 						break;
 					case 400:
-						console.log(error);
+						// console.log(error);
 						if (
 							error.error === 'token_expired' ||
 							error.error == 'Token is Expired' ||
@@ -52,9 +52,8 @@ export class ApplicationErrorHandler extends ErrorHandler {
 								this.ns.notifyError(error.error);
 							}
 							this.loaderService.isLoad(false);
-							const loginService = this.injector.get(
-								LoginService
-							);
+							const loginService =
+								this.injector.get(LoginService);
 							// loginService.logout();
 							loginService.logoutForce();
 						} else {
@@ -68,16 +67,14 @@ export class ApplicationErrorHandler extends ErrorHandler {
 					case 401:
 						if (error.error === 'token_has_been_blacklisted') {
 							this.ns.notifyError('token na lista negra');
-							const loginService = this.injector.get(
-								LoginService
-							);
+							const loginService =
+								this.injector.get(LoginService);
 							loginService.logout();
 							this.goToLogin();
 						} else if (error.error === 'token_invalid') {
 							this.ns.notifyError('Token Inválido');
-							const loginService = this.injector.get(
-								LoginService
-							);
+							const loginService =
+								this.injector.get(LoginService);
 							loginService.logout();
 							this.goToLogin('login');
 						} else {

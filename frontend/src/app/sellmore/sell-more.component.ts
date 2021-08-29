@@ -4,7 +4,6 @@ import {
 	isDevMode,
 	ElementRef,
 	ViewChild,
-	HostListener,
 } from '@angular/core';
 import { isSameDay, isSameMonth } from 'date-fns';
 import {
@@ -34,6 +33,7 @@ import {
 	FormArray,
 } from '@angular/forms';
 import { LoaderService } from '../shared/loader/loader.service';
+import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
 
 @Component({
 	selector: '[app-sell-more]',
@@ -43,6 +43,7 @@ import { LoaderService } from '../shared/loader/loader.service';
 export class SellMoreComponent implements OnInit {
 	position: number = 0;
 	quantidade: number = 2;
+	scrollTo: number = 0;
 
 	boShowProblemasCartao: boolean = false;
 	boShowLigarDepois: boolean = false;
@@ -68,6 +69,7 @@ export class SellMoreComponent implements OnInit {
 		{ id: 'n', status: 'Não tem interesse' },
 		{ id: 'c', status: 'Comprou' },
 	];
+	itemToUpdate: any = {};
 	customersLd: any[] = [];
 	customersImported: any[] = [];
 	person: any = {};
@@ -90,6 +92,9 @@ export class SellMoreComponent implements OnInit {
 	formBug: FormGroup;
 	formCategory: FormGroup;
 	formCalendar: FormGroup;
+
+	calendarDetail: any;
+
 	img: any = 'assets/img/file/search.svg';
 	selectedFile: File;
 	user: any = {};
@@ -102,7 +107,12 @@ export class SellMoreComponent implements OnInit {
 	events: CalendarEvent[] = [];
 
 	@ViewChild('openCalendar', { static: true }) openCalendar: ElementRef;
+	@ViewChild('openCalendarDetail', { static: true })
+	openCalendarDetail: ElementRef;
 	@ViewChild('closeModalPhone', { static: true }) closeModalPhone: ElementRef;
+	@ViewChild(PerfectScrollbarComponent)
+	componentRef?: PerfectScrollbarComponent;
+	@ViewChild('contentScroll') contentScroll: ElementRef;
 
 	options: AnimationOptions = {
 		path: '/assets/animations/json/results.json',
@@ -134,6 +144,15 @@ export class SellMoreComponent implements OnInit {
 	) {}
 
 	ngOnInit() {
+		document.addEventListener(
+			'touchstart',
+			function (e) {
+				e.preventDefault(); // does nothing since the listener is passive
+			},
+			{
+				passive: true,
+			}
+		);
 		this.verifyVersion();
 		this.getStatusLocalStorage();
 
@@ -145,9 +164,15 @@ export class SellMoreComponent implements OnInit {
 		this.find();
 		this.countryCodes = this.helper.getAllCountryCode();
 		this.themeIsDark = this.themeService.themeActive();
+		this.setEvents();
 		this.saveLogAccess();
 	}
 	verifyVersion() {
+		const pessoa = this.loginService.getUser();
+		if (!pessoa) {
+			return;
+		}
+
 		this.sellMoreService.getVersion().subscribe((res) => {
 			if (res.version != this.getVersionLocalStorage()) {
 				this.setVersionLocalStorage(res.version);
@@ -191,39 +216,42 @@ export class SellMoreComponent implements OnInit {
 		});
 	}
 
-	// @HostListener('window:scroll', [])
-	// onScroll(): void {
-	// 	if (this.bottomReached()) {
-	// 		const arCustomers = Object.entries(this.customers);
-	// 		console.log('size:', arCustomers.length);
+	getCustomers() {
+		this.loaderService.isLoad(true);
+		this.sellMoreService
+			.getCustomers(
+				this.boShowProblemasCartao,
+				this.boShowLigarDepois,
+				this.boShowNaotemInteresse,
+				this.boShowComprou,
+				this.boShowAberto
+			)
+			.subscribe((res) => {
+				this.loaderService.isLoad(false);
+				this.customers = res['arCustomers'];
+				this.statistics = res['statistics'];
 
-	// 		let item = arCustomers.slice(
-	// 			this.position,
-	// 			this.position + this.quantidade
-	// 		);
+				// this.addCustomers();
+				// setInterval(() => {
+				// }, 2000);
+			});
+	}
 
-	// 		item.forEach((element) => {
-	// 			console.log(element);
+	addCustomers() {
+		const arCustomers = Object.entries(this.customers);
 
-	// 			this.customersDynamic.push(element[1]);
-	// 		});
+		let item = arCustomers.slice(
+			this.position,
+			this.position + this.quantidade
+		);
 
-	// 		this.position += this.quantidade;
-	// 	}
-	// }
+		item.forEach((element) => {
+			// console.log(element);
+			this.customersDynamic.push(element[1]);
+		});
 
-	// bottomReached(): boolean {
-	// 	const triggerAt: number = 128;
-	// 	/* perform an event when the user has scrolled over the point of 128px from the bottom */
-	// 	if (
-	// 		document.body.scrollHeight -
-	// 			(window.innerHeight + window.scrollY) <=
-	// 		triggerAt
-	// 	) {
-	// 		return true;
-	// 	}
-	// 	return false;
-	// }
+		this.position += this.quantidade;
+	}
 
 	saveLogAccess() {
 		if (this.user.id === 1) {
@@ -362,22 +390,6 @@ export class SellMoreComponent implements OnInit {
 		this.getCustomers();
 	}
 
-	getCustomers() {
-		this.loaderService.isLoad(true);
-		this.sellMoreService
-			.getCustomers(
-				this.boShowProblemasCartao,
-				this.boShowLigarDepois,
-				this.boShowNaotemInteresse,
-				this.boShowComprou,
-				this.boShowAberto
-			)
-			.subscribe((res) => {
-				this.loaderService.isLoad(false);
-				this.customers = res['arCustomers'];
-				this.statistics = res['statistics'];
-			});
-	}
 	getStrategy() {
 		this.loaderService.isLoad(true);
 		this.sellMoreService.getStrategy().subscribe((res) => {
@@ -412,7 +424,7 @@ export class SellMoreComponent implements OnInit {
 		});
 	}
 
-	update(form, feedback = true, updateList = true) {
+	update(form, feedback = true, updateList = true, updateWithJs = false) {
 		if (!form.id) {
 			this.notificationService.notifySweet(
 				'Erro: não encontramos o referido!'
@@ -424,9 +436,26 @@ export class SellMoreComponent implements OnInit {
 				this.notificationService.notifySweet('Alterado com sucesso!');
 				this.clearForm();
 			}
+
 			if (updateList) {
 				this.getCustomers();
 			}
+
+			if (updateWithJs) {
+				const { itemLead, referido } = this.itemToUpdate;
+				if (itemLead === undefined) {
+					// this.getCustomers();
+				} else {
+					const arCustomers = this.customers;
+
+					arCustomers[itemLead.key]['referidos'][referido]['status'] =
+						form.status;
+					arCustomers[itemLead.key]['referidos'][referido][
+						'observation'
+					] = form.observation;
+				}
+			}
+
 			this.loaderService.isLoad(false);
 			// this.closemodalSellMoreAdd.nativeElement.click();
 		});
@@ -480,8 +509,11 @@ export class SellMoreComponent implements OnInit {
 			this.loaderService.isLoad(false);
 		});
 	}
-	callTo(person) {
-		this.loaderService.isLoad(true);
+	callTo(person, itemToUpdate = null) {
+		if (itemToUpdate !== null) {
+			this.itemToUpdate = itemToUpdate;
+		}
+
 		this.updateOpenForm(person);
 		this.person = person;
 		if (!person.id_parent) {
@@ -545,7 +577,6 @@ export class SellMoreComponent implements OnInit {
 			this.sellMoreService
 				.file(uploadData, this.parent.id)
 				.subscribe((data) => {
-					console.log(data);
 					this.customersImported = data;
 					this.getCustomers();
 					this.loaderService.isLoad(false);
@@ -626,8 +657,7 @@ export class SellMoreComponent implements OnInit {
 			this.formBug.controls['desc'].setValue('');
 			Swal.fire({
 				title: 'Obrigado por nos reportar!',
-				text:
-					'Deseja ver a lista de problemas e as novidades que vem por aí?',
+				text: 'Deseja ver a lista de problemas e as novidades que vem por aí?',
 				icon: 'success',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
@@ -651,14 +681,14 @@ export class SellMoreComponent implements OnInit {
 	// calendar
 	actions: CalendarEventAction[] = [
 		{
-			label: '<i class="fas fa-fw fa-pencil-alt"></i>',
+			label: '<i class="fa-pencil">Editar</i>',
 			a11yLabel: 'Edit',
 			onClick: ({ event }: { event: CalendarEvent }): void => {
 				this.handleEvent('Edited', event);
 			},
 		},
 		{
-			label: '<i class="fas fa-fw fa-trash-alt"></i>',
+			label: '<i class="fa fa-trash">Deletar</i>',
 			a11yLabel: 'Delete',
 			onClick: ({ event }: { event: CalendarEvent }): void => {
 				this.events = this.events.filter((iEvent) => iEvent !== event);
@@ -682,6 +712,7 @@ export class SellMoreComponent implements OnInit {
 				this.events = [
 					...this.events,
 					{
+						id: element.id,
 						start: dateStart,
 						end: dateEnd,
 						title: element.title,
@@ -696,7 +727,7 @@ export class SellMoreComponent implements OnInit {
 				];
 			});
 			// this.notificationService.notifySweet(JSON.stringify(this.events));
-			console.log(this.events);
+			// console.log(this.events);
 			// this.events = res['dados'];
 			this.loaderService.isLoad(false);
 		});
@@ -737,6 +768,8 @@ export class SellMoreComponent implements OnInit {
 		newStart,
 		newEnd,
 	}: CalendarEventTimesChangedEvent): void {
+		console.log('entrou event times changed');
+
 		this.events = this.events.map((iEvent) => {
 			if (iEvent === event) {
 				return {
@@ -753,6 +786,17 @@ export class SellMoreComponent implements OnInit {
 	handleEvent(action: string, event: CalendarEvent): void {
 		// this.modalData = { event, action };
 		// this.modal.open(this.modalContent, { size: 'lg' });
+		this.openCalendarDetail.nativeElement.click();
+		this.calendarDetail = event;
+		this.calendarDetail['referido'] = {};
+		const { title } = this.calendarDetail;
+		this.calendarDetail['id_usuario'] = title
+			.replace(/<[^>]*>?/gm, '')
+			.split(':|:;')[0];
+
+		this.calendarDetail['referido'] = this.customersLd.filter((item) => {
+			return item.id === Number(this.calendarDetail.id_usuario);
+		})[0];
 	}
 
 	addEvent(): void {
@@ -762,6 +806,7 @@ export class SellMoreComponent implements OnInit {
 				this.events = [
 					...this.events,
 					{
+						id: res['dados'].id,
 						start: new Date(res['dados'].start),
 						end: new Date(res['dados'].end),
 						title: res['dados'].title,
@@ -780,6 +825,7 @@ export class SellMoreComponent implements OnInit {
 	}
 
 	deleteEvent(eventToDelete: CalendarEvent) {
+		console.log('delete event');
 		this.events = this.events.filter((event) => event !== eventToDelete);
 	}
 
