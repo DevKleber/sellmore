@@ -237,7 +237,7 @@ a:link{
     align-items: center;
     justify-content: center;
 }
-/* .contentscrollbar > div > div.ps-content{
+.contentscrollbar > div > div.ps-content{
 	display: flex;
 	flex-wrap: wrap;
-} */
+}

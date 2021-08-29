@@ -130,6 +130,7 @@
 	display: flex;
 	flex-wrap: wrap;
 	flex-direction: row;
+	height: 70vh;
 }
 .contatos {
 	width: 500px;
@@ -162,9 +163,12 @@
 	overflow: scroll;
 	overflow-x: hidden;
 }
+.overflowPs {
+	height: 100vh;
+}
 
 .customers {
-	width: calc(100% - 100px);
+	width: 422px;
 	height: 510px;
 	background-color: var(--backgroundComponents);
 	margin: 15px;

@@ -42,7 +42,7 @@ class Customers extends Model
         $parentsRoot = self::where('id_usuario', $id_usuario)
             ->whereNull('id_parent')
             ->where('bo_ativo', true)
-            ->orderBy('updated_at')
+            ->orderBy('name')
             ->select('id')
             ->get();
         foreach ($parentsRoot as $value) {

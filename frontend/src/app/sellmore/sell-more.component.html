@@ -206,10 +206,11 @@
 		<div class="contentWiseller" id="customersBody"
 			*ngIf="boShowProblemasCartao || boShowLigarDepois || boShowNaotemInteresse || boShowComprou || boShowAberto"
 		>
-			<div class="contatos">
-				<cdk-virtual-scroll-viewport  itemSize="540" class="viewport" >
+			<!-- <div class="contatos">
+				<cdk-virtual-scroll-viewport  itemSize="540" class="viewport" > -->
 				<!-- <div class="customers" *ngFor="let itemLead of customers | keyvalue; let even = even;"> -->
-					<div class="customers" *cdkVirtualFor="let itemLead of customers | keyvalue; let even = even" >
+				<perfect-scrollbar class="contentscrollbar">
+					<div class="customers" *ngFor="let itemLead of customers | keyvalue; let even = even" >
 						<div class="parent center-center">
 							<div class="contact">
 								<div class="name">{{ itemLead?.value.name }} </div>
@@ -427,9 +428,10 @@
 							</div>
 						</div>
 					</div>
-				</cdk-virtual-scroll-viewport>
-			</div>
-			<div class="card-agenda modal-dialog mobileNo">
+				<!-- </cdk-virtual-scroll-viewport> -->
+				</perfect-scrollbar>
+
+			<div class="card-agenda modal-dialog mobileNo" *ngIf="false">
 
 				<div class="modal-header">
 					<h3 class="modal-title">
@@ -559,7 +561,7 @@
 		</div>
 	</div>
 	<footer>
-		<div class="footerItens desktopNo" (click)="setEvents()" data-toggle="modal" data-target="#modalCalendar" #openCalendar
+		<div class="footerItens " (click)="setEvents()" data-toggle="modal" data-target="#modalCalendar" #openCalendar
 			matTooltip="Agenda">
 			<i class="far fa-calendar-alt"></i>
 		</div>

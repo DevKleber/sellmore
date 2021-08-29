@@ -164,7 +164,7 @@ export class SellMoreComponent implements OnInit {
 		this.find();
 		this.countryCodes = this.helper.getAllCountryCode();
 		this.themeIsDark = this.themeService.themeActive();
-		this.setEvents();
+		// this.setEvents();
 		this.saveLogAccess();
 	}
 	verifyVersion() {
