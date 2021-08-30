@@ -681,18 +681,12 @@ export class SellMoreComponent implements OnInit {
 	// calendar
 	actions: CalendarEventAction[] = [
 		{
-			label: '<i class="fa-pencil">Editar</i>',
+			label: '<button mat-button>Detalhar/Remover</button>',
 			a11yLabel: 'Edit',
 			onClick: ({ event }: { event: CalendarEvent }): void => {
-				this.handleEvent('Edited', event);
-			},
-		},
-		{
-			label: '<i class="fa fa-trash">Deletar</i>',
-			a11yLabel: 'Delete',
-			onClick: ({ event }: { event: CalendarEvent }): void => {
-				this.events = this.events.filter((iEvent) => iEvent !== event);
-				this.handleEvent('Deleted', event);
+				this.calendarDetail = event;
+				this.openCalendarDetail.nativeElement.click();
+				this.handleEvent('Dropped or resized', event);
 			},
 		},
 	];
@@ -717,6 +711,7 @@ export class SellMoreComponent implements OnInit {
 						end: dateEnd,
 						title: element.title,
 						color: element.color,
+						actions: this.actions,
 						allDay: false,
 						draggable: true,
 						resizable: {
@@ -768,25 +763,31 @@ export class SellMoreComponent implements OnInit {
 		newStart,
 		newEnd,
 	}: CalendarEventTimesChangedEvent): void {
-		console.log('entrou event times changed');
+		console.log(event, newStart, newEnd);
 
-		this.events = this.events.map((iEvent) => {
-			if (iEvent === event) {
-				return {
-					...event,
-					start: newStart,
-					end: newEnd,
-				};
-			}
-			return iEvent;
-		});
-		this.handleEvent('Dropped or resized', event);
+		this.sellMoreService
+			.alterarHorarioEvento({ event, newStart, newEnd })
+			.subscribe((res) => {
+				this.events = this.events.map((iEvent) => {
+					if (iEvent === event) {
+						return {
+							...event,
+							start: newStart,
+							end: newEnd,
+						};
+					}
+					return iEvent;
+				});
+				this.loaderService.isLoad(false);
+			});
+
+		// this.handleEvent('Dropped or resized', event);
 	}
 
 	handleEvent(action: string, event: CalendarEvent): void {
 		// this.modalData = { event, action };
 		// this.modal.open(this.modalContent, { size: 'lg' });
-		this.openCalendarDetail.nativeElement.click();
+
 		this.calendarDetail = event;
 		this.calendarDetail['referido'] = {};
 		const { title } = this.calendarDetail;
@@ -811,6 +812,7 @@ export class SellMoreComponent implements OnInit {
 						end: new Date(res['dados'].end),
 						title: res['dados'].title,
 						color: res['dados'].color,
+						actions: this.actions,
 						allDay: false,
 						draggable: true,
 						resizable: {

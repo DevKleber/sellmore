@@ -35,6 +35,12 @@
 }
 
 /* calendar */
+.cal-event-action{
+	color: #fff;
+    padding: 2px 15px;
+    border: 1px solid #fff;
+    border-radius: 8px;
+}
 .cal-month-view .cal-event {
     background-color: var(--backgroundSecondary);
     border-color: #d1e8ff;

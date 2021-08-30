@@ -26,6 +26,9 @@ export class SellMoreService {
 	deleteCalendar(id) {
 		return this.http.delete<any>(`${API}/calendar/${id}`);
 	}
+	alterarHorarioEvento(event) {
+		return this.http.put<any>(`${API}/calendar/${event.event.id}`, event);
+	}
 
 	customersFind(search?: string): Observable<any[]> {
 		let params: HttpParams = undefined;
