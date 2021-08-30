@@ -21,6 +21,9 @@ class CalendarController extends Controller
         $ar = [];
         foreach ($calendar as $key => $value) {
             $end_date = date('Y/m/d H:i:s', strtotime("{$value->date} +30 minute"));
+            if($value->date_end !== null){
+                $end_date = $value->date_end;
+            }
             $hour = date('H:i:s', strtotime("{$value->date}"));
             $cutomersPhone = \App\Phone::where('id_customers', $value->id_customer)->select('phone')->get();
             $arNumbers = [];
@@ -57,6 +60,9 @@ class CalendarController extends Controller
         }
 
         $end_date = date('Y-m-d H:i:s', strtotime("{$calendar->date} +30 minute"));
+        if($calendar->date_end !== null){
+            $end_date = $calendar->date_end;
+        }
         $hour = date('H:i:s', strtotime("{$calendar->date}"));
         $cutomers = \App\Customers::find($request['id_customers']);
         $cutomersPhone = \App\Phone::where('id_customers', $cutomers->id)->select('phone')->get();
@@ -91,10 +97,15 @@ class CalendarController extends Controller
     {
         $calendar = \App\Calendar::find($id);
 
+        $newStart = date("Y-m-d H:i:s", strtotime($request->newStart));
+        $newEnd = date("Y-m-d H:i:s", strtotime($request->newEnd));
+
         if (!$calendar) {
             return response(['response' => 'Calendar Não encontrado'], 400);
         }
-        $calendar = Helpers::processarColunasUpdate($calendar, $request->all());
+
+        $calendar->date = $newStart;
+        $calendar->date_end = $newEnd;
 
         if (!$calendar->update()) {
             return response(['response' => 'Erro ao alterar'], 400);
