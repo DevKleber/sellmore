@@ -1,8 +1,8 @@
 :root {
 	/* dark */
-	--background: #181818;
+	--background: #393A59;
 	--backgroundColor: #fff;
-	--backgroundColorMoreDark: #5b6d80;
+	--backgroundColorMoreDark: #D863BB;
 
 	--colorPrimary: #fff;
 
@@ -12,30 +12,30 @@
 	--backgroundButtonDisabledColor: #8e8c94;
 	--backgroundButtonColor: #fff;
 
-	--primary: #181818;
+	--primary: #D863BB;
 
 	--icons: #6c7883;
 
 	/* --backgroundComponents: #182533; */
-	--backgroundComponents: #0a0a0a;
-	--backgroundComponentsColor: #cbd7e1;
+	--backgroundComponents: #282942;
+	--backgroundComponentsColor: #D863BB;
 
-	--backgroundInput: #0c0b0b;
-	--backgroundInputColor: #dfe1e5;
+	--backgroundInput: #282942;
+	--backgroundInputColor: #fff;
 
-	--backgroundButtonSecondary: #b3b3b3;
+	--backgroundButtonSecondary: #D863BB;
 	--backgroundButtonColorSecondary: #fff;
 
 	/* --backgroundSecondary: #00eb84;
 	--backgroundSecondaryHover: #00c972; */
 
-	--backgroundSecondary: #cbd7e1;
-	--backgroundSecondaryHover: #00c972;
+	--backgroundSecondary: #71D385;
+	--backgroundSecondaryHover: #50FA7B;
 	--backgroundSecondaryColor: #2e2e2e;
 
-	--backgroundColorLight: #0a0a0a;
+	--backgroundColorLight: #dfe1e5;
 	--card-lightBackground: #0a0a0a;
-	--card-lightColor: #cbd7e1;
+	--card-lightColor: #D863BB;
 }
 
 .cal-month-view,

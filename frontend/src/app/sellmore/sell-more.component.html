@@ -210,7 +210,7 @@
 				<cdk-virtual-scroll-viewport  itemSize="540" class="viewport" > -->
 				<!-- <div class="customers" *ngFor="let itemLead of customers | keyvalue; let even = even;"> -->
 				<perfect-scrollbar class="contentscrollbar">
-					<div *ngFor="let itemLead of customers; let even = even" >
+					<div class="customerswidth" *ngFor="let itemLead of customers; let even = even" >
 						<div class="customers" *ngIf="itemLead?.referidos.length > 0 || itemLead?.bo_ativo">
 							<div class="parent center-center">
 								<div class="contact">

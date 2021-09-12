@@ -73,17 +73,17 @@
 }
 
 @media only screen and (min-width: 961px) and (max-width: 1024px) {
-	.customers,.customersFilter {
+	.customerswidth,.customersFilter {
 		width: 46.5% !important;
 	}
 }
 @media only screen and (min-width: 1025px) and (max-width: 1152px) {
-	.customers,.customersFilter {
+	.customerswidth,.customersFilter {
 		width: 47% !important;
 	}
 }
 @media only screen and (min-width: 1153px) and (max-width: 1280px) {
-	.customers,.customersFilter {
+	.customerswidth,.customersFilter {
 		width: 47.3% !important;
 	}
 }
@@ -105,7 +105,7 @@
 } */
 @media only screen and (min-width: 1281px) and (max-width: 1368px) {
 
-	.customers,.customersFilter {
+	.customerswidth,.customersFilter {
 		width: 30.8% !important;
 	}
 
@@ -132,13 +132,13 @@
 
 
 @media only screen and (min-width: 1367px) and (max-width: 1600px) {
-	.customers,.customersFilter {
+	.customerswidth,.customersFilter {
 		width: 30.8% !important;
 	}
 }
 @media only screen and (min-width: 1601px) and (max-width: 1920px) {
-	.customers {
-		width: 23.3% !important;
+	.customerswidth {
+		width: 23% !important;
 	}
 }
 @media only screen and (min-width: 1921px) and (max-width: 2560px) {
