@@ -210,221 +210,223 @@
 				<cdk-virtual-scroll-viewport  itemSize="540" class="viewport" > -->
 				<!-- <div class="customers" *ngFor="let itemLead of customers | keyvalue; let even = even;"> -->
 				<perfect-scrollbar class="contentscrollbar">
-					<div class="customers" *ngFor="let itemLead of customers | keyvalue; let even = even" >
-						<div class="parent center-center">
-							<div class="contact">
-								<div class="name">{{ itemLead?.value.name }} </div>
+					<div *ngFor="let itemLead of customers; let even = even" >
+						<div class="customers" *ngIf="itemLead?.referidos.length > 0 || itemLead?.bo_ativo">
+							<div class="parent center-center">
+								<div class="contact">
+									<div class="name">{{ itemLead?.name }} </div>
 
-								<div class="row flex-wrap">
-									<div class="contacto-phone"
-										*ngFor="let itemPhone of itemLead.value.phones; let last = last">
-										<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
-										<span *ngIf="!last" class="mr-10">,</span>
+									<div class="row flex-wrap">
+										<div class="contacto-phone"
+											*ngFor="let itemPhone of itemLead.phones; let last = last">
+											<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
+											<span *ngIf="!last" class="mr-10">,</span>
+										</div>
 									</div>
+
 								</div>
-
-							</div>
-							<div class="action">
-								<ng-container *ngIf="itemLead?.value.status != 'a'; else waiting">
-									<div class="finished">
-										<i *ngIf="itemLead.value.status == 'pc'"
-											class="fa fa-credit-card icon-finished icon-finished-no">
-										</i>
-										<i *ngIf="itemLead.value.status == 'ld'" class="fa fa-headset icon-finished">
-										</i>
-										<i *ngIf="itemLead.value.status == 'n'"
-											class="fa fa-thumbs-down icon-finished icon-finished-no">
-										</i>
-										<i *ngIf="itemLead.value.status == 'c'"
-											class="fa fa-thumbs-up icon-finished icon-finished-yes">
-										</i>
-										<i class="fa fa-bars icon-finished cursor-pointer" matTooltip="Menu"
-											[matMenuTriggerFor]="menu"></i>
-										<mat-menu #menu="matMenu">
-											<button mat-menu-item (click)="newChildren(itemLead?.value)" data-toggle="modal"
-												data-target="#modalImportContact">
-												<i class="fab fa-whatsapp"></i> Importar contatos
-											</button>
-											<!-- <button mat-menu-item>
-												<a target="_BLANK" href="https://wa.me/55{{itemLead?.value.phone}}">
-													<i class="fab fa-whatsapp"></i>
-													Abrir no Whatsapp
-												</a>
-											</button> -->
-											<button mat-menu-item (click)="updateOpenForm(itemLead.value)" data-toggle="modal"
-												data-target="#modalStickyAdd">
-												<i class="fas fa-edit"></i> Alterar
-											</button>
-											<button mat-menu-item (click)="inativar(itemLead.value)">
-												<i class="fas fa-eye-slash"></i> Arquivar
-											</button>
-
-										</mat-menu>
-									</div>
-								</ng-container>
-								<ng-template #waiting>
-									<div class="waiting">
-										<i (click)="changeStatus(itemLead.value, 'pc')" class="fa fa-credit-card icon-waiting"
-											matTooltip="Problemas com cartão de crédito">
-										</i>
-										<i (click)="changeStatus(itemLead.value, 'ld')" class="fa fa-headset icon-waiting"
-											matTooltip="Ligar depois"></i>
-										<i (click)="changeStatus(itemLead.value, 'n')" class="fa fa-thumbs-down icon-waiting"
-											matTooltip="Não deu negócio 😭"></i>
-										<i (click)="changeStatus(itemLead.value, 'c')" class="fa fa-thumbs-up icon-waiting"
-											matTooltip="Vendido 😃"></i>
-										<i class="fa fa-bars icon-waiting cursor-pointer" matTooltip="Menu"
-											[matMenuTriggerFor]="menu"></i>
-										<mat-menu #menu="matMenu">
-											<button mat-menu-item (click)="newChildren(itemLead.value)" data-toggle="modal"
-												data-target="#modalImportContact">
-												<i class="fab fa-whatsapp"></i> Importar contatos
-											</button>
-											<!-- <button mat-menu-item>
-												<a target="_BLANK" href="https://wa.me/55{{itemLead?.value.phone}}">
-													<i class="fab fa-whatsapp"></i>
-													Abrir no Whatsapp
-												</a>
-											</button> -->
-											<button mat-menu-item (click)="updateOpenForm(itemLead.value)" data-toggle="modal"
-												data-target="#modalStickyAdd">
-												<i class="fas fa-edit"></i> Alterar
-											</button>
-											<button mat-menu-item (click)="inativar(itemLead.value)">
-												<i class="fas fa-eye-slash"></i> Arquivar
-											</button>
-										</mat-menu>
-									</div>
-								</ng-template>
-							</div>
-						</div>
-						<perfect-scrollbar>
-							<div class="children">
-								<div class="item" *ngFor=" let item of itemLead.value.referidos; index as indexItem;">
-									<div class="contacto cursor-pointer" (click)="callTo(item, {itemLead, referido : indexItem})" data-toggle="modal"
-										data-target="#modalCall">
-										<span>
-											<div class="contacto-name">
-												{{ item.name }} <i *ngIf="item.status != 'a' && item.bo_preference" class="fa fa-star"></i>
-											</div>
-											<div class="row flex-wrap">
-												<div class="contacto-phone"
-													*ngFor="let itemPhone of item.phones; let last = last">
-													<small>+{{itemPhone?.country_code}}</small> {{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
-													<!-- <small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }} -->
-													<span *ngIf="!last" class="mr-10">,</span>
-													<small><br>{{item?.created_at | date: 'dd/MM/yyyy'}}</small><br>
-												</div>
-											</div>
-										</span>
-									</div>
-
-									<ng-container *ngIf=" item.status != 'a'; else waitingChildren ">
+								<div class="action">
+									<ng-container *ngIf="itemLead?.status != 'a'; else waiting">
 										<div class="finished">
-
-											<!-- <i class="icon-waiting" ngIf="item.bo_preference"
-												[ngClass]="item.bo_preference ? 'fa fa-star' : 'far fa-star'"
-												(click)="preference(item)" matTooltip="Dar preferencia">
-											</i> -->
-
-											<i *ngIf="item.status == 'pc'"
+											<i *ngIf="itemLead?.status == 'pc'"
 												class="fa fa-credit-card icon-finished icon-finished-no">
 											</i>
-											<i *ngIf="item.status == 'ld'" class="fa fa-headset icon-finished icon-finished-no">
+											<i *ngIf="itemLead?.status == 'ld'" class="fa fa-headset icon-finished">
 											</i>
-											<i *ngIf="item.status == 'n'"
+											<i *ngIf="itemLead?.status == 'n'"
 												class="fa fa-thumbs-down icon-finished icon-finished-no">
 											</i>
-											<i *ngIf="item.status == 'c'"
+											<i *ngIf="itemLead?.status == 'c'"
 												class="fa fa-thumbs-up icon-finished icon-finished-yes">
 											</i>
-											<i class="fa fa-bars icon-finished" style="margin-left: 15px" matTooltip="Menu"
+											<i class="fa fa-bars icon-finished cursor-pointer" matTooltip="Menu"
 												[matMenuTriggerFor]="menu"></i>
 											<mat-menu #menu="matMenu">
-												<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
+												<button mat-menu-item (click)="newChildren(itemLead?.value)" data-toggle="modal"
 													data-target="#modalImportContact">
 													<i class="fab fa-whatsapp"></i> Importar contatos
 												</button>
 												<!-- <button mat-menu-item>
-													<a target="_BLANK" href="https://wa.me/{{item?.}}{{item?.phone}}">
+													<a target="_BLANK" href="https://wa.me/55{{itemLead?.phone}}">
 														<i class="fab fa-whatsapp"></i>
 														Abrir no Whatsapp
 													</a>
 												</button> -->
-												<button mat-menu-item (click)="updateOpenForm(item)" data-toggle="modal"
+												<button mat-menu-item (click)="updateOpenForm(itemLead)" data-toggle="modal"
 													data-target="#modalStickyAdd">
 													<i class="fas fa-edit"></i> Alterar
 												</button>
-												<button mat-menu-item (click)="inativar(item)">
+												<button mat-menu-item (click)="inativar(itemLead)">
 													<i class="fas fa-eye-slash"></i> Arquivar
 												</button>
-												<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
-													data-target="#modalStickyAdd">
-													<i class="fa fa-chalkboard-teacher"></i>
-													Tornar Lead
-												</button>
+
 											</mat-menu>
 										</div>
 									</ng-container>
-									<ng-template #waitingChildren>
+									<ng-template #waiting>
 										<div class="waiting">
-											<i class="icon-waiting"
-												[ngClass]="item.bo_preference ? 'fa fa-star' : 'far fa-star'"
-												(click)="preference(item)" matTooltip="Dar preferencia">
-											</i>
-
-											<i (click)="changeStatus(item, 'pc')" class="fa fa-credit-card icon-waiting"
+											<i (click)="changeStatus(itemLead, 'pc')" class="fa fa-credit-card icon-waiting"
 												matTooltip="Problemas com cartão de crédito">
 											</i>
-											<i (click)="changeStatus(item, 'ld')" class="fa fa-headset icon-waiting"
+											<i (click)="changeStatus(itemLead, 'ld')" class="fa fa-headset icon-waiting"
 												matTooltip="Ligar depois"></i>
-											<i (click)="changeStatus(item, 'n')" class="fa fa-thumbs-down icon-waiting"
+											<i (click)="changeStatus(itemLead, 'n')" class="fa fa-thumbs-down icon-waiting"
 												matTooltip="Não deu negócio 😭"></i>
-											<i (click)="changeStatus(item, 'c')" class="fa fa-thumbs-up icon-waiting"
+											<i (click)="changeStatus(itemLead, 'c')" class="fa fa-thumbs-up icon-waiting"
 												matTooltip="Vendido 😃"></i>
-											<i class="fa fa-bars icon-waiting" matTooltip="Menu" [matMenuTriggerFor]="menu"></i>
+											<i class="fa fa-bars icon-waiting cursor-pointer" matTooltip="Menu"
+												[matMenuTriggerFor]="menu"></i>
 											<mat-menu #menu="matMenu">
-												<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
+												<button mat-menu-item (click)="newChildren(itemLead)" data-toggle="modal"
 													data-target="#modalImportContact">
 													<i class="fab fa-whatsapp"></i> Importar contatos
 												</button>
 												<!-- <button mat-menu-item>
-													<a target="_BLANK" href="https://wa.me/55{{item?.phone}}">
+													<a target="_BLANK" href="https://wa.me/55{{itemLead?.phone}}">
 														<i class="fab fa-whatsapp"></i>
 														Abrir no Whatsapp
 													</a>
 												</button> -->
-												<button mat-menu-item (click)="updateOpenForm(item)" data-toggle="modal"
+												<button mat-menu-item (click)="updateOpenForm(itemLead)" data-toggle="modal"
 													data-target="#modalStickyAdd">
 													<i class="fas fa-edit"></i> Alterar
 												</button>
-												<button mat-menu-item (click)="inativar(item)">
+												<button mat-menu-item (click)="inativar(itemLead)">
 													<i class="fas fa-eye-slash"></i> Arquivar
-												</button>
-												<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
-													data-target="#modalStickyAdd">
-													<i class="fa fa-chalkboard-teacher"></i>
-													Tornar Lead
 												</button>
 											</mat-menu>
 										</div>
 									</ng-template>
 								</div>
 							</div>
-						</perfect-scrollbar>
+							<perfect-scrollbar class="zindex999">
+								<div class="children">
+									<div class="item" *ngFor=" let item of itemLead?.referidos; index as indexItem;">
+										<div class="contacto cursor-pointer" (click)="callTo(item, {itemLead, referido : indexItem})" data-toggle="modal"
+											data-target="#modalCall">
+											<span>
+												<div class="contacto-name">
+													{{ item.name }} <i *ngIf="item.status != 'a' && item.bo_preference" class="fa fa-star"></i>
+												</div>
+												<div class="row flex-wrap">
+													<div class="contacto-phone"
+														*ngFor="let itemPhone of item.phones; let last = last">
+														<small>+{{itemPhone?.country_code}}</small> {{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
+														<!-- <small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }} -->
+														<span *ngIf="!last" class="mr-10">,</span>
+														<small><br>{{item?.created_at | date: 'dd/MM/yyyy'}}</small><br>
+													</div>
+												</div>
+											</span>
+										</div>
 
-						<div class="info center-center">
-							<div class="quantitative">
-								{{ itemLead.value.referidos.length }} referidos
-								<br />
-								<!-- N à contactar -->
-							</div>
-							<div class="action">
-								<div class="actionButton" (click)="newChildren(itemLead.value)" data-toggle="modal"
-									data-target="#modalStickyAdd">
-									<i class="fa fa-plus"></i>
+										<ng-container *ngIf=" item.status != 'a'; else waitingChildren ">
+											<div class="finished">
+
+												<!-- <i class="icon-waiting" ngIf="item.bo_preference"
+													[ngClass]="item.bo_preference ? 'fa fa-star' : 'far fa-star'"
+													(click)="preference(item)" matTooltip="Dar preferencia">
+												</i> -->
+
+												<i *ngIf="item.status == 'pc'"
+													class="fa fa-credit-card icon-finished icon-finished-no">
+												</i>
+												<i *ngIf="item.status == 'ld'" class="fa fa-headset icon-finished icon-finished-no">
+												</i>
+												<i *ngIf="item.status == 'n'"
+													class="fa fa-thumbs-down icon-finished icon-finished-no">
+												</i>
+												<i *ngIf="item.status == 'c'"
+													class="fa fa-thumbs-up icon-finished icon-finished-yes">
+												</i>
+												<i class="fa fa-bars icon-finished" style="margin-left: 15px" matTooltip="Menu"
+													[matMenuTriggerFor]="menu"></i>
+												<mat-menu #menu="matMenu">
+													<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
+														data-target="#modalImportContact">
+														<i class="fab fa-whatsapp"></i> Importar contatos
+													</button>
+													<!-- <button mat-menu-item>
+														<a target="_BLANK" href="https://wa.me/{{item?.}}{{item?.phone}}">
+															<i class="fab fa-whatsapp"></i>
+															Abrir no Whatsapp
+														</a>
+													</button> -->
+													<button mat-menu-item (click)="updateOpenForm(item)" data-toggle="modal"
+														data-target="#modalStickyAdd">
+														<i class="fas fa-edit"></i> Alterar
+													</button>
+													<button mat-menu-item (click)="inativar(item)">
+														<i class="fas fa-eye-slash"></i> Arquivar
+													</button>
+													<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
+														data-target="#modalStickyAdd">
+														<i class="fa fa-chalkboard-teacher"></i>
+														Tornar Lead
+													</button>
+												</mat-menu>
+											</div>
+										</ng-container>
+										<ng-template #waitingChildren>
+											<div class="waiting">
+												<i class="icon-waiting"
+													[ngClass]="item.bo_preference ? 'fa fa-star' : 'far fa-star'"
+													(click)="preference(item)" matTooltip="Dar preferencia">
+												</i>
+
+												<i (click)="changeStatus(item, 'pc')" class="fa fa-credit-card icon-waiting"
+													matTooltip="Problemas com cartão de crédito">
+												</i>
+												<i (click)="changeStatus(item, 'ld')" class="fa fa-headset icon-waiting"
+													matTooltip="Ligar depois"></i>
+												<i (click)="changeStatus(item, 'n')" class="fa fa-thumbs-down icon-waiting"
+													matTooltip="Não deu negócio 😭"></i>
+												<i (click)="changeStatus(item, 'c')" class="fa fa-thumbs-up icon-waiting"
+													matTooltip="Vendido 😃"></i>
+												<i class="fa fa-bars icon-waiting" matTooltip="Menu" [matMenuTriggerFor]="menu"></i>
+												<mat-menu #menu="matMenu">
+													<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
+														data-target="#modalImportContact">
+														<i class="fab fa-whatsapp"></i> Importar contatos
+													</button>
+													<!-- <button mat-menu-item>
+														<a target="_BLANK" href="https://wa.me/55{{item?.phone}}">
+															<i class="fab fa-whatsapp"></i>
+															Abrir no Whatsapp
+														</a>
+													</button> -->
+													<button mat-menu-item (click)="updateOpenForm(item)" data-toggle="modal"
+														data-target="#modalStickyAdd">
+														<i class="fas fa-edit"></i> Alterar
+													</button>
+													<button mat-menu-item (click)="inativar(item)">
+														<i class="fas fa-eye-slash"></i> Arquivar
+													</button>
+													<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
+														data-target="#modalStickyAdd">
+														<i class="fa fa-chalkboard-teacher"></i>
+														Tornar Lead
+													</button>
+												</mat-menu>
+											</div>
+										</ng-template>
+									</div>
 								</div>
+							</perfect-scrollbar>
 
+							<div class="info center-center">
+								<div class="quantitative">
+									{{ itemLead?.referidos.length }} referidos
+									<br />
+									<!-- N à contactar -->
+								</div>
+								<div class="action">
+									<div class="actionButton" (click)="newChildren(itemLead)" data-toggle="modal"
+										data-target="#modalStickyAdd">
+										<i class="fa fa-plus"></i>
+									</div>
+
+								</div>
 							</div>
 						</div>
 					</div>

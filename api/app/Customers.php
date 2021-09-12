@@ -41,7 +41,7 @@ class Customers extends Model
 
         $parentsRoot = self::where('id_usuario', $id_usuario)
             ->whereNull('id_parent')
-            ->where('bo_ativo', true)
+            // ->where('bo_ativo', true)
             ->orderBy('name')
             ->select('id')
             ->get();
@@ -53,34 +53,38 @@ class Customers extends Model
             ->groupBy('id_parent')
             ->select('id_parent')
             ->whereNotNull('id_parent')
-            ->where('bo_ativo', true)
+            // ->where('bo_ativo', true)
             ->get();
+
         $parents->merge($parentsRoot);
 
         foreach ($parents as $keyParents => $value) {
             $arFather[$value->id_parent] = $value->id_parent;
         }
+
         $arTempFather = $arFather;
         $arFather =[];
-        //ordenando pais
-        foreach ($arTempFather as $key => $value) {
-            $arFather[] = $value;
-        }
-        sort($arFather);
+
+        $arFather = self::select('id')
+            ->where('id_usuario', $id_usuario)
+            ->whereIn('id', array_values ($arTempFather))
+            ->orderBy('name')
+            ->get();
+
 
         $arCustomers = [];
         $count = 0;
         foreach ($arFather as $key => $value) {
             $customersParent = self::where('id_usuario', $id_usuario)
-                ->where('id', $value)
-                ->where('bo_ativo', true)
+                ->where('id', $value->id)
+                // ->where('bo_ativo', true)
                 ->first();
             if (!$customersParent) {
                 continue;
             }
 
             $queryReferidos = self::where('id_usuario', $id_usuario)
-                ->where('id_parent', $value)
+                ->where('id_parent', $value->id)
                 ->where('bo_ativo', true);
 
             $queryReferidos->where(function ($queryReferidos) use ( $boShowProblemasCartao, $boShowLigarDepois, $boShowNaotemInteresse, $boShowComprou, $boShowAberto ) {

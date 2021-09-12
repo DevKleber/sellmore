@@ -591,14 +591,10 @@ export class SellMoreComponent implements OnInit {
 				return true;
 			}
 		});
-
+		// ? `Atenção, a pessoa escolhida é, também, um lead e possui referidos em sua cadeia de conexões (card). Se prosseguir com o arquivamento do(a) ${referido.name}, o seu card será ocultado por completo. Esta ação não altera os referidos que se tornaram lead. Deseja prosseguir?`
 		Swal.fire({
 			title: `Arquivar ${referido.name} ?`,
-			text: `${
-				isLead
-					? `Atenção, a pessoa escolhida é, também, um lead e possui referidos em sua cadeia de conexões (card). Se prosseguir com o arquivamento do(a) ${referido.name}, o seu card será ocultado por completo. Esta ação não altera os referidos que se tornaram lead. Deseja prosseguir?`
-					: ''
-			}`,
+			text: `${isLead ? `` : ''}`,
 			icon: 'warning',
 			showCancelButton: true,
 			confirmButtonColor: '#3085d6',
