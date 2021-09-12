@@ -16,6 +16,7 @@ class LogController extends Controller
         $log = \App\Log::Join('usuario', 'usuario.id', '=', 'usuario_log.id_user')
             ->orderBy('usuario_log.id', 'desc')
             ->select('usuario_log.*', 'usuario.nome')
+            ->whereRaw('usuario_log.created_at >= now() - INTERVAL 7 day')
             ->get()
         ;
         $logDay = \App\Log::Join('usuario', 'usuario.id', '=', 'usuario_log.id_user')
