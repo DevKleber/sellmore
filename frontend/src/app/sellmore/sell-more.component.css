@@ -59,6 +59,9 @@
 	bottom: 0;
 	right: 0;
 }
+footer {
+	z-index: 999;
+}
 .footerItens {
 	width: 80px;
 	height: 80px;
@@ -72,7 +75,7 @@
 	justify-content: center;
 	cursor: pointer;
 	transition: 0.3s;
-	z-index: 998;
+	z-index: 9999!important;
 }
 .footerItens:hover {
 	background-color: var(--backgroundSecondaryHover);
