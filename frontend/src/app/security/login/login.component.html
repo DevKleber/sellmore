@@ -44,12 +44,10 @@
 			>
 				Entrar
 			</button>
-			<a
-				target="_BLANK"
-				href="https://api.whatsapp.com/send/?phone=5564999967567&text=Estou entrando em contato porque esqueci a minha senha e o sistema ainda não tem a opção de alterá-la."
-				title="Enviar link">
-				<br> Esqueci a senha
-			</a>
+
+			<br>
+			<a [routerLink]="[ '/request-recover-password']">Esqueci a senha</a>
+
 			<hr />
 			<h3>Novo no Wi<span style="text-decoration: underline;">se</span>ller?</h3>
 			<button
