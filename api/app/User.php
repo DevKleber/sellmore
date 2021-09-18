@@ -78,12 +78,12 @@ class User extends Authenticatable implements JWTSubject
         $cript = base64_encode(json_encode($link));
         $token = base64_encode($funcionario->created_at);
 
-        // Mail::to($funcionario->email)->send(new SendMailRecover([
-        //     'no_pessoa' => $funcionario->nome,
-        //     'link' => "{$linkFront}?url=".$cript."&token={$token}"
-        // ]));
+        Mail::to($funcionario->email)->send(new SendMailRecover([
+            'no_pessoa' => $funcionario->nome,
+            'link' => "{$linkFront}?url=".$cript."&token={$token}"
+        ]));
 
-        return response(['response' => 'Enviamos um e-mail com o link para alteração de senha.','link' => "{$linkFront}?url=".$cript."&token={$token}"]);
+        return response(['response' => 'Enviamos um e-mail com o link para alteração de senha.']);
     }
 
     public static function changePassword($request, $id_pessoa)
