@@ -3,8 +3,24 @@
 use Illuminate\Support\Facades\Route;
 
 
+Route::get('teste', function () {
+
+});
+
+Route::get('teste', function () {
+    return view('emails/recoverPassword', [
+        'user' => ['email' => 'meuemail@gmail.com',
+        'no_pessoa' => 'Kleber de souza',
+        'link' => 'aqui vai o link para recuperar']
+    ]);
+});
+
+
 Route::post('auth/login', 'AuthController@login');
 Route::post('auth/recoverPassword', 'AuthController@recoverPassword');
+Route::get('auth/recoverPassword', 'AuthController@recoverPasswordAfterEmail');
+Route::put('auth/changePassoword', 'AuthController@recoverPasswordAfterEmail');
+
 Route::post('user/new', 'FuncionarioController@store');
 
 Route::post('issue', 'TrelloController@issue');

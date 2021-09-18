@@ -64,71 +64,63 @@ class User extends Authenticatable implements JWTSubject
 
     public static function recoverPassword($request)
     {
+        $linkFront = "http://localhost:4200/request-recover-password";
         $funcionario = \App\Funcionario::getEmployeeByEmail($request['email']);
         if (!$funcionario) {
-            return response(['error' => 'E-mail ou cpf incorreto'], 400);
+            return response(['response' => 'Não encontrado'], 400);
         }
 
-        $password = Str::random(8);
-        $employee['password'] = $password;
-        $funcionario->password = \Hash::make(($password));
-        $funcionario->bo_mudar_senha = true;
+        $link = [
+            "email"=> $funcionario->email,
+            "id"=> "1",
+            "expired" => now()->addMinutes(1440)
+        ];
+        $cript = base64_encode(json_encode($link));
+        $token = base64_encode($funcionario->created_at);
 
-        // if (!$funcionario->update()) {
-        //     return response(['response' => 'Erro ao alterar'], 400);
-        // }
+        // Mail::to($funcionario->email)->send(new SendMailRecover([
+        //     'no_pessoa' => $funcionario->nome,
+        //     'link' => "{$linkFront}?url=".$cript."&token={$token}"
+        // ]));
 
-        Mail::to("kleber107@gmail.com")->send(new SendMailRecover([
-            'no_pessoa' => $funcionario->nome,
-            'password' => $funcionario->password
-        ]));
-        // \App\Email::sendEmailNewCount($employee);
-
-        return response(['response' => 'Atualizado com sucesso', 'data' => [
-            'email' => $funcionario->email,
-            'no_pessoa' => $funcionario->nome,
-            'password' => $funcionario->password
-        ]]);
+        return response(['response' => 'Enviamos um e-mail com o link para alteração de senha.','link' => "{$linkFront}?url=".$cript."&token={$token}"]);
     }
 
     public static function changePassword($request, $id_pessoa)
     {
         $funcionario = \App\Funcionario::find($id_pessoa);
 
-        if (!\Hash::check($request['currentPassword'], $funcionario->password)) {
-            return response(['response' => 'Senha incorreta'], 400);
-        }
-
         $funcionario->password = \Hash::make(($request['newPassword']));
+
         if (!$funcionario->update()) {
-            return response(['response' => 'Erro ao alterar'], 400);
+            throw new \Exception("Erro ao alterar");
         }
 
-        return response(['response' => 'Atualizado com sucesso']);
+        return $funcionario->password;
     }
 
     public static function getWorstPassword()
     {
         return [
-            '123456',
-            '123456789',
             '123abc',
+            '123',
+            '1234',
+            '12345',
+            '123456',
+            '1234567',
+            '12345678',
+            '123456789',
+            '1234567890',
             'qwerty',
             'password',
             '111111',
-            '12345678',
             'abc123',
-            '1234567',
             'password1',
-            '12345',
-            '1234567890',
             '123123',
             '000000',
             'iloveyou',
-            '1234',
             '1q2w3e4r5t',
             'qwertyuiop',
-            '123',
             'monkey',
             'dragon',
         ];

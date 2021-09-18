@@ -88,6 +88,30 @@ export class LoginService {
 		return this.http.post<any>(`${API}/user/new`, form);
 	}
 
+	solicitarNovaSenha(form) {
+		return this.http.post<any>(`${API}/auth/recoverPassword`, form);
+	}
+	alterarSenha(form) {
+		return this.http.put<any>(`${API}/auth/changePassoword`, form).pipe(
+			tap((user) => {
+				localStorage.setItem('dG9rZW5fbWVtb3JpemU=', user.access_token);
+
+				let userString = JSON.stringify(user.me);
+				let encrypt = btoa(userString);
+				let myencrypt = this.helper.encrypt(encrypt);
+				localStorage.setItem('user', myencrypt);
+
+				let empresaString = this.helper.encrypt(
+					btoa(JSON.stringify(user.empresa))
+				);
+				localStorage.setItem('empresa', empresaString);
+
+				(this.user = user), this.mostrarMenu.emit(true);
+				this.router.navigate(['/']);
+			})
+		);
+	}
+
 	login(login: string, password: string): Observable<User> {
 		return this.http
 			.post<User>(`${API}/auth/login`, {

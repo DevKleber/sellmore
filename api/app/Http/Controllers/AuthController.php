@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -43,32 +44,6 @@ class AuthController extends Controller
         return  auth('api')->user();
     }
 
-    public function changePassword(Request $request)
-    {
-        $id = auth('api')->user()->id;
-        $dados = $request->only(['currentPassword', 'newPassword', 'confirmPassword']);
-        $employee = \App\Funcionario::getEmployeeById($id);
-        $firstName = explode(' ', $employee->no_pessoa);
-        $nomeEmployee = strtolower($firstName[0]);
-
-        if (!$id) {
-            return response(['error' => 'Unauthorized'], 401);
-        }
-
-        if ($dados['newPassword'] != $dados['confirmPassword']) {
-            return response(['response' => 'As senhas não conferem'], 400);
-        }
-
-        if (in_array($dados['newPassword'], \App\User::getWorstPassword())) {
-            return response(['response' => 'A senha informada é muito fraca'], 400);
-        }
-
-        if ($nomeEmployee == $dados['newPassword']) {
-            return response(['response' => 'Senha tem que ser diferente do nome'], 400);
-        }
-
-        return  \App\User::changePassword($dados, $id);
-    }
 
     /**
      * Log the user out (Invalidate the token).
@@ -98,6 +73,64 @@ class AuthController extends Controller
     public function recoverPassword(Request $request)
     {
         return \App\User::recoverPassword($request->all());
+    }
+    public function recoverPasswordAfterEmail(Request $request)
+    {
+
+        $url = $request['url'];
+        $token = $request['token'];
+
+
+        $criptDecode = json_decode(base64_decode($url));
+        $created_at = base64_decode($token);
+
+        $funcionario = \App\Funcionario::where('email', $criptDecode->email)->where('id', $criptDecode->id)->first();
+
+        if($funcionario->created_at != $created_at){
+            return response(['response' => 'Error'], 400);
+        }
+
+
+        $expire = strtotime($criptDecode->expired);
+        $now = strtotime(date("Y-m-d H:i:s"));
+
+        if($now >= $expire){
+            return response(['response' => 'Link expirado'], 400);
+        }
+
+        try {
+            return $this->changePassword($funcionario, $request->all());
+        } catch (\Throwable $th) {
+            return response(['response' => $th->getMessage()], 400);
+        }
+    }
+
+    public function changePassword($user,$dados)
+    {
+        if ($dados['newPassword'] != $dados['confirmPassword']) {
+            return response(['response' => 'As senhas não conferem'], 400);
+        }
+
+        if (in_array($dados['newPassword'], \App\User::getWorstPassword())) {
+            return response(['response' => 'A senha informada é muito fraca'], 400);
+        }
+
+        try {
+            //code...
+            \App\User::changePassword($dados, $user->id);
+
+            $credentials['email'] = $user->email;
+            $credentials['password'] = $dados['newPassword'];
+
+            if (!$token = auth('api')->attempt($credentials)) {
+                throw new \Exception("Unauthorized");
+            }
+
+            return $this->respondWithToken($token);
+
+        } catch (\Throwable $th) {
+            return response(['response' => $th->getMessage()], 400);
+        }
     }
 
     /**

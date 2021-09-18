@@ -11,7 +11,7 @@
         <tr>
             <td colspan="2" style="padding:20px;color:#666666">
                 <h2 style="color:#333333">Olá, {{$user['no_pessoa']}}</h2>
-                <p>Segue dados de acesso ao sistema pecus</p>
+                <p>Segue dados de acesso ao sistema Wiseller</p>
                 <p>
                 <h3>
                     Seu login: {{$user['login']}}<br />
@@ -25,7 +25,7 @@
             <td colspan="2" style="color:#666;font-size:14px;line-height:20px;padding:16px 16px 0">
                 Acesse o
                 <a href="#" style="color:#000;text-decoration:underline" target="_blank">
-                    PECUS
+                    Wiseller
                 </a>
             </td>
         </tr>

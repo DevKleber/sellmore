@@ -32,7 +32,7 @@ class SendMailRecover extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.recoverPassword')->subject('Recuperação de senha!')->with([
+        return $this->view('emails.recoverPassword')->subject('Wiseller - Recuperação de senha!')->with([
             'user' => $this->user,
         ]);
     }

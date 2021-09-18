@@ -21,6 +21,7 @@ import { SharedModule } from './shared/shared.module';
 import { ApplicationErrorHandler } from './app.error-handler';
 import { ErrorHandler } from '@angular/core';
 import { LoginComponent } from './security/login/login.component';
+import { RequestRecoverPasswordComponent } from './security/requestRecoverPassword/request-recover-password.component';
 
 @NgModule({
 	declarations: [
@@ -30,6 +31,7 @@ import { LoginComponent } from './security/login/login.component';
 		FooterComponent,
 		LoaderComponent,
 		LoginComponent,
+		RequestRecoverPasswordComponent,
 		CommemorationsComponent,
 	],
 	imports: [
@@ -40,7 +42,7 @@ import { LoginComponent } from './security/login/login.component';
 
 		// RouterModule.forRoot(ROUTES, { preloadingStrategy: PreloadAllModules })
 		// RouterModule.forRoot(ROUTES, { preloadingStrategy: PreloadAllModules })
-RouterModule.forRoot(ROUTES, { relativeLinkResolution: 'legacy' }),
+		RouterModule.forRoot(ROUTES, { relativeLinkResolution: 'legacy' }),
 		// RouterModule.forRoot(ROUTES, { useHash: true }), // .../#/crisis-center/
 	],
 	providers: [{ provide: ErrorHandler, useClass: ApplicationErrorHandler }],
