@@ -64,7 +64,7 @@ class User extends Authenticatable implements JWTSubject
 
     public static function recoverPassword($request)
     {
-        $linkFront = "http://localhost:4200/request-recover-password";
+        $linkFront = "https://wiseller.com.br/request-recover-password";
         $funcionario = \App\Funcionario::getEmployeeByEmail($request['email']);
         if (!$funcionario) {
             return response(['response' => 'Não encontrado'], 400);
