@@ -2,10 +2,12 @@
 
 namespace App;
 
+use App\Mail\SendMailRecover;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Support\Facades\Mail;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -62,26 +64,31 @@ class User extends Authenticatable implements JWTSubject
 
     public static function recoverPassword($request)
     {
-        $employee = \App\Funcionario::getEmployeeByEmail($request['email']);
-        if (!$employee) {
+        $funcionario = \App\Funcionario::getEmployeeByEmail($request['email']);
+        if (!$funcionario) {
             return response(['error' => 'E-mail ou cpf incorreto'], 400);
         }
 
-        $funcionario = \App\Funcionario::find($employee->id_pessoa);
-        if (!$funcionario) {
-            return response(['response' => 'Funcionario Não encontrado'], 400);
-        }
         $password = Str::random(8);
         $employee['password'] = $password;
         $funcionario->password = \Hash::make(($password));
         $funcionario->bo_mudar_senha = true;
 
-        if (!$funcionario->update()) {
-            return response(['response' => 'Erro ao alterar'], 400);
-        }
-        \App\Email::sendEmailNewCount($employee);
+        // if (!$funcionario->update()) {
+        //     return response(['response' => 'Erro ao alterar'], 400);
+        // }
 
-        return response(['response' => 'Atualizado com sucesso']);
+        Mail::to("kleber107@gmail.com")->send(new SendMailRecover([
+            'no_pessoa' => $funcionario->nome,
+            'password' => $funcionario->password
+        ]));
+        // \App\Email::sendEmailNewCount($employee);
+
+        return response(['response' => 'Atualizado com sucesso', 'data' => [
+            'email' => $funcionario->email,
+            'no_pessoa' => $funcionario->nome,
+            'password' => $funcionario->password
+        ]]);
     }
 
     public static function changePassword($request, $id_pessoa)

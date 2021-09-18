@@ -48,7 +48,8 @@ class AuthController extends Controller
         $id = auth('api')->user()->id;
         $dados = $request->only(['currentPassword', 'newPassword', 'confirmPassword']);
         $employee = \App\Funcionario::getEmployeeById($id);
-        $nomeEmployee = strtolower(explode(' ', $employee->no_pessoa));
+        $firstName = explode(' ', $employee->no_pessoa);
+        $nomeEmployee = strtolower($firstName[0]);
 
         if (!$id) {
             return response(['error' => 'Unauthorized'], 401);
