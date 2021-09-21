@@ -2,18 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 
+// Route::get('teste', function () {
 
-Route::get('teste', function () {
+// });
 
-});
-
-Route::get('teste', function () {
-    return view('emails/recoverPassword', [
-        'user' => ['email' => 'meuemail@gmail.com',
-        'no_pessoa' => 'Kleber de souza',
-        'link' => 'aqui vai o link para recuperar']
-    ]);
-});
+// Route::get('teste', function () {
+//     return view('emails/recoverPassword', [
+//         'user' => ['email' => 'meuemail@gmail.com',
+//         'no_pessoa' => 'Kleber de souza',
+//         'link' => 'aqui vai o link para recuperar']
+//     ]);
+// });
 
 
 Route::post('auth/login', 'AuthController@login');
@@ -26,8 +25,8 @@ Route::post('user/new', 'FuncionarioController@store');
 Route::post('issue', 'TrelloController@issue');
 
 Route::get('currentVersion', function () {
-    $version = '1.1.3';
-    return ["version" => $version];
+    $version = '1.1.4';
+    return ["version" => $version, "resume" => "Foi corrigido o bug ao importar contatos do Whatsapp. "];
 });
 
 Route::group(['middleware' => 'apiJwt'], function () {

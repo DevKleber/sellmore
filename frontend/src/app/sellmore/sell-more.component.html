@@ -49,16 +49,9 @@
 				<i class="fas fa-id-card-alt"></i>
 				{{user?.nome}}
 			</button>
-			<button mat-menu-item matTooltip="Mostrar/Ocultar referidos que não tem interesse" >
-				<ng-container *ngIf="showNaotemInteresse == 'false'; else elseTemplateMenuNaoInteresse">
-					<i class="fas fa-eye"></i>
-					Mostrar referidos que não tem interesse
-				</ng-container>
-				<ng-template #elseTemplateMenuNaoInteresse>
-					<i class="fas fa-eye-slash"></i>
-					Ocultar referidos que não tem interesse
-				</ng-template>
-
+			<button mat-menu-item>
+				<i class="fas fa-id-card-alt"></i>
+				Perfil: em desenvolvimento
 			</button>
 			<button mat-menu-item (click)="logout()">
 				<i class="fas fa-sign-out-alt"></i> Sair
@@ -242,7 +235,7 @@
 											<i class="fa fa-bars icon-finished cursor-pointer" matTooltip="Menu"
 												[matMenuTriggerFor]="menu"></i>
 											<mat-menu #menu="matMenu">
-												<button mat-menu-item (click)="newChildren(itemLead?.value)" data-toggle="modal"
+												<button mat-menu-item (click)="newChildren(itemLead)" data-toggle="modal"
 													data-target="#modalImportContact">
 													<i class="fab fa-whatsapp"></i> Importar contatos
 												</button>
@@ -302,15 +295,16 @@
 							<perfect-scrollbar class="zindex999">
 								<div class="children">
 									<div class="item" *ngFor=" let item of itemLead?.referidos; index as indexItem;">
+
 										<div class="contacto cursor-pointer" (click)="callTo(item, {itemLead, referido : indexItem})" data-toggle="modal"
 											data-target="#modalCall">
 											<span>
 												<div class="contacto-name">
-													{{ item.name }} <i *ngIf="item.status != 'a' && item.bo_preference" class="fa fa-star"></i>
+													{{ item?.name }} <i *ngIf="item?.status != 'a' && item?.bo_preference" class="fa fa-star"></i>
 												</div>
 												<div class="row flex-wrap">
 													<div class="contacto-phone"
-														*ngFor="let itemPhone of item.phones; let last = last">
+														*ngFor="let itemPhone of item?.phones; let last = last">
 														<small>+{{itemPhone?.country_code}}</small> {{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
 														<!-- <small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }} -->
 														<span *ngIf="!last" class="mr-10">,</span>
@@ -320,7 +314,7 @@
 											</span>
 										</div>
 
-										<ng-container *ngIf=" item.status != 'a'; else waitingChildren ">
+										<ng-container *ngIf=" item?.status != 'a'; else waitingChildren ">
 											<div class="finished">
 
 												<!-- <i class="icon-waiting" ngIf="item.bo_preference"
@@ -328,15 +322,15 @@
 													(click)="preference(item)" matTooltip="Dar preferencia">
 												</i> -->
 
-												<i *ngIf="item.status == 'pc'"
+												<i *ngIf="item?.status == 'pc'"
 													class="fa fa-credit-card icon-finished icon-finished-no">
 												</i>
-												<i *ngIf="item.status == 'ld'" class="fa fa-headset icon-finished icon-finished-no">
+												<i *ngIf="item?.status == 'ld'" class="fa fa-headset icon-finished icon-finished-no">
 												</i>
-												<i *ngIf="item.status == 'n'"
+												<i *ngIf="item?.status == 'n'"
 													class="fa fa-thumbs-down icon-finished icon-finished-no">
 												</i>
-												<i *ngIf="item.status == 'c'"
+												<i *ngIf="item?.status == 'c'"
 													class="fa fa-thumbs-up icon-finished icon-finished-yes">
 												</i>
 												<i class="fa fa-bars icon-finished" style="margin-left: 15px" matTooltip="Menu"
@@ -370,7 +364,7 @@
 										<ng-template #waitingChildren>
 											<div class="waiting">
 												<i class="icon-waiting"
-													[ngClass]="item.bo_preference ? 'fa fa-star' : 'far fa-star'"
+													[ngClass]="item?.bo_preference ? 'fa fa-star' : 'far fa-star'"
 													(click)="preference(item)" matTooltip="Dar preferencia">
 												</i>
 
@@ -514,11 +508,11 @@
 											<option value="" selected>
 												Referente
 											</option>
-											<option *ngFor="let item of customersLd" [value]="item.id">
+											<option *ngFor="let item of customersLd" [value]="item?.id">
 												<div class="row flex-wrap">
 													{{ item?.name }} -
 													<div class="contacto-phone ml-5"
-														*ngFor="let itemPhone of item.phones; let last = last">
+														*ngFor="let itemPhone of item?.phones; let last = last">
 														<div class="cursor-pointer">
 															<i
 																[ngClass]="itemPhone.bo_whatsapp ? 'fab fa-whatsapp' : 'fa fa-mobile-alt'"></i>
@@ -629,7 +623,7 @@
 										Selecione uma opção caso tenha entrado
 										em contato com o referente
 									</option>
-									<option *ngFor="let item of status" [value]="item.id">
+									<option *ngFor="let item of status" [value]="item?.id">
 										{{ item?.status }}
 									</option>
 								</select>

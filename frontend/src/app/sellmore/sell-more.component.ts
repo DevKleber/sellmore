@@ -176,7 +176,7 @@ export class SellMoreComponent implements OnInit {
 		this.sellMoreService.getVersion().subscribe((res) => {
 			if (res.version != this.getVersionLocalStorage()) {
 				this.setVersionLocalStorage(res.version);
-				this.messageNewVersion(res.version);
+				this.messageNewVersion(res);
 			}
 		});
 	}
@@ -188,17 +188,20 @@ export class SellMoreComponent implements OnInit {
 		return localStorage.setItem('wiseller_version', version);
 	}
 
-	messageNewVersion(version) {
+	messageNewVersion(res) {
+		const version = res.version;
+
 		const pessoa = this.loginService.getUser();
 
 		Swal.fire({
-			title: `Nova versão instalada ${version}`,
+			title: `Nova versão ${version}`,
 			width: 600,
 			showCancelButton: true,
 
 			html: `
 			<div style="text-align: left;">
 				Olá, ${pessoa?.nome}, temos novidades.<br />
+				${res.resume.length > 0 ? '<br />' + res.resume : ''}
 			</div>
 			`,
 			icon: 'info',
