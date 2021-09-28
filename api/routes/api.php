@@ -25,8 +25,8 @@ Route::post('user/new', 'FuncionarioController@store');
 Route::post('issue', 'TrelloController@issue');
 
 Route::get('currentVersion', function () {
-    $version = '1.1.4';
-    return ["version" => $version, "resume" => "Foi corrigido o bug ao importar contatos do Whatsapp. "];
+    $version = '1.1.';
+    return ["version" => $version, "resume" => "Agora você pode escolher em qual ordem você deseja apresentar seus cards. Segue mais detalhes no link. "];
 });
 
 Route::group(['middleware' => 'apiJwt'], function () {
