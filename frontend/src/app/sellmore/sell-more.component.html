@@ -192,6 +192,24 @@
 				</div>
 
 
+				<div class="orderByMenu" matTooltip="Ordem">
+					<i class="fa  fa-bars" [matMenuTriggerFor]="orderByMenu"></i>
+					<!-- <img class="cursor-pointer" src="/assets/img/user/user.png" alt="" width="55px"> -->
+				</div>
+
+				<mat-menu #orderByMenu="matMenu">
+					<h3 style=" margin: 0px 15px; ">Ordem</h3>
+					<button mat-menu-item (click)="setStatusLocalStorage('desc')">
+						<i class="fas fa-sort"></i>
+						Ordem de lançamento decrescente <i *ngIf="orderBy == 'desc'" class="fa fa-check-square checkOrder"></i>
+					</button>
+					<button mat-menu-item (click)="setStatusLocalStorage('name')">
+						<i class="fas fa-sort"></i>
+						Ordem alfabética <i *ngIf="orderBy == 'name'" class="fa fa-check-square checkOrder"></i>
+					</button>
+				</mat-menu>
+
+
 			</div>
 
 		</div>

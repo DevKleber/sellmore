@@ -50,6 +50,7 @@ export class SellMoreComponent implements OnInit {
 	boShowNaotemInteresse: boolean = false;
 	boShowComprou: boolean = false;
 	boShowAberto: boolean = false;
+	orderBy = '';
 
 	showNaotemInteresse: string = 'false';
 	themeIsDark: boolean;
@@ -227,7 +228,8 @@ export class SellMoreComponent implements OnInit {
 				this.boShowLigarDepois,
 				this.boShowNaotemInteresse,
 				this.boShowComprou,
-				this.boShowAberto
+				this.boShowAberto,
+				this.orderBy
 			)
 			.subscribe((res) => {
 				this.loaderService.isLoad(false);
@@ -368,6 +370,7 @@ export class SellMoreComponent implements OnInit {
 			boShowNaotemInteresse,
 			boShowComprou,
 			boShowAberto,
+			orderBy,
 		} = JSON.parse(localStorageWisellerBoShowStatus);
 
 		this.boShowProblemasCartao = boShowProblemasCartao;
@@ -375,14 +378,17 @@ export class SellMoreComponent implements OnInit {
 		this.boShowNaotemInteresse = boShowNaotemInteresse;
 		this.boShowComprou = boShowComprou;
 		this.boShowAberto = boShowAberto;
+		this.orderBy = orderBy;
 	}
-	setStatusLocalStorage() {
+	setStatusLocalStorage(order = null) {
+		this.orderBy = order ?? this.orderBy;
 		const jsonShowStatus = {
 			boShowProblemasCartao: this.boShowProblemasCartao,
 			boShowLigarDepois: this.boShowLigarDepois,
 			boShowNaotemInteresse: this.boShowNaotemInteresse,
 			boShowComprou: this.boShowComprou,
 			boShowAberto: this.boShowAberto,
+			orderBy: this.orderBy,
 		};
 
 		localStorage.setItem(

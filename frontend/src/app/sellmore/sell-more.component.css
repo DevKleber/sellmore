@@ -135,6 +135,18 @@ footer {
 	flex-direction: row;
 	height: 70vh;
 }
+.orderByMenu {
+	color: var(--backgroundColor);
+    font-size: 3rem;
+	cursor: pointer;
+	transition: filter 0.2s;
+}
+.orderByMenu:hover {
+	filter: brightness(0.8);
+}
+.checkOrder {
+	color: var(--backgroundSecondary)!important;
+}
 .contatos {
 	width: 500px;
 }

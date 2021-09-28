@@ -45,7 +45,8 @@ export class SellMoreService {
 		boShowLigarDepois: boolean,
 		boShowNaotemInteresse: boolean,
 		boShowComprou: boolean,
-		boShowAberto: boolean
+		boShowAberto: boolean,
+		order: string
 	): Observable<any[]> {
 		let params = new HttpParams();
 		params = params.append(
@@ -59,6 +60,7 @@ export class SellMoreService {
 		);
 		params = params.append('boShowComprou', String(boShowComprou));
 		params = params.append('boShowAberto', String(boShowAberto));
+		params = params.append('orderBy', String(order));
 
 		return this.http.get<any[]>(`${API}/customers`, { params: params });
 	}
