@@ -5,7 +5,6 @@ namespace App;
 use Helpers;
 use Illuminate\Database\Eloquent\Model;
 
-
 class Customers extends Model
 {
     protected $table = 'customers';
@@ -25,13 +24,14 @@ class Customers extends Model
     }
     public static function getAll($options=[])
     {
-
         $boShowProblemasCartao = $options['boShowProblemasCartao'] === 'true'? true: false;
         $boShowLigarDepois = $options['boShowLigarDepois'] === 'true'? true: false;
         $boShowNaotemInteresse = $options['boShowNaotemInteresse'] === 'true'? true: false;
         $boShowComprou = $options['boShowComprou'] === 'true'? true: false;
         $boShowAberto = $options['boShowAberto'] === 'true'? true: false;
-        if(!self::hasAnyFilter($boShowProblemasCartao, $boShowLigarDepois, $boShowNaotemInteresse, $boShowComprou, $boShowAberto)){
+        $order = $options['orderBy'];
+
+        if (!self::hasAnyFilter($boShowProblemasCartao, $boShowLigarDepois, $boShowNaotemInteresse, $boShowComprou, $boShowAberto)) {
             return[];
         }
 
@@ -39,12 +39,17 @@ class Customers extends Model
         $id_usuario = auth('api')->user()->id;
         $arFather = [];
 
-        $parentsRoot = self::where('id_usuario', $id_usuario)
+        $parentsRootQuery = self::where('id_usuario', $id_usuario)
             ->whereNull('id_parent')
             // ->where('bo_ativo', true)
-            ->orderBy('name')
-            ->select('id')
-            ->get();
+            ->select('id');
+        if ($order == 'desc') {
+            $parentsRootQuery->orderBy('id', 'desc');
+        }else{
+            $parentsRootQuery->orderBy('name');
+        }
+
+        $parentsRoot = $parentsRootQuery->get();
         foreach ($parentsRoot as $value) {
             $arFather[$value->id] = $value->id;
         }
@@ -65,11 +70,17 @@ class Customers extends Model
         $arTempFather = $arFather;
         $arFather =[];
 
-        $arFather = self::select('id')
+        $arFatherQuery = self::select('id')
             ->where('id_usuario', $id_usuario)
-            ->whereIn('id', array_values ($arTempFather))
-            ->orderBy('name')
-            ->get();
+            ->whereIn('id', array_values($arTempFather));
+            // ->orderBy('name')
+            // ->orderBy('id', 'desc')
+        if ($order == 'desc') {
+            $arFatherQuery->orderBy('id', 'desc');
+        }else{
+            $arFatherQuery->orderBy('name');
+        }
+        $arFather = $arFatherQuery->get();
 
 
         $arCustomers = [];
@@ -87,22 +98,21 @@ class Customers extends Model
                 ->where('id_parent', $value->id)
                 ->where('bo_ativo', true);
 
-            $queryReferidos->where(function ($queryReferidos) use ( $boShowProblemasCartao, $boShowLigarDepois, $boShowNaotemInteresse, $boShowComprou, $boShowAberto ) {
-
-                if($boShowProblemasCartao){
-                    $queryReferidos->orWhere('status' , 'pc');
+            $queryReferidos->where(function ($queryReferidos) use ($boShowProblemasCartao, $boShowLigarDepois, $boShowNaotemInteresse, $boShowComprou, $boShowAberto) {
+                if ($boShowProblemasCartao) {
+                    $queryReferidos->orWhere('status', 'pc');
                 }
-                if($boShowLigarDepois){
-                    $queryReferidos->orWhere('status' , 'ld');
+                if ($boShowLigarDepois) {
+                    $queryReferidos->orWhere('status', 'ld');
                 }
-                if($boShowNaotemInteresse){
-                    $queryReferidos->orWhere('status' , 'n');
+                if ($boShowNaotemInteresse) {
+                    $queryReferidos->orWhere('status', 'n');
                 }
-                if($boShowComprou){
-                    $queryReferidos->orWhere('status' , 'c');
+                if ($boShowComprou) {
+                    $queryReferidos->orWhere('status', 'c');
                 }
-                if($boShowAberto){
-                    $queryReferidos->orWhere('status' , 'a');
+                if ($boShowAberto) {
+                    $queryReferidos->orWhere('status', 'a');
                 }
             });
 
@@ -128,21 +138,23 @@ class Customers extends Model
         return ['arCustomers' => $arCustomers, 'statistics' => self::statistics($arCustomers)];
     }
 
-    private static function hasAnyFilter($boShowProblemasCartao, $boShowLigarDepois, $boShowNaotemInteresse, $boShowComprou, $boShowAberto){
-        if(
+    private static function hasAnyFilter($boShowProblemasCartao, $boShowLigarDepois, $boShowNaotemInteresse, $boShowComprou, $boShowAberto)
+    {
+        if (
             $boShowProblemasCartao || $boShowLigarDepois || $boShowNaotemInteresse || $boShowComprou || $boShowAberto
-        ){
+        ) {
             return true;
         }
         return false;
     }
 
-    public static function getPhoneByUser(){
+    public static function getPhoneByUser()
+    {
         $idUsuario = auth('api')->user()->id;
 
         $customersPhones = \App\Customers::join('customers_phone', 'customers_phone.id_customers', '=', 'customers.id')
                 ->where('id_usuario', $idUsuario)
-                ->select('customers.id_usuario','customers_phone.*')
+                ->select('customers.id_usuario', 'customers_phone.*')
                 ->get();
 
         $arPhones = [];
@@ -184,17 +196,15 @@ class Customers extends Model
             $i = 0;
             $ar = [];
             foreach ($array_texto as $line_num => $line) {
-
                 $ar[$i][] = $line;
 
                 if (preg_match('/END:/', $line)) {
                     ++$i;
                 }
-
             }
             $contatos = [];
             foreach ($ar as $key => $value) {
-                if(count($value) <=2){
+                if (count($value) <=2) {
                     continue;
                 }
 
@@ -223,7 +233,7 @@ class Customers extends Model
 
                             $numeroWithoutCountryCode = substr($numero, strlen($countryCode));
 
-                            if($numeroWithoutCountryCode == ''){
+                            if ($numeroWithoutCountryCode == '') {
                                 continue;
                             }
 
@@ -237,7 +247,7 @@ class Customers extends Model
                             $numero = preg_replace('/[^0-9]/', '', $numeroNormal);
                             $numeroWithoutCountryCode = substr($numero, strlen($countryCode));
 
-                            if($numeroWithoutCountryCode == ''){
+                            if ($numeroWithoutCountryCode == '') {
                                 continue;
                             }
                             $contatos[$key]['numeros']['phone'][$countPhone]['phone'] = $numeroWithoutCountryCode;
