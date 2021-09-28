@@ -199,13 +199,25 @@
 
 				<mat-menu #orderByMenu="matMenu">
 					<h3 style=" margin: 0px 15px; ">Ordem</h3>
-					<button mat-menu-item (click)="setStatusLocalStorage('desc')">
+					<button mat-menu-item (click)="setStatusLocalStorage({column: 'id', type: 'desc'})">
 						<i class="fas fa-sort"></i>
-						Ordem de lançamento decrescente <i *ngIf="orderBy == 'desc'" class="fa fa-check-square checkOrder"></i>
+						Ordem de lançamento decrescente <i *ngIf="orderBy?.column == 'id' && orderBy?.type == 'desc'" class="fa fa-check-square checkOrder"></i>
 					</button>
-					<button mat-menu-item (click)="setStatusLocalStorage('name')">
+					<button mat-menu-item (click)="setStatusLocalStorage({column: 'id', type: 'asc'})">
 						<i class="fas fa-sort"></i>
-						Ordem alfabética <i *ngIf="orderBy == 'name'" class="fa fa-check-square checkOrder"></i>
+						Ordem de lançamento crescente <i *ngIf="orderBy?.column == 'id' && orderBy?.type == 'asc'" class="fa fa-check-square checkOrder"></i>
+					</button>
+					<button mat-menu-item (click)="setStatusLocalStorage({column: 'name', type: 'asc'})">
+						<i class="fas fa-sort"></i>
+						Ordem alfabética
+						A <i class="fa fa-arrow-right menuOrderArrowSize" aria-hidden="true"></i> Z
+						<i *ngIf="orderBy?.column == 'name' && orderBy?.type == 'asc'" class="fa fa-check-square checkOrder"></i>
+					</button>
+					<button mat-menu-item (click)="setStatusLocalStorage({column: 'name', type: 'desc'})">
+						<i class="fas fa-sort"></i>
+						Ordem alfabética
+						Z <i class="fa fa-arrow-left menuOrderArrowSize" aria-hidden="true"></i> A
+						<i *ngIf="orderBy?.column == 'name' && orderBy?.type == 'desc'" class="fa fa-check-square checkOrder"></i>
 					</button>
 				</mat-menu>
 

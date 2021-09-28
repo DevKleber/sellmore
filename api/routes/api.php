@@ -25,7 +25,7 @@ Route::post('user/new', 'FuncionarioController@store');
 Route::post('issue', 'TrelloController@issue');
 
 Route::get('currentVersion', function () {
-    $version = '1.1.5';
+    $version = '1.1.6';
     return ["version" => $version, "resume" => "Agora você pode escolher em qual ordem você deseja apresentar seus cards. Segue mais detalhes no link. "];
 });
 

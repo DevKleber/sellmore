@@ -382,6 +382,7 @@ export class SellMoreComponent implements OnInit {
 	}
 	setStatusLocalStorage(order = null) {
 		this.orderBy = order ?? this.orderBy;
+
 		const jsonShowStatus = {
 			boShowProblemasCartao: this.boShowProblemasCartao,
 			boShowLigarDepois: this.boShowLigarDepois,

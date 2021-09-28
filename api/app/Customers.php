@@ -43,8 +43,8 @@ class Customers extends Model
             ->whereNull('id_parent')
             // ->where('bo_ativo', true)
             ->select('id');
-        if ($order == 'desc') {
-            $parentsRootQuery->orderBy('id', 'desc');
+        if (isset($order->column) ) {
+            $parentsRootQuery->orderBy("{$order->column}", "{$order->type}");
         }else{
             $parentsRootQuery->orderBy('name');
         }
@@ -75,11 +75,12 @@ class Customers extends Model
             ->whereIn('id', array_values($arTempFather));
             // ->orderBy('name')
             // ->orderBy('id', 'desc')
-        if ($order == 'desc') {
-            $arFatherQuery->orderBy('id', 'desc');
+        if (isset($order->column) ) {
+            $arFatherQuery->orderBy("{$order->column}", "{$order->type}");
         }else{
             $arFatherQuery->orderBy('name');
         }
+
         $arFather = $arFatherQuery->get();
 
 

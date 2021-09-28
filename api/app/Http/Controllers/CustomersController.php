@@ -15,7 +15,7 @@ class CustomersController extends Controller
         $options['boShowComprou'] = $request->input('boShowComprou');
         $options['boShowAberto'] = $request->input('boShowAberto');
 
-        $options['orderBy'] = $request->input('orderBy');
+        $options['orderBy'] = !empty($request->input('orderBy')) ? json_decode($request->input('orderBy')): null;
 
         $arCustomers = \App\Customers::getAll($options);
 

@@ -147,6 +147,9 @@ footer {
 .checkOrder {
 	color: var(--backgroundSecondary)!important;
 }
+.menuOrderArrowSize {
+    font-size: 0.8rem!important;
+}
 .contatos {
 	width: 500px;
 }
