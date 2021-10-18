@@ -4,6 +4,7 @@ import {
 	isDevMode,
 	ElementRef,
 	ViewChild,
+	HostListener,
 } from '@angular/core';
 import { isSameDay, isSameMonth } from 'date-fns';
 import {
@@ -42,8 +43,10 @@ import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
 })
 export class SellMoreComponent implements OnInit {
 	position: number = 0;
-	quantidade: number = 2;
+	quantidade: number = 8;
 	scrollTo: number = 0;
+	skeleton: any[] = [];
+	isLoadCard: boolean;
 
 	boShowProblemasCartao: boolean = false;
 	boShowLigarDepois: boolean = false;
@@ -55,6 +58,7 @@ export class SellMoreComponent implements OnInit {
 	showNaotemInteresse: string = 'false';
 	themeIsDark: boolean;
 	countryCodes: any[] = [];
+	arCustomers: any[] = [];
 	customersDynamic: any[] = [];
 	customers: any[] = [];
 	customersFilter: any[] = [];
@@ -144,7 +148,24 @@ export class SellMoreComponent implements OnInit {
 		private logService: LogService
 	) {}
 
+	@HostListener('window:scroll', [])
+	onScroll(): void {
+		if (this.bottomReached()) {
+			this.isLoadCard = true;
+			this.addCustomers();
+		}
+	}
+	bottomReached(): boolean {
+		return (
+			window.innerHeight + (window.scrollY + 150) >=
+			document.body.offsetHeight
+		);
+	}
 	ngOnInit() {
+		for (let index = 0; index < this.quantidade; index++) {
+			this.skeleton.push(index);
+		}
+
 		document.addEventListener(
 			'touchstart',
 			function (e) {
@@ -233,21 +254,29 @@ export class SellMoreComponent implements OnInit {
 			)
 			.subscribe((res) => {
 				this.loaderService.isLoad(false);
+				this.customersDynamic = [];
+				this.position = 0;
+
 				this.customers = res['arCustomers'];
 				this.statistics = res['statistics'];
 
-				// this.addCustomers();
+				this.arCustomers = Object.entries(this.customers);
+				this.addCustomers(
+					this.customersDynamic.length > 0
+						? this.customersDynamic.length
+						: this.quantidade
+				);
 				// setInterval(() => {
 				// }, 2000);
 			});
 	}
 
-	addCustomers() {
-		const arCustomers = Object.entries(this.customers);
-
-		let item = arCustomers.slice(
+	addCustomers(quantidade = null) {
+		this.isLoadCard = true;
+		const moreItems = quantidade === null ? this.quantidade : quantidade;
+		let item = this.arCustomers.slice(
 			this.position,
-			this.position + this.quantidade
+			this.position + moreItems
 		);
 
 		item.forEach((element) => {
@@ -256,6 +285,7 @@ export class SellMoreComponent implements OnInit {
 		});
 
 		this.position += this.quantidade;
+		this.isLoadCard = false;
 	}
 
 	saveLogAccess() {
@@ -448,7 +478,18 @@ export class SellMoreComponent implements OnInit {
 			}
 
 			if (updateList) {
-				this.getCustomers();
+				const parent = this.customersDynamic.find((item) => {
+					return item.id === form.id_parent;
+				});
+				const person = parent.referidos.find((ref) => {
+					return ref.id === form.id;
+				});
+
+				person.name = form.name;
+				person.observation = form.observation;
+				person.phone = form.phone;
+				person.phones = form.telefones;
+				person.status = form.status;
 			}
 
 			if (updateWithJs) {

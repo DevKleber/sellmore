@@ -133,7 +133,7 @@ footer {
 	display: flex;
 	flex-wrap: wrap;
 	flex-direction: row;
-	height: 70vh;
+	/* height: 70vh; */
 }
 .orderByMenu {
 	color: var(--backgroundColor);
@@ -174,7 +174,7 @@ footer {
 
 .viewport {
 	width: 100%;
-	height: 100vh;
+	/* height: 100vh; */
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;

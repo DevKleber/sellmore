@@ -232,9 +232,11 @@
 			<!-- <div class="contatos">
 				<cdk-virtual-scroll-viewport  itemSize="540" class="viewport" > -->
 				<!-- <div class="customers" *ngFor="let itemLead of customers | keyvalue; let even = even;"> -->
+
 				<perfect-scrollbar class="contentscrollbar">
-					<div [class.customerswidth] = "itemLead?.referidos.length > 0 || itemLead?.bo_ativo" class="customerswidth" *ngFor="let itemLead of customers; let even = even" >
+					<div [class.customerswidth] = "itemLead?.referidos.length > 0 || itemLead?.bo_ativo" class="customerswidth" *ngFor="let itemLead of customersDynamic; let even = even" >
 						<div class="customers" *ngIf="itemLead?.referidos.length > 0 || itemLead?.bo_ativo">
+
 							<div class="parent center-center">
 								<div class="contact">
 									<div class="name">{{ itemLead?.name }} </div>
@@ -454,6 +456,13 @@
 							</div>
 						</div>
 					</div>
+
+					<ng-container *ngIf="isLoadCard">
+						<div class="customers customerswidth skeleton piscando_div" *ngFor="let item of skeleton">
+						</div>
+					</ng-container>
+
+
 				<!-- </cdk-virtual-scroll-viewport> -->
 				</perfect-scrollbar>
 
@@ -597,7 +606,7 @@
 		</div>
 		<div class="footerItens" (click)="newLead()" data-toggle="modal" data-target="#modalStickyAdd"
 			matTooltip="Novo lead">
-			<i class="fa fa-plus"></i>
+			<i class="fa fa-plus"></i> {{isLoadCard}}
 		</div>
 	</footer>
 </div>
