@@ -15,7 +15,42 @@
 @media only screen and (min-width: 1px) and (max-width: 550px) {
 
 	.contentWiseller{
-		height: 70vh;
+		/* height: 70vh; */
+	}
+	.pad40 {
+		padding: 15px!important;
+	}
+	.showEachStatus {
+
+	}
+	.onoffswitch-label:before {
+		height: 27px!important;
+	}
+	.showEachStatus > div{
+		width: 110px!important;
+		height: 110px;
+		justify-content: space-between;
+		display: flex;
+		flex-direction: column;
+	}
+	.card-input {
+		padding: 5px!important;
+		font-size: 1em !important;
+	}
+	#modalStickyAdd > div > div > div.modal-body > div > form > div.card-input.mb-15.ng-star-inserted > div > div.phone-icon {
+		padding: 5px!important;
+	}
+	#modalStickyAdd > div > div > div.modal-body > div > form > div.card-input.mb-15.ng-star-inserted > div > div.phone-number {
+		padding: 5px!important;
+	}
+	#modalStickyAdd > div > div > div.modal-body > div > form > div.card-input.mb-15.ng-star-inserted > div > div.phone-remove {
+		padding: 5px!important;
+	}
+	#modalCall > div > div > div.modal-body {
+		padding: 15px!important;
+	}
+	#modalCall > div > div > div.modal-body > div {
+		flex-direction: column!important;
 	}
 	.sellMore header .logo {
 		width: 65px!important;
