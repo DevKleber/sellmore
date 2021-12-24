@@ -234,7 +234,7 @@
 				<!-- <div class="customers" *ngFor="let itemLead of customers | keyvalue; let even = even;"> -->
 
 				<perfect-scrollbar class="contentscrollbar">
-					<div [class.customerswidth] = "itemLead?.referidos.length > 0 || itemLead?.bo_ativo" class="customerswidth" *ngFor="let itemLead of customersDynamic; let even = even" >
+					<div [class.customerswidth] = "itemLead?.referidos.length > 0 || itemLead?.bo_ativo" class="customerswidth" *ngFor="let itemLead of customersDynamic; let even = even; index as indexItemLead;" >
 						<div class="customers" *ngIf="itemLead?.referidos.length > 0 || itemLead?.bo_ativo">
 
 							<div class="parent center-center">
@@ -326,9 +326,9 @@
 							</div>
 							<perfect-scrollbar class="zindex999">
 								<div class="children">
-									<div class="item" *ngFor=" let item of itemLead?.referidos; index as indexItem;">
+									<div class="item" *ngFor=" let item of itemLead?.referidos; index as indexItemReferido;">
 
-										<div class="contacto cursor-pointer" (click)="callTo(item, {itemLead, referido : indexItem})" data-toggle="modal"
+										<div class="contacto cursor-pointer" (click)="callTo(item, {itemLead, referido : indexItemReferido, indexItemLeade:indexItemLead})" data-toggle="modal"
 											data-target="#modalCall">
 											<span>
 												<div class="contacto-name">
@@ -1316,3 +1316,5 @@
 	<ng-lottie [options]="optionsSold" class="center-center" (complete)="showCongrats=false" style="width: 100%;">
 	</ng-lottie>
 </div>
+
+<app-commemorations ></app-commemorations>

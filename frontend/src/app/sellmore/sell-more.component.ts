@@ -493,17 +493,29 @@ export class SellMoreComponent implements OnInit {
 			}
 
 			if (updateWithJs) {
-				const { itemLead, referido } = this.itemToUpdate;
+				const { itemLead, referido, indexItemLeade } =
+					this.itemToUpdate;
+
 				if (itemLead === undefined) {
 					// this.getCustomers();
 				} else {
 					const arCustomers = this.customers;
 
-					arCustomers[itemLead.key]['referidos'][referido]['status'] =
-						form.status;
-					arCustomers[itemLead.key]['referidos'][referido][
-						'observation'
-					] = form.observation;
+					if (itemLead.key) {
+						arCustomers[itemLead.key]['referidos'][referido][
+							'status'
+						] = form.status;
+						arCustomers[itemLead.key]['referidos'][referido][
+							'observation'
+						] = form.observation;
+					} else {
+						arCustomers[indexItemLeade]['referidos'][referido][
+							'status'
+						] = form.status;
+						arCustomers[indexItemLeade]['referidos'][referido][
+							'observation'
+						] = form.observation;
+					}
 				}
 			}
 

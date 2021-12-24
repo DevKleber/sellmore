@@ -6,7 +6,6 @@ import { HeaderComponent } from './layout/header/header.component';
 import { MenuComponent } from './layout/menu/menu.component';
 import { FooterComponent } from './layout/footer/footer.component';
 import { LoaderComponent } from './shared/loader/loader.component';
-import { CommemorationsComponent } from './shared/commemorations/commemorations.component';
 
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, PreloadAllModules } from '@angular/router';
@@ -32,7 +31,6 @@ import { RequestRecoverPasswordComponent } from './security/requestRecoverPasswo
 		LoaderComponent,
 		LoginComponent,
 		RequestRecoverPasswordComponent,
-		CommemorationsComponent,
 	],
 	imports: [
 		BrowserModule,

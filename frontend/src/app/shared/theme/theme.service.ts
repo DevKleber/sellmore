@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 export class ThemeService {
 	title = 'selelmore';
 	theme: string = 'theme-whbl';
-	darkmode: boolean;
+	darkmode: boolean = false;
 	pathcss: string = '../assets/css/dark.css';
 
 	setDarkMode() {
@@ -46,7 +46,7 @@ export class ThemeService {
 			head.appendChild(link);
 		} else {
 			var sheet = document.getElementById('iddarkmode');
-			if (sheet != null) sheet.parentNode.removeChild(sheet);
+			if (sheet) sheet?.parentNode?.removeChild(sheet);
 		}
 	}
 }

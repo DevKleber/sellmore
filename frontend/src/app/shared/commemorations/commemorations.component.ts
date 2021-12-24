@@ -1,77 +1,71 @@
 import { Component, OnInit } from '@angular/core';
-import { CommemorationsService } from './commemorations.service'
-import { Observable, timer } from 'rxjs'
-
+import { AnimationOptions } from 'ngx-lottie';
 
 @Component({
-  selector: 'app-commemorations',
-  templateUrl: './commemorations.component.html',
-  styleUrls: ['./commemorations.component.css']
+	selector: 'app-commemorations',
+	templateUrl: './commemorations.component.html',
+	styleUrls: ['./commemorations.component.css'],
 })
 export class CommemorationsComponent implements OnInit {
-  showCommemorations: boolean = false;
-  lastCommemorations:string = 'christmas'
-  
-  dateFrom = "01/12/2019";
-  dateTo = "30/12/2019";
+	showCommemorations: boolean = false;
 
-  timeAnimationInDisplay = 6000;
-  
+	optionsMerryChristmas: AnimationOptions = {
+		path: '/assets/animations/json/merryChristmas.json',
+		autoplay: true,
+		loop: true,
+	};
+	optionschristmasTree: AnimationOptions = {
+		path: '/assets/animations/json/90315-christmas-tree.json',
+		autoplay: true,
+		loop: false,
+	};
+	optionsChristmasWind: AnimationOptions = {
+		path: '/assets/animations/json/87898-christmas-wind-chimes.json',
+		autoplay: true,
+		loop: true,
+	};
+	optionsWinter: AnimationOptions = {
+		path: '/assets/animations/json/snow.json',
+		autoplay: true,
+		loop: true,
+	};
 
-  lottieConfig = {
-    path: 'assets/animations/json/christmas.json', 
-    autoplay: true,
-    loop: true
-  };
-  constructor(private commemorationsService: CommemorationsService) { }
+	constructor() {}
 
-  ngOnInit(): void {
-    this.commemorations();
-  }
-  timeToHidden(time) {
-    const numbers = timer(time);
-    numbers.subscribe(x => this.showCommemorations = false);
-  }
+	ngOnInit(): void {
+		if (!this.getLocalStorageCommemorations()) {
+			const showCommemorations = this.dateIsBetween(
+				new Date(),
+				new Date('2021-12-20'),
+				new Date('2021-12-25')
+			);
+			if (showCommemorations) {
+				this.commemorations();
+				this.setLocalStorageCommemorations();
+			}
+		}
+	}
 
-  inTime(){
-    
-    var dateFrom = this.dateFrom;
-    var dateTo = this.dateTo;
-    
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-    var dateCheck = `${dd}/${mm}/${yyyy}`;
+	dateIsBetween(date: Date, start: Date, end: Date) {
+		return (
+			date.getTime() >= start.getTime() && date.getTime() <= end.getTime()
+		);
+	}
 
-    var d1 = dateFrom.split("/");
-    var d2 = dateTo.split("/");
-    var c = dateCheck.split("/");
+	commemorations() {
+		this.showCommemorations = true;
+		setTimeout(
+			function () {
+				this.showCommemorations = false;
+			}.bind(this),
+			10000
+		);
+	}
 
-    var from = new Date(parseInt(d1[2]), parseInt(d1[1])-1, parseInt(d1[0]));  // -1 because months are from 0 to 11
-    var to   = new Date(parseInt(d2[2]), parseInt(d2[1])-1, parseInt(d2[0]));
-    var check = new Date(parseInt(c[2]), parseInt(c[1])-1, parseInt(c[0]));
-    
-    return check > from && check < to;
-  }
-  commemorations() {
-    let commemorations = this.getLocalStorageCommemorations();
-    if(this.inTime()){
-      if (commemorations == '' || (commemorations != this.lastCommemorations)) {
-        this.showCommemorations = true
-        this.setLocalStorageCommemorations();
-        this.timeToHidden(this.timeAnimationInDisplay)
-      }
-    }else{
-      this.showCommemorations = false
-      this.setLocalStorageCommemorations();
-    }
-  }
-
-  getLocalStorageCommemorations() {
-    return localStorage.getItem('commemorations') || '';
-  }
-  setLocalStorageCommemorations() {
-    localStorage.setItem('commemorations', this.lastCommemorations);
-  }
+	getLocalStorageCommemorations() {
+		return localStorage.getItem('commemorations') || false;
+	}
+	setLocalStorageCommemorations() {
+		localStorage.setItem('commemorations', 'true');
+	}
 }

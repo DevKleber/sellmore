@@ -20,13 +20,13 @@ export class SellMoreService {
 	getCalenda(search?: string): Observable<any[]> {
 		return this.http.get<any[]>(`${API}/calendar`);
 	}
-	saveCalendar(form) {
+	saveCalendar(form: any) {
 		return this.http.post<any>(`${API}/calendar`, form);
 	}
-	deleteCalendar(id) {
+	deleteCalendar(id: any) {
 		return this.http.delete<any>(`${API}/calendar/${id}`);
 	}
-	alterarHorarioEvento(event) {
+	alterarHorarioEvento(event: any) {
 		return this.http.put<any>(`${API}/calendar/${event.event.id}`, event);
 	}
 
@@ -67,37 +67,37 @@ export class SellMoreService {
 	getStrategy(): Observable<any[]> {
 		return this.http.get<any[]>(`${API}/strategy`);
 	}
-	getAllParents(id): Observable<any[]> {
+	getAllParents(id: any): Observable<any[]> {
 		return this.http.get<any[]>(`${API}/parents/customers/${id}`);
 	}
-	insertUpdateStrategy(form): Observable<any[]> {
+	insertUpdateStrategy(form: any): Observable<any[]> {
 		return this.http.put<any[]>(`${API}/strategy`, form);
 	}
-	changeStatus(form, id) {
+	changeStatus(form: any, id: any) {
 		return this.http.put(`${API}/status/customers/${id}`, form);
 	}
-	preference(form) {
+	preference(form: any) {
 		return this.http.post(`${API}/preference`, form);
 	}
 
-	bug(form) {
+	bug(form: any) {
 		return this.http.post<any>(`${API}/issue`, form);
 	}
-	save(form) {
+	save(form: any) {
 		return this.http.post<any>(`${API}/customers`, form);
 	}
-	update(form, id) {
+	update(form: any, id: any) {
 		return this.http.put<any>(`${API}/customers/${id}`, form);
 	}
 
 	inativar(id: string) {
 		return this.http.delete(`${API}/customers/${id}`);
 	}
-	ativar(id) {
+	ativar(id: any) {
 		return this.http.put(`${API}/customersActivate/${id}`, []);
 	}
 
-	file(form, id) {
+	file(form: any, id: any) {
 		return this.http.post<any>(
 			`${API}/import-contact/customers/${id}`,
 			form

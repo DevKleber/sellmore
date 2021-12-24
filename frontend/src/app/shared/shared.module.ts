@@ -3,7 +3,7 @@ import { CommonModule, registerLocaleData } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { InputComponent } from './input/input.component';
-import { RadioComponent } from './radio/radio.component';
+import { CommemorationsComponent } from './commemorations/commemorations.component';
 
 import { SnackbarComponent } from './messages/snackbar/snackbar.component';
 
@@ -57,7 +57,7 @@ export function playerFactory() {
 	declarations: [
 		SafeHtml,
 		InputComponent,
-		RadioComponent,
+		CommemorationsComponent,
 		SnackbarComponent,
 		HelpersPipe,
 		BooleanMessagePipe,
@@ -83,7 +83,7 @@ export function playerFactory() {
 	exports: [
 		SafeHtml,
 		InputComponent,
-		RadioComponent,
+		CommemorationsComponent,
 		CommonModule,
 		FormsModule,
 		ReactiveFormsModule,

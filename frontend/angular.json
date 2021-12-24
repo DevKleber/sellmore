@@ -3,9 +3,13 @@
 	"version": 1,
 	"newProjectRoot": "projects",
 	"projects": {
-		"sellmore": {
+		"wiseller": {
 			"projectType": "application",
-			"schematics": {},
+			"schematics": {
+				"@schematics/angular:application": {
+					"strict": true
+				}
+			},
 			"root": "",
 			"sourceRoot": "src",
 			"prefix": "app",
@@ -13,7 +17,7 @@
 				"build": {
 					"builder": "@angular-devkit/build-angular:browser",
 					"options": {
-						"outputPath": "dist/sellmore",
+						"outputPath": "dist/wiseller",
 						"index": "src/index.html",
 						"main": "src/main.ts",
 						"polyfills": "src/polyfills.ts",
@@ -40,60 +44,57 @@
 						"scripts": [
 							"src/assets/lib/bootstrap/jquery/jquery-3.5.1.slim.min.js",
 							"src/assets/lib/bootstrap/js/bootstrap.min.js"
-						],
-						"vendorChunk": true,
-						"extractLicenses": false,
-						"buildOptimizer": false,
-						"sourceMap": true,
-						"optimization": false,
-						"namedChunks": true
+						]
 					},
 					"configurations": {
 						"production": {
+							"budgets": [
+								{
+									"type": "initial",
+									"maximumWarning": "500kb",
+									"maximumError": "1mb"
+								},
+								{
+									"type": "anyComponentStyle",
+									"maximumWarning": "2kb",
+									"maximumError": "4kb"
+								}
+							],
 							"fileReplacements": [
 								{
 									"replace": "src/environments/environment.ts",
 									"with": "src/environments/environment.prod.ts"
 								}
 							],
-							"optimization": true,
-							"outputHashing": "all",
-							"sourceMap": false,
-							"namedChunks": false,
-							"extractLicenses": true,
-							"vendorChunk": false,
-							"buildOptimizer": true,
-							"budgets": [
-								{
-									"type": "initial",
-									"maximumWarning": "2mb",
-									"maximumError": "5mb"
-								},
-								{
-									"type": "anyComponentStyle",
-									"maximumWarning": "6kb",
-									"maximumError": "10kb"
-								}
-							]
+							"outputHashing": "all"
+						},
+						"development": {
+							"buildOptimizer": false,
+							"optimization": false,
+							"vendorChunk": true,
+							"extractLicenses": false,
+							"sourceMap": true,
+							"namedChunks": true
 						}
 					},
-					"defaultConfiguration": ""
+					"defaultConfiguration": "production"
 				},
 				"serve": {
 					"builder": "@angular-devkit/build-angular:dev-server",
-					"options": {
-						"browserTarget": "sellmore:build"
-					},
 					"configurations": {
 						"production": {
-							"browserTarget": "sellmore:build:production"
+							"browserTarget": "wiseller:build:production"
+						},
+						"development": {
+							"browserTarget": "wiseller:build:development"
 						}
-					}
+					},
+					"defaultConfiguration": "development"
 				},
 				"extract-i18n": {
 					"builder": "@angular-devkit/build-angular:extract-i18n",
 					"options": {
-						"browserTarget": "sellmore:build"
+						"browserTarget": "wiseller:build"
 					}
 				},
 				"test": {
@@ -104,38 +105,12 @@
 						"tsConfig": "tsconfig.spec.json",
 						"karmaConfig": "karma.conf.js",
 						"assets": ["src/favicon.ico", "src/assets"],
-						"styles": [
-							"node_modules/angular-calendar/css/angular-calendar.css",
-							"src/styles.css"
-						],
+						"styles": ["src/styles.css"],
 						"scripts": []
-					}
-				},
-				"lint": {
-					"builder": "@angular-devkit/build-angular:tslint",
-					"options": {
-						"tsConfig": [
-							"tsconfig.app.json",
-							"tsconfig.spec.json",
-							"e2e/tsconfig.json"
-						],
-						"exclude": ["**/node_modules/**"]
-					}
-				},
-				"e2e": {
-					"builder": "@angular-devkit/build-angular:protractor",
-					"options": {
-						"protractorConfig": "e2e/protractor.conf.js",
-						"devServerTarget": "sellmore:serve"
-					},
-					"configurations": {
-						"production": {
-							"devServerTarget": "sellmore:serve:production"
-						}
 					}
 				}
 			}
 		}
 	},
-	"defaultProject": "sellmore"
+	"defaultProject": "wiseller"
 }
