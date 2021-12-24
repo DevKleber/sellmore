@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AnimationOptions } from 'ngx-lottie';
+import { LoginService } from 'src/app/security/login/login.service';
 
 @Component({
 	selector: 'app-commemorations',
@@ -8,6 +9,7 @@ import { AnimationOptions } from 'ngx-lottie';
 })
 export class CommemorationsComponent implements OnInit {
 	showCommemorations: boolean = false;
+	nameEventMerryChristmas = 'merryChristmas';
 
 	optionsMerryChristmas: AnimationOptions = {
 		path: '/assets/animations/json/merryChristmas.json',
@@ -30,10 +32,14 @@ export class CommemorationsComponent implements OnInit {
 		loop: true,
 	};
 
-	constructor() {}
+	constructor(private loginService: LoginService) {}
 
 	ngOnInit(): void {
-		if (!this.getLocalStorageCommemorations()) {
+		const pessoa = this.loginService.getUser();
+		if (!pessoa) {
+			return;
+		}
+		if (!this.getLocalStorageCommemorations(this.nameEventMerryChristmas)) {
 			const showCommemorations = this.dateIsBetween(
 				new Date(),
 				new Date('2021-12-20'),
@@ -41,7 +47,10 @@ export class CommemorationsComponent implements OnInit {
 			);
 			if (showCommemorations) {
 				this.commemorations();
-				this.setLocalStorageCommemorations();
+				this.setLocalStorageCommemorations({
+					event: this.nameEventMerryChristmas,
+					year: 2021,
+				});
 			}
 		}
 	}
@@ -62,10 +71,17 @@ export class CommemorationsComponent implements OnInit {
 		);
 	}
 
-	getLocalStorageCommemorations() {
-		return localStorage.getItem('commemorations') || false;
+	getLocalStorageCommemorations(eventName) {
+		const commemorations = localStorage.getItem('commemorations') || false;
+		if (commemorations) {
+			const { event, year } = JSON.parse(commemorations);
+			if (event === eventName && year === new Date().getFullYear()) {
+				return true;
+			}
+		}
+		return false;
 	}
-	setLocalStorageCommemorations() {
-		localStorage.setItem('commemorations', 'true');
+	setLocalStorageCommemorations(dataEvent) {
+		localStorage.setItem('commemorations', JSON.stringify(dataEvent));
 	}
 }
