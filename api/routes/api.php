@@ -25,8 +25,8 @@ Route::post('user/new', 'FuncionarioController@store');
 Route::post('issue', 'TrelloController@issue');
 
 Route::get('currentVersion', function () {
-    $version = '1.1.8';
-    return ["version" => $version, "resume" => "Correções de bugs e melhorias em dispositivos móveis 📱"];
+    $version = '1.1.81';
+    return ["version" => $version, "resume" => "Correção: Servidor offline 📱"];
 });
 
 Route::group(['middleware' => 'apiJwt'], function () {
