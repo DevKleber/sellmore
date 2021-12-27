@@ -12,10 +12,10 @@ export const environment = {
 	// apiDominio: 'http://127.0.0.1:8000',
 	// apiSite: 'http://127.0.0.1:8000',
 
-	api: 'https://apisellmore.siagesc.com.br/api',
-	apiPublic: 'https://apisellmore.siagesc.com.br/public',
-	apiDominio: 'https://apisellmore.siagesc.com.br',
-	apiSite: 'https://apisellmore.siagesc.com.br',
+	api: 'https://api.wiseller.com.br/api',
+	apiPublic: 'https://api.wiseller.com.br/public',
+	apiDominio: 'https://api.wiseller.com.br',
+	apiSite: 'https://api.wiseller.com.br',
 };
 
 /*

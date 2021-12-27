@@ -9,7 +9,7 @@ import { LoginService } from 'src/app/security/login/login.service';
 })
 export class CommemorationsComponent implements OnInit {
 	showCommemorations: boolean = false;
-	nameEventMerryChristmas = 'merryChristmas';
+	nameEvent = 'happyNewYear';
 
 	optionsMerryChristmas: AnimationOptions = {
 		path: '/assets/animations/json/merryChristmas.json',
@@ -31,6 +31,11 @@ export class CommemorationsComponent implements OnInit {
 		autoplay: true,
 		loop: true,
 	};
+	newYear: AnimationOptions = {
+		path: '/assets/animations/json/90477-happy-new-year-lottie-animation.json',
+		autoplay: true,
+		loop: true,
+	};
 
 	constructor(private loginService: LoginService) {}
 
@@ -39,16 +44,16 @@ export class CommemorationsComponent implements OnInit {
 		if (!pessoa) {
 			return;
 		}
-		if (!this.getLocalStorageCommemorations(this.nameEventMerryChristmas)) {
+		if (!this.getLocalStorageCommemorations(this.nameEvent)) {
 			const showCommemorations = this.dateIsBetween(
 				new Date(),
-				new Date('2021-12-20'),
-				new Date('2021-12-25')
+				new Date('2021-12-26'),
+				new Date('2021-12-31')
 			);
 			if (showCommemorations) {
 				this.commemorations();
 				this.setLocalStorageCommemorations({
-					event: this.nameEventMerryChristmas,
+					event: this.nameEvent,
 					year: 2021,
 				});
 			}
