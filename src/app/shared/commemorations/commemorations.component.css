@@ -1,0 +1,28 @@
+.commemorations {
+	position: absolute;
+	top: 40px;
+	right: 0;
+	z-index: 999;
+}
+
+.optionsMerryChristmas {
+	position: fixed;
+	bottom: 0px;
+	left: 0;
+	width: 450px;
+	z-index: 999;
+
+}
+.optionsChristmasWind {
+	position: absolute;
+	top: 0px;
+	right: 0;
+	z-index: 999;
+}
+.optionsWinter {
+	position: absolute;
+	bottom: 0px;
+	right: 0;
+	width: 100%;
+	z-index: 999;
+}
