@@ -81,16 +81,37 @@ npm run typecheck
 - `test.fixme` marca um defeito conhecido da aplicação, com um comentário explicando o que acontece hoje. Ao corrigir o defeito, troque por `test`.
 - Os demais testes descrevem o que a tela faz hoje. Se você mudar um comportamento de propósito, atualize o teste na mesma mudança.
 
+## Site de apresentação
+
+A pasta `site/` é a página pública de `https://wiseller.com.br`: HTML e CSS estáticos, sem build e sem JavaScript. A plataforma (este projeto Angular) fica em `https://app.wiseller.com.br`.
+
+- Para ver localmente: `python3 -m http.server 8099 --directory site`.
+- As cores repetem as de `src/assets/css/colors.css`; o tema escuro segue a preferência do sistema.
+- O texto da página de dúvidas aparece duas vezes: no HTML e no bloco `application/ld+json`. Altere os dois.
+- `site/assets/img/system/wiseller.png` precisa continuar nesse caminho: o e-mail de recuperação de senha da API aponta para ele.
+- `site/.htaccess` é versionado: força `https` sem `www`, redireciona os endereços antigos da plataforma (`/login`, `/request-recover-password`, `/access_log`, `/not-found`) para `app.wiseller.com.br` e define o cache.
+- Página nova: crie o `.html` em `site/` e acrescente o endereço ao `site/sitemap.xml`.
+
 ## Deploy
 
-`.github/workflows/deploy.yml`: todo push em `master` ou `main` publica em produção.
+Todo push em `master` ou `main` publica em produção. São dois workflows, que nunca rodam ao mesmo tempo:
+
+| Workflow | Dispara quando muda | Publica em |
+|---|---|---|
+| `.github/workflows/deploy.yml` | qualquer coisa fora de `site/` | `app.wiseller.com.br` |
+| `.github/workflows/deploy-site.yml` | `site/` | `wiseller.com.br` |
+
+Plataforma:
 
 1. `npm ci` e `ng build` de produção, em Node 16.
-2. Envia `dist/wiseller` por `rsync` com `--delete`.
+2. Envia `dist/wiseller` por `rsync` com `--delete` para o destino `app/`.
 3. Confere a página inicial e a rota interna `/login`.
 
-- **O `.htaccess` do servidor não é versionado nem enviado.** É ele que faz o F5 funcionar nas rotas do Angular. Tudo que começa com ponto na raiz do site fica preservado, e a conferência de `/login` falha se ele sumir.
-- Não coloque na raiz do build arquivos que comecem com ponto: eles não são publicados.
+Site: envia `site/` por `rsync` com `--delete` e confere a página inicial, o `robots.txt` e o redirecionamento de `/login`.
+
+- A mesma chave de deploy atende os dois. No servidor, `~/scripts/deploy/wiseller-front-acesso.sh` só aceita `rsync` e escolhe a pasta pelo destino (`app/` é a plataforma, o resto é o site).
+- **O `.htaccess` da plataforma não é versionado nem enviado.** É ele que faz o F5 funcionar nas rotas do Angular, define o cache e manda o `noindex`. Tudo que começa com ponto na raiz fica preservado, e a conferência de `/login` falha se ele sumir.
+- Não coloque na raiz do build arquivos que comecem com ponto: eles não são publicados. No site, só o `.htaccess` é enviado.
 - Para avisar os usuários de uma versão nova, altere a rota `currentVersion` na API; o `version` do `package.json` não é usado pela tela.
 
 ## Convenções
