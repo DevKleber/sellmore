@@ -35,6 +35,16 @@ docker compose logs -f web      # acompanha o build
 | `src/app/app.api.ts` | endereços da API, lidos de `environment` |
 | `e2e/` | testes de ponta a ponta (Playwright), pacote npm separado |
 
+## Aparência
+
+- **Cores, fontes e medidas** são variáveis CSS em `src/assets/css/colors.css`, com os temas claro e escuro. Nunca escreva cor fixa: use as variáveis. O tema é o atributo `data-theme` do `<html>`, controlado por `ThemeService`.
+- **Componentes visuais** (`ws-btn`, `ws-card`, `ws-pill`, `ws-tag`, `ws-stat`, `ws-avatar`...) ficam em `src/assets/css/wiseller-ui.css`. O CSS dos componentes Angular tem limite de tamanho no build (10 kB), então o que for reutilizável vai para esse arquivo.
+- **Base** (botões, campos, modais do Bootstrap, menus do Material, SweetAlert, agenda) em `src/styles.css`.
+- **Ícones**: `<app-icon name="..." [size]="20"></app-icon>` (`src/app/shared/icon/`). O Font Awesome ainda é usado dentro dos modais.
+- **Filtros de status** são pílulas de seleção única ("Todos" ou um status); por trás continuam os cinco campos `boShow*` enviados à API.
+- Fontes: Inter (texto) e Plus Jakarta Sans (títulos), carregadas do Google Fonts.
+- O modelo que originou o layout está em `tarefas/modelo-painel/`, na pasta acima do repositório.
+
 - O usuário logado e o token ficam no `localStorage` (chave `user`); o tema em `darkmodeWiseller`; a versão vista em `wiseller_version`.
 - O aviso de versão nova compara o valor guardado em `wiseller_version` com o que `GET /api/currentVersion` devolve; quem define a versão é a API.
 - Modais são do Bootstrap 3, abertos por jQuery.
@@ -62,6 +72,7 @@ npm run typecheck
 
 - Rodam no host com Node 18 ou mais novo, e não no container do front. O `e2e/` tem `package.json` e lockfile próprios para **não afetar o build do Angular**: não acrescente dependências de teste ao `package.json` da raiz.
 - `pages/`: page objects das telas, componentes e modais. `support/`: fixtures, contas de teste, clientes de API e mocks. `tests/`: specs por área.
+- Dois projetos do Playwright: `chromium` (desktop, 1440x900) roda tudo menos `tests/celular/`; `celular` (390x844) roda só essa pasta.
 - Cada arquivo cria um vendedor novo pela API, com e-mail `@wiseller.test`. Nunca use usuários reais do banco.
 - A API limita a 60 requisições por minuto por usuário; a suíte controla o ritmo por conta. Ao criar um arquivo de teste, use as fixtures existentes para herdar esse controle.
 - O navegador dos testes só alcança `localhost`. O envio de bug (`POST /api/issue`, que cria cartão no Trello) é sempre simulado, e a recuperação de senha só é testada com e-mail inexistente. Mantenha essas proteções.

@@ -1,38 +1,30 @@
 import { Locator, Page } from '@playwright/test';
-import { ClosedStatusCode, STATUS_ACTION_HINT } from '../../support/data/customer-status';
+import { ClosedStatusCode } from '../../support/data/customer-status';
 import { ContextMenu } from './context-menu';
 import { byHint, MENU_HINT } from './hints';
 
-/** Ícone exibido quando o atendimento já tem status. */
-const STATUS_ICON: Record<ClosedStatusCode, string> = {
-	pc: '.fa-credit-card',
-	ld: '.fa-headset',
-	n: '.fa-thumbs-down',
-	c: '.fa-thumbs-up',
-};
-
-/** Cliente exibido na tela principal (lead do card ou referido), com ações de status e menu. */
+/** Cliente exibido na tela principal (lead do card ou referido), com etiqueta de status e menu. */
 export abstract class CustomerEntry {
 	protected constructor(
 		protected readonly page: Page,
-		private readonly actionsArea: Locator,
+		/** Trecho que contém o botão de menu deste cliente (e não o de outros). */
+		private readonly menuArea: Locator,
+		/** Trecho onde aparece a etiqueta de status deste cliente. */
+		private readonly statusArea: Locator,
 	) {}
 
-	/** Ícones de ação de quem ainda aguarda o telefonema. */
-	get waitingActions(): Locator {
-		return this.actionsArea.locator('.waiting');
-	}
+	/** Ações de quem ainda aguarda o telefonema; somem quando o atendimento ganha status. */
+	abstract get waitingActions(): Locator;
 
-	finishedIcon(status: ClosedStatusCode): Locator {
-		return this.actionsArea.locator('.finished').locator(STATUS_ICON[status]);
-	}
+	abstract markStatus(status: ClosedStatusCode): Promise<void>;
 
-	async markStatus(status: ClosedStatusCode): Promise<void> {
-		await this.actionsArea.locator(byHint(STATUS_ACTION_HINT[status])).click();
+	/** Etiqueta exibida quando o atendimento já tem status. */
+	statusTag(status: ClosedStatusCode): Locator {
+		return this.statusArea.locator(`.ws-status[data-status="${status}"]`);
 	}
 
 	async openMenu(): Promise<ContextMenu> {
-		await this.actionsArea.locator(byHint(MENU_HINT)).click();
+		await this.menuArea.locator(byHint(MENU_HINT)).click();
 		return new ContextMenu(this.page);
 	}
 }

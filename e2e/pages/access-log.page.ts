@@ -20,13 +20,15 @@ export class AccessLogPage {
 	readonly alert: AlertDialog;
 	readonly heading: Locator;
 	readonly refreshButton: Locator;
+	readonly homeLink: Locator;
 	readonly accessRows: Locator;
 
 	constructor(readonly page: Page) {
 		this.alert = new AlertDialog(page);
 		this.heading = page.getByRole('heading', { name: 'Access log' });
 		this.refreshButton = page.getByRole('button', { name: 'Atualizar lista' });
-		this.accessRows = page.locator('.logs tbody tr');
+		this.homeLink = page.getByRole('link', { name: 'Wiseller' });
+		this.accessRows = page.locator('.log-access tbody tr');
 	}
 
 	async goto(): Promise<void> {
@@ -40,6 +42,6 @@ export class AccessLogPage {
 
 	/** Células do relatório, linha a linha (ex.: "Chrome", "25", "Firefox", "3"). */
 	reportCells(title: AccessReportTitle): Locator {
-		return this.page.locator('.cardRight').filter({ has: this.reportHeading(title) }).locator('tbody td');
+		return this.page.locator('.log-report').filter({ has: this.reportHeading(title) }).locator('tbody td');
 	}
 }

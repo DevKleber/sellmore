@@ -1,15 +1,28 @@
 import { Locator, Page } from '@playwright/test';
+import { ClosedStatusCode, STATUS_ACTION_HINT } from '../../support/data/customer-status';
 import { CustomerEntry } from './customer-entry';
+import { byHint } from './hints';
 import { ReferralItem } from './referral-item';
 
 /** Card de um lead na tela principal, com seus referidos. */
 export class LeadCard extends CustomerEntry {
 	readonly root: Locator;
+	private readonly statusButtons: Locator;
 
 	constructor(page: Page, name: string) {
 		const root = page.locator('.customers').filter({ has: page.locator('.parent .name').getByText(name, { exact: true }) });
-		super(page, root.locator('.parent'));
+		super(page, root.locator('.parent'), root.locator('.info'));
 		this.root = root;
+		this.statusButtons = root.locator('.ws-statusbar');
+	}
+
+	/** Botões de status do lead, habilitados só enquanto ele aguarda o telefonema. */
+	get waitingActions(): Locator {
+		return this.root.locator('.ws-statusbar.waiting');
+	}
+
+	async markStatus(status: ClosedStatusCode): Promise<void> {
+		await this.statusButtons.locator(byHint(STATUS_ACTION_HINT[status])).click();
 	}
 
 	get phones(): Locator {

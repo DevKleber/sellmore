@@ -39,7 +39,8 @@
 							"src/assets/css/configTelas.css",
 							"src/assets/css/print.css",
 							"src/assets/lib/bootstrap/css/bootstrap.min.css",
-							"src/styles.css"
+							"src/styles.css",
+							"src/assets/css/wiseller-ui.css"
 						],
 						"scripts": [
 							"src/assets/lib/bootstrap/jquery/jquery-3.5.1.slim.min.js",

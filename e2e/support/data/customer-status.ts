@@ -20,7 +20,7 @@ export const STATUS_DESCRIPTION: Record<CustomerStatusCode, string> = {
 	c: 'Comprou',
 };
 
-/** Rótulo do filtro (switch) de cada status na tela principal. */
+/** Rótulo de cada status nas pílulas de filtro e no menu do referido. */
 export const STATUS_FILTER_LABEL: Record<CustomerStatusCode, string> = {
 	a: 'Em aberto',
 	pc: 'Problemas com cartão',
@@ -29,7 +29,7 @@ export const STATUS_FILTER_LABEL: Record<CustomerStatusCode, string> = {
 	c: 'Comprou',
 };
 
-/** Dica (tooltip/title) de cada ação que encerra o atendimento. */
+/** Dica (tooltip) dos botões de status do card do lead e do modal de ligação. */
 export const STATUS_ACTION_HINT: Record<ClosedStatusCode, string> = {
 	pc: 'Problemas com cartão de crédito',
 	ld: 'Ligar depois',

@@ -1,32 +1,41 @@
 import { expect, Locator, Page } from '@playwright/test';
+import { ClosedStatusCode, STATUS_FILTER_LABEL } from '../../support/data/customer-status';
 import { CustomerEntry } from './customer-entry';
-import { byHint } from './hints';
 
-const PREFERENCE_HINT = 'Dar preferencia';
-const SOLID_STAR = /(^|\s)fa(\s|$)/;
-const OUTLINED_STAR = /(^|\s)far(\s|$)/;
+const PREFERENCE_OPTION = /preferência$/;
 
 /** Referido (indicado) listado dentro do card de um lead. */
 export class ReferralItem extends CustomerEntry {
 	readonly root: Locator;
+	private readonly card: Locator;
+	private readonly name: string;
 
 	constructor(page: Page, card: Locator, name: string) {
 		const root = card.locator('.children .item').filter({ has: page.locator('.contacto-name').getByText(name, { exact: true }) });
-		super(page, root);
+		super(page, root, root);
 		this.root = root;
+		this.card = card;
+		this.name = name;
+	}
+
+	/** O próprio item, enquanto o referido aguarda o telefonema. */
+	get waitingActions(): Locator {
+		return this.card.locator('.children .item.waiting').filter({ has: this.page.locator('.contacto-name').getByText(this.name, { exact: true }) });
+	}
+
+	/** O status do referido é escolhido no menu do item. */
+	async markStatus(status: ClosedStatusCode): Promise<void> {
+		const menu = await this.openMenu();
+		await menu.choose(STATUS_FILTER_LABEL[status]);
 	}
 
 	get phones(): Locator {
 		return this.root.locator('.contacto-phone');
 	}
 
-	get preferenceStar(): Locator {
-		return this.root.locator(byHint(PREFERENCE_HINT));
-	}
-
-	/** Estrela ao lado do nome, exibida para preferidos que já têm status. */
+	/** Estrela ao lado do nome dos referidos preferidos. */
 	get preferredMark(): Locator {
-		return this.root.locator('.contacto-name .fa-star');
+		return this.root.locator('.ws-ref__star');
 	}
 
 	async open(): Promise<void> {
@@ -34,10 +43,11 @@ export class ReferralItem extends CustomerEntry {
 	}
 
 	async togglePreference(): Promise<void> {
-		await this.preferenceStar.click();
+		const menu = await this.openMenu();
+		await menu.choose(PREFERENCE_OPTION);
 	}
 
 	async expectPreferred(preferred: boolean): Promise<void> {
-		await expect(this.preferenceStar).toHaveClass(preferred ? SOLID_STAR : OUTLINED_STAR);
+		await expect(this.preferredMark).toBeVisible({ visible: preferred });
 	}
 }

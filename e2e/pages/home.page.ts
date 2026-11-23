@@ -20,7 +20,7 @@ import { StrategyModal } from './modals/strategy.modal';
 const CELEBRATION_TIMEOUT_MS = 15_000;
 const SCROLL_TO_BOTTOM_PX = 20_000;
 
-/** Tela principal ("/"): cabeçalho, contadores, filtros, cards de leads e rodapé. */
+/** Tela principal ("/"): cabeçalho, contadores, filtros e cards de leads. */
 export class HomePage {
 	readonly alert: AlertDialog;
 	readonly versionNotice: VersionNotice;
@@ -44,7 +44,7 @@ export class HomePage {
 	readonly donateButton: Locator;
 	readonly accessLogButton: Locator;
 	readonly themeToggle: Locator;
-	readonly darkThemeIcon: Locator;
+	readonly darkThemeActive: Locator;
 	readonly saleCelebration: Locator;
 
 	constructor(readonly page: Page) {
@@ -65,12 +65,12 @@ export class HomePage {
 		this.bugReport = new BugReportModal(page);
 		this.donate = new DonateModal(page);
 
-		this.searchInput = page.getByPlaceholder('Buscar');
+		this.searchInput = page.getByPlaceholder('Buscar por nome ou telefone');
 		this.reportBugButton = page.getByRole('button', { name: 'Reportar bug' });
 		this.donateButton = page.getByRole('button', { name: 'Doar' });
-		this.accessLogButton = page.getByRole('button', { name: 'LOG', exact: true });
-		this.themeToggle = page.locator('header button').filter({ has: page.locator('.fa-moon') });
-		this.darkThemeIcon = this.themeToggle.locator('.far.fa-moon');
+		this.accessLogButton = page.getByRole('button', { name: 'Log', exact: true });
+		this.themeToggle = page.getByRole('button', { name: 'Tema escuro' });
+		this.darkThemeActive = page.locator('header button[aria-label="Tema escuro"][aria-pressed="true"]');
 		this.saleCelebration = page.locator('ng-lottie.center-center');
 	}
 
@@ -128,7 +128,7 @@ export class HomePage {
 	}
 
 	async openProfileMenu(): Promise<ContextMenu> {
-		await this.page.locator('.profile img').click();
+		await this.page.getByRole('button', { name: 'Minha conta' }).click();
 		return this.profileMenu;
 	}
 

@@ -19,7 +19,7 @@ test.describe('Busca', () => {
 		await expect(home.searchResults.total).toHaveText('1');
 		const result = home.searchResults.result(customer.name);
 		await expect(result.activity).toHaveText('ATIVO');
-		await expect(result.phones).toHaveText([`+${BRAZIL.code}${displayBrazilianMobile(phone.number)}`]);
+		await expect(result.phones).toHaveText([`+${BRAZIL.code} ${displayBrazilianMobile(phone.number)}`]);
 		await expect(result.status).toHaveText(`Status: ${STATUS_DESCRIPTION.a}`);
 		await expect(result.createdAt).toHaveText(`Criado em: ${todayInFullFormat()}`);
 	});

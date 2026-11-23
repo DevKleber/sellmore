@@ -1,216 +1,88 @@
-<div class="row">
-	<div class="center-center flexAll pad30">
-		<div class="panel-heading">
-			<h1 class="panel-title">
-				Access log
-			</h1>
-			<div class="refresh" (click)="getLogs()" style="position: absolute; right: 15px; top: 15px;">
-				<button class="btn-primary">Atualizar lista</button>
+<div class="ws-app">
+	<header class="ws-topbar">
+		<a class="ws-brand log-home" [routerLink]="['/']" title="Voltar para a tela principal">
+			<img class="ws-brand__logo" src="/assets/img/system/wiseller.png" alt="" />
+			<span class="ws-brand__name">Wiseller</span>
+		</a>
+	</header>
+
+	<main class="ws-page">
+		<div class="ws-pagehead">
+			<h1 class="ws-title log-title">Access log</h1>
+			<div class="ws-pagehead__actions">
+				<button type="button" class="ws-btn ws-btn--primary" (click)="getLogs()">
+					<app-icon name="restore" [size]="18"></app-icon>
+					Atualizar lista
+				</button>
 			</div>
 		</div>
 
-		<div class="row">
-			<div class="left card-light">
-				<div class="logs ">
-					<table class="table table-bordered">
-						<perfect-scrollbar>
-							<div class="logsHight">
-								<thead>
-									<tr>
-										<th>Data</th>
-										<th>User</th>
-										<th width="100">Display</th>
-										<th>OS</th>
-										<th>Device</th>
-										<th>Browser</th>
-										<th>Language</th>
-										<th>IP</th>
-										<!-- <th>User Agent</th> -->
-									</tr>
-								</thead>
-								<tbody>
-									<tr *ngFor="let log of logs">
-										<td>{{log?.created_at | date: 'dd/MM/yyyy HH:mm:ss'}}</td>
-										<td>{{log?.nome}}</td>
-										<td>{{log?.display_resolution}}</td>
-										<td>{{log?.os}}</td>
-										<td>{{log?.device}}</td>
-										<td>{{log?.browser}}</td>
-										<td>{{log?.language}}</td>
-										<td>{{log?.ip}}</td>
-										<!-- <td>{{log?.user_agent}}</td> -->
-									</tr>
-								</tbody>
-							</div>
-						</perfect-scrollbar>
+		<div class="log-layout">
+			<section class="ws-card log-access">
+				<div class="log-scroll log-scroll--access" tabindex="0" role="region" aria-label="Acessos">
+					<table class="log-table">
+						<thead>
+							<tr>
+								<th scope="col">Data</th>
+								<th scope="col">User</th>
+								<th scope="col">Display</th>
+								<th scope="col">OS</th>
+								<th scope="col">Device</th>
+								<th scope="col">Browser</th>
+								<th scope="col">Language</th>
+								<th scope="col">IP</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngFor="let log of logs">
+								<td class="log-table__nowrap">{{ log?.created_at | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+								<td>{{ log?.nome }}</td>
+								<td class="log-table__nowrap">{{ log?.display_resolution }}</td>
+								<td>{{ log?.os }}</td>
+								<td>{{ log?.device }}</td>
+								<td>{{ log?.browser }}</td>
+								<td>{{ log?.language }}</td>
+								<td class="log-table__nowrap">{{ log?.ip }}</td>
+							</tr>
+						</tbody>
 					</table>
 				</div>
+			</section>
+
+			<div class="log-reports">
+				<ng-container *ngTemplateOutlet="report; context: { title: 'Acessos do dia', rows: logDay, column: 'Nome', field: 'nome' }"></ng-container>
+				<ng-container *ngTemplateOutlet="report; context: { title: 'Clientes por usuário', rows: totalCustomerActive, column: 'User', field: 'nome', showTotal: true }"></ng-container>
+				<ng-container *ngTemplateOutlet="report; context: { title: 'Vendas por usuário', rows: totalCustomerSeller, column: 'User', field: 'nome', showTotal: true }"></ng-container>
+				<ng-container *ngTemplateOutlet="report; context: { title: 'Acessos por usuário', rows: totalAccessByUser, column: 'User', field: 'nome', showTotal: true }"></ng-container>
+				<ng-container *ngTemplateOutlet="report; context: { title: 'Resolução', rows: totalDisplay, column: 'Resolução', field: 'display_resolution', showTotal: true }"></ng-container>
+				<ng-container *ngTemplateOutlet="report; context: { title: 'Navegador', rows: totalBrowser, column: 'Browser', field: 'browser', showTotal: true }"></ng-container>
+				<ng-container *ngTemplateOutlet="report; context: { title: 'Dispositivo', rows: totalDevice, column: 'Device', field: 'device', showTotal: true }"></ng-container>
+				<ng-container *ngTemplateOutlet="report; context: { title: 'Idioma', rows: totalLanguage, column: 'Language', field: 'language', showTotal: true }"></ng-container>
 			</div>
-			<div class="right ">
-
-
-				<div class="cardRight card-light">
-					<h2>Acessos do dia {{logDay.length}}</h2>
-					<perfect-scrollbar>
-						<table class="table">
-							<thead>
-								<tr>
-									<th>Nome</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr *ngFor="let item of logDay">
-									<td>{{item?.nome}}</td>
-								</tr>
-							</tbody>
-						</table>
-					</perfect-scrollbar>
-				</div>
-
-				<div class="cardRight card-light">
-					<h2>Clientes por usuário {{totalCustomerActive.length}}</h2>
-					<perfect-scrollbar>
-						<table class="table">
-							<thead>
-								<tr>
-									<th>User</th>
-									<th>Quantidade</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr *ngFor="let item of totalCustomerActive">
-									<td>{{item?.nome}}</td>
-									<td>{{item?.total}}</td>
-								</tr>
-							</tbody>
-						</table>
-					</perfect-scrollbar>
-				</div>
-
-				<div class="cardRight card-light">
-					<h2>Vendas por usuário {{totalCustomerSeller.length}}</h2>
-						<perfect-scrollbar>
-						<table class="table table-bordered">
-							<thead>
-								<tr>
-									<th>User</th>
-									<th>Quantidade</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr *ngFor="let item of totalCustomerSeller">
-									<td>{{item?.nome}}</td>
-									<td>{{item?.total}}</td>
-
-								</tr>
-							</tbody>
-						</table>
-					</perfect-scrollbar>
-				</div>
-				<div class="cardRight card-light">
-					<h2>Acessos por usuário {{totalAccessByUser.length}}</h2>
-						<perfect-scrollbar>
-						<table class="table table-bordered">
-							<thead>
-								<tr>
-									<th>User</th>
-									<th>Quantidade</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr *ngFor="let item of totalAccessByUser">
-									<td>{{item?.nome}}</td>
-									<td>{{item?.total}}</td>
-
-								</tr>
-							</tbody>
-						</table>
-					</perfect-scrollbar>
-				</div>
-				<div class="cardRight card-light">
-					<h2>Resolução {{totalDisplay.length}}</h2>
-						<perfect-scrollbar>
-						<table class="table table-bordered">
-							<thead>
-								<tr>
-									<th>Resolução</th>
-									<th>Quantidade</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr *ngFor="let item of totalDisplay">
-									<td>{{item?.display_resolution}}</td>
-									<td>{{item?.total}}</td>
-
-								</tr>
-							</tbody>
-						</table>
-					</perfect-scrollbar>
-				</div>
-				<div class="cardRight card-light">
-					<h2>Navegador {{totalBrowser.length}}</h2>
-						<perfect-scrollbar>
-						<table class="table table-bordered">
-							<thead>
-								<tr>
-									<th>Browser</th>
-									<th>Quantidade</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr *ngFor="let item of totalBrowser">
-									<td>{{item?.browser}}</td>
-									<td>{{item?.total}}</td>
-
-								</tr>
-							</tbody>
-						</table>
-					</perfect-scrollbar>
-				</div>
-				<div class="cardRight card-light">
-					<h2>Dispositivo {{totalDevice.length}}</h2>
-						<perfect-scrollbar>
-						<table class="table table-bordered">
-							<thead>
-								<tr>
-									<th>Device</th>
-									<th>Quantidade</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr *ngFor="let item of totalDevice">
-									<td>{{item?.device}}</td>
-									<td>{{item?.total}}</td>
-
-								</tr>
-							</tbody>
-						</table>
-					</perfect-scrollbar>
-				</div>
-				<div class="cardRight card-light">
-					<h2>Idioma {{totalLanguage.length}}</h2>
-						<perfect-scrollbar>
-						<table class="table table-bordered">
-							<thead>
-								<tr>
-									<th>Language</th>
-									<th>Quantidade</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr *ngFor="let item of totalLanguage">
-									<td>{{item?.language}}</td>
-									<td>{{item?.total}}</td>
-
-								</tr>
-							</tbody>
-						</table>
-					</perfect-scrollbar>
-				</div>
-			</div>
-
 		</div>
-	</div>
-
-
+	</main>
 </div>
+
+<ng-template #report let-title="title" let-rows="rows" let-column="column" let-field="field" let-showTotal="showTotal">
+	<section class="ws-card log-report">
+		<h2 class="log-report__title">
+			{{ title }} <span class="log-report__count" *ngIf="rows">{{ rows.length }}</span>
+		</h2>
+		<div class="log-scroll">
+			<table class="log-table">
+				<thead>
+					<tr>
+						<th scope="col">{{ column }}</th>
+						<th scope="col" class="log-table__number" *ngIf="showTotal">Quantidade</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let item of rows">
+						<td>{{ item?.[field] }}</td>
+						<td class="log-table__number" *ngIf="showTotal">{{ item?.total }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</section>
+</ng-template>

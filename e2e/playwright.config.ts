@@ -15,6 +15,10 @@ const EXPECT_TIMEOUT_MS = 10_000;
 const ACTION_TIMEOUT_MS = 15_000;
 const NAVIGATION_TIMEOUT_MS = 60_000;
 
+/** Os testes desta pasta rodam em janela estreita; os demais, em desktop. */
+const MOBILE_TESTS = '**/celular/**/*.spec.ts';
+const MOBILE_VIEWPORT = { width: 390, height: 844 };
+
 export default defineConfig({
 	testDir: './tests',
 	testMatch: '**/*.spec.ts',
@@ -38,7 +42,13 @@ export default defineConfig({
 	projects: [
 		{
 			name: 'chromium',
+			testIgnore: MOBILE_TESTS,
 			use: { ...devices['Desktop Chrome'], ...BROWSER_CONTEXT_OPTIONS },
+		},
+		{
+			name: 'celular',
+			testMatch: MOBILE_TESTS,
+			use: { ...devices['Desktop Chrome'], ...BROWSER_CONTEXT_OPTIONS, viewport: MOBILE_VIEWPORT, hasTouch: true },
 		},
 	],
 });

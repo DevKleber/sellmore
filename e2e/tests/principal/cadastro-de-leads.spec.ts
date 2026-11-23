@@ -21,14 +21,14 @@ test.describe('Cadastro de leads', () => {
 		await home.openNewLeadForm();
 
 		await home.leadForm.fill({ name, observation: 'Conheci na feira', phones: [{ number, whatsapp: true }] });
-		await expect(home.leadForm.phones).toHaveText([`+${BRAZIL.code}${displayBrazilianMobile(number)}`]);
+		await expect(home.leadForm.phones).toHaveText([`+${BRAZIL.code} ${displayBrazilianMobile(number)}`]);
 		await home.leadForm.save();
 
 		await home.alert.acknowledge('Salvo com sucesso!');
 		await expect(home.leadForm.nameInput).toHaveValue('');
 		await expect(home.leadForm.phones).toHaveCount(0);
 		await home.leadForm.close();
-		await expect(home.leadCard(name).phones).toHaveText([`+${BRAZIL.code}${displayBrazilianMobile(number)}`]);
+		await expect(home.leadCard(name).phones).toHaveText([`+${BRAZIL.code} ${displayBrazilianMobile(number)}`]);
 	});
 
 	test('cadastra um lead com telefones de países diferentes', async ({ home }) => {
@@ -51,8 +51,8 @@ test.describe('Cadastro de leads', () => {
 
 		const phones = home.leadCard(name).phones;
 		await expect(phones).toHaveCount(2);
-		await expect(phones.nth(0)).toContainText(`+${BRAZIL.code}${displayBrazilianMobile(brazilianNumber)}`);
-		await expect(phones.nth(1)).toContainText(`+${PORTUGAL.code}${displayPortugueseMobile(portugueseNumber)}`);
+		await expect(phones.nth(0)).toContainText(`+${BRAZIL.code} ${displayBrazilianMobile(brazilianNumber)}`);
+		await expect(phones.nth(1)).toContainText(`+${PORTUGAL.code} ${displayPortugueseMobile(portugueseNumber)}`);
 	});
 
 	test('remove um telefone do formulário antes de salvar', async ({ home }) => {
@@ -64,12 +64,12 @@ test.describe('Cadastro de leads', () => {
 		await home.leadForm.fill({ name, phones: [{ number: kept, whatsapp: true }, { number: removed, whatsapp: false }] });
 
 		await home.leadForm.removePhone(displayBrazilianMobile(removed));
-		await expect(home.leadForm.phones).toHaveText([`+${BRAZIL.code}${displayBrazilianMobile(kept)}`]);
+		await expect(home.leadForm.phones).toHaveText([`+${BRAZIL.code} ${displayBrazilianMobile(kept)}`]);
 		await home.leadForm.save();
 		await home.alert.acknowledge('Salvo com sucesso!');
 		await home.leadForm.close();
 
-		await expect(home.leadCard(name).phones).toHaveText([`+${BRAZIL.code}${displayBrazilianMobile(kept)}`]);
+		await expect(home.leadCard(name).phones).toHaveText([`+${BRAZIL.code} ${displayBrazilianMobile(kept)}`]);
 	});
 
 	test('salvar o telefone sem número não adiciona telefone ao formulário', async ({ home }) => {
@@ -94,7 +94,7 @@ test.describe('Cadastro de leads', () => {
 		await home.alert.acknowledge('Salvo com sucesso!');
 		await home.leadForm.close();
 
-		await expect(home.leadCard(name).finishedIcon(CustomerStatus.Comprou)).toBeVisible();
+		await expect(home.leadCard(name).statusTag(CustomerStatus.Comprou)).toBeVisible();
 		await home.search(name);
 		await expect(home.searchResults.result(name).status).toHaveText(`Status: ${STATUS_DESCRIPTION.c}`);
 	});

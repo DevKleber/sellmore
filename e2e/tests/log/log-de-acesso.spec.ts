@@ -75,4 +75,14 @@ test.describe('Log de acesso', () => {
 		await expect(accessLogPage.accessRows.first()).toContainText('Segunda Consulta');
 		expect(accessLog.receivedBodies).toHaveLength(2);
 	});
+
+	test('a marca "Wiseller" no topo volta para a tela principal', async ({ accessLogPage, page }) => {
+		await mockApi(page, '/api/access_log', () => fakeAccessLog('Vendedor Fictício'));
+		await accessLogPage.goto();
+		await expect(accessLogPage.accessRows).toHaveCount(1);
+
+		await accessLogPage.homeLink.click();
+
+		await expect(page).toHaveURL('/');
+	});
 });

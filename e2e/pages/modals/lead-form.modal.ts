@@ -76,7 +76,7 @@ export class LeadFormModal extends BootstrapModal {
 	}
 
 	async removePhone(displayedNumber: string): Promise<void> {
-		await this.phones.filter({ hasText: displayedNumber }).locator('.phone-remove i').click();
+		await this.phones.filter({ hasText: displayedNumber }).locator('.phone-remove button').click();
 	}
 
 	async save(): Promise<void> {

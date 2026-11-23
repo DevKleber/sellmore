@@ -1,52 +1,37 @@
 import { Injectable } from '@angular/core';
 
+const STORAGE_KEY = 'darkmodeWiseller';
+const THEME_ATTRIBUTE = 'data-theme';
+const DARK = 'dark';
+const LIGHT = 'light';
+
+/**
+ * Tema claro ou escuro. As cores de cada tema estao em assets/css/colors.css,
+ * selecionadas pelo atributo data-theme da pagina.
+ */
 @Injectable({
 	providedIn: 'root',
 })
 export class ThemeService {
-	title = 'selelmore';
-	theme: string = 'theme-whbl';
 	darkmode: boolean = false;
-	pathcss: string = '../assets/css/dark.css';
 
-	setDarkMode() {
-		let darkmode = this.themeActive();
-		let setDark = darkmode ? false : true;
-		localStorage.setItem(
-			'darkmodeWiseller',
-			JSON.parse(setDark.toString())
-		);
+	setDarkMode(): boolean {
+		const dark = !this.themeActive();
+		localStorage.setItem(STORAGE_KEY, String(dark));
 		this.setTheme();
-		return setDark;
-	}
-	themeActive() {
-		return localStorage.getItem('darkmodeWiseller') == 'true'
-			? true
-			: false;
+
+		return dark;
 	}
 
-	setTheme() {
+	themeActive(): boolean {
+		return localStorage.getItem(STORAGE_KEY) === 'true';
+	}
+
+	setTheme(): void {
 		this.darkmode = this.themeActive();
-		// console.log(this.darkmode);
-		this.loadCSS();
-	}
-	loadCSS() {
-		// Get HTML head element
-		if (this.darkmode) {
-			var head = document.getElementsByTagName('HEAD')[0];
-
-			// Create new link Element
-			var link = document.createElement('link');
-			// set the attributes for link element
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.id = 'iddarkmode';
-			link.href = this.pathcss;
-			// Append link element to HTML head
-			head.appendChild(link);
-		} else {
-			var sheet = document.getElementById('iddarkmode');
-			if (sheet) sheet?.parentNode?.removeChild(sheet);
-		}
+		document.documentElement.setAttribute(
+			THEME_ATTRIBUTE,
+			this.darkmode ? DARK : LIGHT
+		);
 	}
 }
