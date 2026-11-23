@@ -1,8 +1,11 @@
-name: Deploy
+name: Deploy da plataforma
 
 on:
   push:
     branches: [master, main]
+    paths-ignore:
+      - 'site/**'
+      - '.github/workflows/deploy-site.yml'
   workflow_dispatch:
 
 permissions:
@@ -16,9 +19,9 @@ env:
   NODE_VERSION: 16
   BUILD_DIR: dist/wiseller
   DEPLOY_HOST: wiseller.com.br
-  # A chave de deploy so enxerga a pasta do site no servidor; "." e a raiz dela.
-  DEPLOY_PATH: .
-  SITE_URL: https://wiseller.com.br
+  # A chave de deploy so envia arquivos; o destino "app/" e a pasta de app.wiseller.com.br no servidor.
+  DEPLOY_PATH: app/
+  SITE_URL: https://app.wiseller.com.br
   # Rota interna do Angular: so responde 200 se o .htaccess do servidor continuar la (F5 na pagina).
   ROTA_INTERNA: /login
   HOST_KEY: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKhOUkK8Ib4xHzEsaqZU3Mas8+uKe4hsRYFKlybXjgld
@@ -66,7 +69,7 @@ jobs:
             -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes" \
             "$BUILD_DIR/" "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH"
 
-      - name: Conferir site no ar
+      - name: Conferir plataforma no ar
         run: |
           curl --fail --silent --show-error --output /dev/null "$SITE_URL/"
           curl --fail --silent --show-error --output /dev/null "$SITE_URL$ROTA_INTERNA"
