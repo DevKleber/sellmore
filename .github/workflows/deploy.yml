@@ -1,0 +1,72 @@
+name: Deploy
+
+on:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-producao
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: 16
+  BUILD_DIR: dist/wiseller
+  DEPLOY_HOST: wiseller.com.br
+  # A chave de deploy so enxerga a pasta do site no servidor; "." e a raiz dela.
+  DEPLOY_PATH: .
+  SITE_URL: https://wiseller.com.br
+  # Rota interna do Angular: so responde 200 se o .htaccess do servidor continuar la (F5 na pagina).
+  ROTA_INTERNA: /login
+  HOST_KEY: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKhOUkK8Ib4xHzEsaqZU3Mas8+uKe4hsRYFKlybXjgld
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Build de producao
+        run: npx ng build --configuration production
+
+      - name: Conferir build
+        run: test -s "$BUILD_DIR/index.html"
+
+      - name: Configurar SSH
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          echo "$DEPLOY_HOST $HOST_KEY" > ~/.ssh/known_hosts
+
+      # Arquivos que existem so no servidor ficam fora do envio e da limpeza:
+      # tudo que comeca com ponto (.htaccess, .well-known) e a pagina de manutencao.
+      - name: Enviar para o servidor
+        env:
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        run: |
+          rsync --recursive --links --times --compress --delete \
+            --exclude='/.*' \
+            --exclude='/indexManutencao.html' \
+            -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes" \
+            "$BUILD_DIR/" "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH"
+
+      - name: Conferir site no ar
+        run: |
+          curl --fail --silent --show-error --output /dev/null "$SITE_URL/"
+          curl --fail --silent --show-error --output /dev/null "$SITE_URL$ROTA_INTERNA"
