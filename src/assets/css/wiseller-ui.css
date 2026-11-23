@@ -1,0 +1,1118 @@
+/*
+ * Componentes visuais do Wiseller (prefixo ws-), usados pelas telas redesenhadas.
+ * As cores e medidas vem de colors.css.
+ */
+
+/* ---------- Utilitarios ---------- */
+
+/* Rotulo acessivel: lido pelo leitor de tela, invisivel na pagina. */
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* ---------- Estrutura da pagina ---------- */
+
+.ws-app {
+	min-height: 100vh;
+	background: var(--bg);
+	color: var(--ink);
+}
+
+.ws-page {
+	max-width: var(--page-max-width);
+	margin: 0 auto;
+	padding: 32px 32px 96px;
+}
+
+.ws-topbar {
+	position: sticky;
+	top: 0;
+	z-index: 20;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 14px 32px;
+	background: var(--surface);
+	border-bottom: 1px solid var(--border);
+}
+
+.ws-brand {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex: none;
+	color: var(--ink);
+}
+
+a.ws-brand,
+a.ws-brand:hover,
+a.ws-brand:focus {
+	color: var(--ink);
+	text-decoration: none;
+}
+
+.ws-brand__mark {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border-radius: var(--radius-control);
+	background: var(--primary);
+	color: var(--primary-ink);
+}
+
+.ws-brand__logo {
+	width: 44px;
+	height: 44px;
+	flex: none;
+}
+
+.ws-brand__name {
+	font-family: var(--font-display);
+	font-size: 20px;
+	font-weight: 800;
+	letter-spacing: -0.02em;
+}
+
+.ws-topbar__search {
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	min-width: 0;
+}
+
+.ws-topbar__actions {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex: none;
+}
+
+.ws-search {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	max-width: 520px;
+	height: var(--control-height);
+	padding: 0 14px;
+	background: var(--surface2);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-control);
+	color: var(--muted);
+}
+
+/* O contorno de foco fica na caixa inteira, como no modelo, e nao so no texto. */
+.ws-search:focus-within {
+	border-color: var(--primary);
+	outline: 2px solid var(--focus);
+	outline-offset: 2px;
+}
+
+.ws-search input {
+	flex: 1;
+	align-self: stretch;
+	min-width: 0;
+	margin: 0;
+	padding: 0 !important;
+	border: none !important;
+	background: transparent !important;
+}
+
+.ws-search input:focus-visible {
+	outline: none;
+}
+
+.ws-search-toggle {
+	color: var(--ink);
+}
+
+.ws-search-toggle[aria-expanded='true'] {
+	background: var(--surface2);
+}
+
+.ws-profile {
+	margin-left: 4px;
+	background: var(--surface2);
+	color: var(--muted);
+}
+
+/* ---------- Botoes ---------- */
+
+.ws-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	flex: none;
+	min-height: var(--control-height);
+	margin: 0;
+	padding: 0 16px;
+	border: 1px solid var(--border);
+	border-radius: var(--radius-control);
+	background: var(--surface);
+	color: var(--ink);
+	font-size: 14px;
+	font-weight: 500;
+	white-space: nowrap;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.ws-btn:hover {
+	background: var(--surface2);
+	color: var(--ink);
+	text-decoration: none;
+}
+
+.ws-btn--primary {
+	padding: 0 18px;
+	border-color: var(--primary);
+	background: var(--primary);
+	color: var(--primary-ink);
+	font-weight: 600;
+}
+
+.ws-btn--primary:hover {
+	border-color: var(--primary-hover);
+	background: var(--primary-hover);
+	color: var(--primary-ink);
+}
+
+.ws-btn--soft {
+	border-color: transparent;
+	background: var(--primary-soft);
+	color: var(--primary-text);
+	font-weight: 600;
+}
+
+.ws-btn--soft:hover {
+	background: var(--primary-soft);
+	color: var(--primary-text);
+	border-color: var(--primary);
+}
+
+.ws-btn--quiet {
+	border-color: transparent;
+	background: transparent;
+	color: var(--muted);
+}
+
+.ws-btn--quiet:hover {
+	background: var(--surface2);
+	color: var(--ink);
+}
+
+.ws-btn--icon {
+	width: var(--control-height);
+	padding: 0;
+}
+
+.ws-btn--round {
+	border-radius: var(--radius-pill);
+}
+
+.ws-btn--block {
+	display: flex;
+	width: 100%;
+}
+
+.ws-btn--link,
+.ws-btn--link:hover {
+	color: var(--primary-text);
+	font-weight: 600;
+}
+
+.ws-btn:disabled,
+.ws-btn:disabled:hover {
+	border-color: var(--border);
+	background: var(--surface2);
+	color: var(--muted);
+	cursor: not-allowed;
+}
+
+/* ---------- Cabecalho da pagina ---------- */
+
+.ws-pagehead {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+.ws-title {
+	margin: 0;
+	font-size: 32px;
+	font-weight: 800;
+	letter-spacing: -0.03em;
+	line-height: 1.15;
+}
+
+.ws-subtitle {
+	margin: 4px 0 0;
+	font-size: 15px;
+	color: var(--muted);
+}
+
+.ws-pagehead__actions {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+/* ---------- Contadores ---------- */
+
+.ws-stats {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 16px;
+	margin-top: 24px;
+}
+
+.ws-stat {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 16px 20px;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-panel);
+	box-shadow: var(--shadow);
+}
+
+.ws-stat__text {
+	margin: 0;
+}
+
+.ws-stat__icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	border-radius: var(--radius-control);
+	flex: none;
+}
+
+.ws-stat__icon--comprou {
+	background: var(--comprou-bg);
+	color: var(--comprou-fg);
+}
+
+.ws-stat__icon--ligar {
+	background: var(--ligar-bg);
+	color: var(--ligar-fg);
+}
+
+.ws-stat__icon--cartao {
+	background: var(--cartao-bg);
+	color: var(--cartao-fg);
+}
+
+.ws-stat__number {
+	display: block;
+	font-family: var(--font-display);
+	font-size: 28px;
+	font-weight: 700;
+	line-height: 1.1;
+}
+
+.ws-stat__label {
+	font-size: 13px;
+	color: var(--muted);
+}
+
+/* ---------- Filtros ---------- */
+
+.ws-toolbar {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-top: 24px;
+}
+
+.ws-pills {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex: 1;
+	min-width: 0;
+	flex-wrap: wrap;
+}
+
+.ws-pill {
+	flex: none;
+	min-height: 40px;
+	margin: 0;
+	padding: 0 16px;
+	border: 1px solid var(--border);
+	border-radius: var(--radius-pill);
+	background: var(--surface);
+	color: var(--ink);
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.ws-pill:hover {
+	background: var(--surface2);
+	color: var(--ink);
+}
+
+.ws-pill[aria-pressed='true'],
+.ws-pill[aria-pressed='true']:hover {
+	border-color: var(--primary);
+	background: var(--primary);
+	color: var(--primary-ink);
+}
+
+/* ---------- Etiquetas de status ---------- */
+
+.ws-tag {
+	display: inline-flex;
+	align-items: center;
+	height: 24px;
+	padding: 0 10px;
+	border-radius: var(--radius-pill);
+	font-size: 12px;
+	font-weight: 600;
+	white-space: nowrap;
+	background: var(--aberto-bg);
+	color: var(--aberto-fg);
+}
+
+.ws-tag--ld {
+	background: var(--ligar-bg);
+	color: var(--ligar-fg);
+}
+
+.ws-tag--pc {
+	background: var(--cartao-bg);
+	color: var(--cartao-fg);
+}
+
+.ws-tag--n {
+	background: var(--sem-bg);
+	color: var(--sem-fg);
+}
+
+.ws-tag--c {
+	background: var(--comprou-bg);
+	color: var(--comprou-fg);
+}
+
+.ws-tag--inativo {
+	background: var(--surface2);
+	color: var(--muted);
+	border: 1px solid var(--border);
+}
+
+/* ---------- Avatar ---------- */
+
+.ws-avatar {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	border-radius: var(--radius-pill);
+	background: var(--primary-soft);
+	color: var(--primary-text);
+	font-size: 15px;
+	font-weight: 700;
+	flex: none;
+	text-transform: uppercase;
+}
+
+/* ---------- Grade e card do lead ---------- */
+
+/* Linhas de mesma altura: todos os cards ficam iguais, mesmo em linhas diferentes da grade. */
+.ws-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr));
+	grid-auto-rows: 1fr;
+	gap: 20px;
+	margin-top: 24px;
+}
+
+.ws-card {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 16px;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-card);
+	box-shadow: var(--shadow);
+	min-width: 0;
+	height: 100%;
+	/* Todos os cards tem a mesma altura: a lista de referidos ocupa sempre este espaco. */
+	--refs-height: 344px;
+	--refs-empty-height: 88px;
+	--card-control: 40px;
+}
+
+.ws-card__head {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-right: -4px;
+}
+
+.ws-card__head > .ws-btn--icon {
+	width: var(--card-control);
+	min-height: var(--card-control);
+	border-radius: var(--radius-small);
+}
+
+.ws-card__who {
+	flex: 1;
+	min-width: 0;
+}
+
+.ws-card__name {
+	font-family: var(--font-display);
+	font-size: 17px;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	line-height: 1.25;
+	overflow-wrap: anywhere;
+}
+
+.ws-phones {
+	display: flex;
+	flex-wrap: wrap;
+	column-gap: 6px;
+	font-size: 12px;
+	line-height: 1.5;
+	font-variant-numeric: tabular-nums;
+	color: var(--muted);
+}
+
+.ws-phone {
+	white-space: nowrap;
+}
+
+.ws-phone:not(:last-child)::after {
+	content: ' ·';
+}
+
+.ws-card__meta {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+}
+
+.ws-card__count {
+	font-size: 13px;
+	color: var(--muted);
+}
+
+.ws-statusbar {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 6px;
+	margin-bottom: 2px;
+}
+
+.ws-statusbtn {
+	min-height: var(--card-control, var(--control-height));
+	margin: 0;
+	padding: 0;
+	border: 1px solid var(--border);
+	border-radius: var(--radius-small);
+	background: transparent;
+	color: var(--muted);
+}
+
+.ws-statusbtn:hover {
+	background: var(--surface2);
+	color: var(--ink);
+}
+
+/* Desabilitado: sem borda e com fundo, mas o icone mantem o contraste da cor --muted. */
+.ws-statusbtn:disabled,
+.ws-statusbtn:disabled:hover {
+	border-color: transparent;
+	background: var(--surface2);
+	color: var(--muted);
+	cursor: not-allowed;
+}
+
+.ws-statusbtn--ld[aria-pressed='true'],
+.ws-statusbtn--ld[aria-pressed='true']:hover {
+	background: var(--ligar-bg);
+	border-color: var(--ligar-fg);
+	color: var(--ligar-fg);
+}
+
+.ws-statusbtn--pc[aria-pressed='true'],
+.ws-statusbtn--pc[aria-pressed='true']:hover {
+	background: var(--cartao-bg);
+	border-color: var(--cartao-fg);
+	color: var(--cartao-fg);
+}
+
+.ws-statusbtn--n[aria-pressed='true'],
+.ws-statusbtn--n[aria-pressed='true']:hover {
+	background: var(--sem-bg);
+	border-color: var(--sem-fg);
+	color: var(--sem-fg);
+}
+
+.ws-statusbtn--c[aria-pressed='true'],
+.ws-statusbtn--c[aria-pressed='true']:hover {
+	background: var(--comprou-bg);
+	border-color: var(--comprou-fg);
+	color: var(--comprou-fg);
+}
+
+/* ---------- Referidos ---------- */
+
+/* A lista rola dentro do card; a barra so aparece ao passar o mouse (perfect-scrollbar). */
+.ws-refs-scroll {
+	height: var(--refs-height);
+	margin: 0 -4px;
+}
+
+.ws-refs {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.ws-ref {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 6px 8px 14px;
+	background: var(--surface2);
+	border-radius: var(--radius-row);
+}
+
+.ws-ref > .ws-btn--quiet {
+	width: 36px;
+	border-radius: var(--radius-small);
+}
+
+.ws-ref__who {
+	flex: 1;
+	min-width: 0;
+	cursor: pointer;
+}
+
+.ws-ref__name {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	flex-wrap: wrap;
+	font-size: 14px;
+	font-weight: 600;
+	overflow-wrap: anywhere;
+}
+
+.ws-ref__star {
+	color: var(--cartao-fg);
+}
+
+.ws-ref__details {
+	display: flex;
+	flex-wrap: wrap;
+	column-gap: 6px;
+	font-size: 12px;
+	line-height: 1.5;
+	font-variant-numeric: tabular-nums;
+	color: var(--muted);
+}
+
+.ws-ref__details .ws-phone::after {
+	content: ' ·';
+}
+
+.ws-empty {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: var(--refs-empty-height);
+	padding: 16px;
+	border: 1px dashed var(--border);
+	border-radius: var(--radius-control);
+	font-size: 13px;
+	color: var(--muted);
+	text-align: center;
+	flex: none;
+	margin-inline: -4px;
+	margin-bottom: calc(var(--refs-height) - var(--refs-empty-height));
+}
+
+/* Sobra de altura do card (nome em duas linhas no vizinho) fica acima do botao, que fica sempre no pe. */
+.ws-card .actionButton {
+	margin-top: auto;
+}
+
+.ws-skeleton {
+	min-height: 260px;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-card);
+}
+
+/* ---------- Resultado da busca ---------- */
+
+.ws-results {
+	margin-top: 24px;
+}
+
+.ws-results__summary {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 15px;
+	color: var(--muted);
+}
+
+.ws-results__total {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 28px;
+	height: 24px;
+	padding: 0 8px;
+	border-radius: var(--radius-pill);
+	background: var(--primary-soft);
+	color: var(--primary-text);
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.ws-results__none {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+	padding: 32px 16px;
+	text-align: center;
+}
+
+.ws-result__facts {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	font-size: 13px;
+	color: var(--muted);
+}
+
+.ws-result__facts strong {
+	font-weight: 600;
+	color: var(--ink);
+}
+
+/* ---------- Celular ---------- */
+
+.ws-only-mobile {
+	display: none !important;
+}
+
+@media (max-width: 760px) {
+	.ws-only-mobile {
+		display: inline-flex !important;
+	}
+
+	.ws-only-desktop {
+		display: none !important;
+	}
+
+	.ws-topbar {
+		gap: 8px;
+		padding: 12px 16px;
+		flex-wrap: wrap;
+	}
+
+	.ws-brand {
+		flex: 1;
+	}
+
+	.ws-brand__mark,
+	.ws-brand__logo {
+		width: 36px;
+		height: 36px;
+	}
+
+	.ws-brand__name {
+		font-size: 18px;
+	}
+
+	.ws-topbar__search {
+		order: 3;
+		flex: 1 0 100%;
+	}
+
+	.ws-topbar__search.is-collapsed {
+		display: none;
+	}
+
+	.ws-search {
+		max-width: none;
+	}
+
+	.ws-page {
+		padding: 20px 16px 104px;
+	}
+
+	.ws-title {
+		font-size: 26px;
+	}
+
+	.ws-subtitle {
+		margin-top: 2px;
+		font-size: 14px;
+	}
+
+	.ws-stats {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 8px;
+		margin-top: 16px;
+	}
+
+	.ws-stat {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 8px;
+		padding: 12px;
+		border-radius: var(--radius-row);
+		box-shadow: none;
+	}
+
+	.ws-stat__icon {
+		width: 28px;
+		height: 28px;
+		border-radius: 8px;
+	}
+
+	.ws-stat__number {
+		font-size: 22px;
+	}
+
+	.ws-stat__label {
+		font-size: 12px;
+	}
+
+	.ws-toolbar {
+		margin-top: 16px;
+	}
+
+	/* A faixa rola ate a borda esquerda da tela e termina antes do botao de ordem; a folga mostra o foco. */
+	.ws-pills {
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		white-space: nowrap;
+		margin: -4px 0 -4px -16px;
+		padding: 4px 4px 4px 16px;
+		scrollbar-width: none;
+	}
+
+	.ws-pills::-webkit-scrollbar {
+		display: none;
+	}
+
+	.ws-pill {
+		min-height: var(--control-height);
+	}
+
+	.ws-card {
+		--card-control: var(--control-height);
+	}
+
+	.ws-ref {
+		gap: 4px;
+		padding: 6px 4px 6px 12px;
+	}
+
+	.ws-ref > .ws-btn--quiet {
+		width: var(--control-height);
+	}
+
+	.ws-ref__details {
+		font-variant-numeric: normal;
+	}
+
+	.ws-refs-scroll {
+		height: auto;
+		max-height: var(--refs-height);
+	}
+
+	.ws-empty {
+		margin-bottom: 0;
+	}
+
+	.ws-grid {
+		grid-template-columns: minmax(0, 1fr);
+		grid-auto-rows: auto;
+		gap: 12px;
+		margin-top: 16px;
+	}
+
+	.ws-results {
+		margin-top: 16px;
+	}
+
+	.ws-fab {
+		position: fixed;
+		right: 16px;
+		bottom: 20px;
+		z-index: 15;
+		min-height: 56px;
+		padding: 0 22px;
+		border-radius: var(--radius-pill);
+		font-size: 15px;
+		box-shadow: var(--shadow-fab);
+	}
+}
+
+/* ---------- Modais da tela principal ---------- */
+
+.modal-title p {
+	margin: 0;
+}
+
+.modal-title p,
+.modal-title .ws-modal-title {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.modal-body h2 {
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.modal-body h3 {
+	font-size: 16px;
+	font-weight: 700;
+}
+
+textarea.textarea {
+	display: block;
+	width: 100%;
+	resize: vertical;
+}
+
+/* Botao de fechar dos modais sem rodape: no celular o modal ocupa a tela e nao ha fundo para tocar. */
+.ws-modal-close {
+	position: absolute;
+	top: 12px;
+	right: 12px;
+	z-index: 1;
+}
+
+.ws-modal-close + .modal-header {
+	padding-right: 64px;
+}
+
+.ws-modal-close + .modal-body {
+	padding-top: 64px;
+}
+
+/* Lead e telefone */
+
+.ws-phone-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 4px;
+	border-radius: var(--radius-row);
+}
+
+.ws-phone-item .phone-icon {
+	color: var(--muted);
+}
+
+/* Ligacao */
+
+#modalCall .modal-title {
+	font-size: 20px;
+}
+
+#modalCall .modal-title > .row {
+	column-gap: 8px;
+	row-gap: 4px;
+	align-items: baseline;
+}
+
+#modalCall .modal-title .contacto-phone a {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-family: var(--font-text);
+	font-size: 15px;
+	font-weight: 600;
+	letter-spacing: 0;
+	color: var(--primary-text);
+}
+
+#modalCall .modal-title .contacto-phone .ws-icon {
+	align-self: center;
+}
+
+#modalCall .filterstatus {
+	margin-top: 4px;
+	font-family: var(--font-text);
+	font-size: 14px;
+	font-weight: 500;
+	letter-spacing: 0;
+	color: var(--muted);
+}
+
+.ws-call__actions {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 8px;
+	margin-top: 16px;
+}
+
+.ws-call__actions h4 {
+	margin: 4px 0 0;
+	font-family: var(--font-text);
+	font-size: 13px;
+	font-weight: 600;
+	letter-spacing: 0;
+	color: var(--muted);
+}
+
+.ws-call__statusbar {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.ws-call__statusbar .ws-statusbtn {
+	width: var(--control-height);
+}
+
+#modalCall .strategy {
+	padding: 16px;
+	background: var(--surface2);
+	border-radius: var(--radius-panel);
+	font-size: 15px;
+	line-height: 1.6;
+}
+
+#modalCall .strategy h1 {
+	margin-bottom: 8px;
+	font-size: 18px;
+}
+
+#modalCall .tree {
+	margin-top: 12px;
+}
+
+/* Doacao */
+
+#modalDonate .pix {
+	width: 160px;
+}
+
+#modalDonate .pix button {
+	margin-top: 8px;
+}
+
+.ws-donate__banks {
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+#modalDonate .ws-donate__banks .card {
+	flex: 1 1 160px;
+	max-width: 220px;
+	box-shadow: none;
+	text-align: center;
+}
+
+#modalDonate .ws-donate__banks h3 {
+	margin: 0 0 8px;
+}
+
+/* Bug */
+
+.ws-bug__link {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-weight: 500;
+}
+
+/* Importacao e agenda */
+
+#modalImportContact .card {
+	box-shadow: none;
+}
+
+.calendarNew {
+	margin-top: 24px;
+}
+
+#modalCalendar .card-light {
+	margin-top: 12px;
+	box-shadow: none;
+	background: var(--surface2);
+}
+
+#modalCalendar .card-light .row {
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+#modalCalendar .card-light .input {
+	flex: 1 1 200px;
+	background: var(--surface);
+}
+
+#modalCalendar .modal-footer {
+	padding: 12px 0 0;
+}
+
+.ws-appointment h3 {
+	margin: 0;
+	line-height: 1.35;
+}
+
+.ws-appointment p {
+	margin: 12px 0 0;
+	color: var(--muted);
+}
+
+.ws-appointment small {
+	display: block;
+	margin-top: 12px;
+	color: var(--muted);
+}
+
+.ws-appointment__call {
+	margin-top: 16px;
+}
+
+@media (max-width: 760px) {
+	#modalCall .strategy {
+		max-height: 50vh;
+	}
+}
+
+@media (max-width: 550px) {
+	#modalDonate .ws-donate__banks .card {
+		flex-basis: 100%;
+		max-width: none;
+	}
+}

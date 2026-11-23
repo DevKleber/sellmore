@@ -1,46 +1,120 @@
+/*
+ * Fundamentos visuais do Wiseller. O tema escuro redefine as mesmas variaveis.
+ * No fim do arquivo, as variaveis antigas apontam para as novas, para que as telas
+ * ainda nao redesenhadas acompanhem o tema.
+ */
 :root {
-	--backgroundColorLight:#fff;
-	--background: #efefed;
-	--backgroundColor: #2a004f;
-	--backgroundColorMoreDark: #5b6d80;
+	color-scheme: light;
 
-	--colorPrimary: #1D3055;
+	--font-text: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+	--font-display: 'Plus Jakarta Sans', Inter, system-ui, sans-serif;
 
-	--backgroundButton: #1D3055;
-	--backgroundButtonHover: #192947;
-	--backgroundButtonDisabled: #1c0035;
-	--backgroundButtonDisabledColor: #8e8c94;
-	--backgroundButtonColor: #fff;
+	--bg: #f4f6f8;
+	--surface: #ffffff;
+	--surface2: #f4f6f9;
+	--border: #e3e8ef;
+	--ink: #0f172a;
+	--muted: #5b6b82;
 
-	--primary: #1A2A39;
+	--primary: #0b7f73;
+	--primary-hover: #096a60;
+	--primary-ink: #ffffff;
+	--primary-soft: #e1f3f0;
+	--primary-text: #0b6a60;
+	--focus: #14b8a6;
 
-	--icons: #6c7883;
+	--danger: #b42318;
+	--danger-ink: #ffffff;
 
-	/* --backgroundComponents: #2a004f; */
-	--backgroundComponents: #1D3055;
-	--backgroundComponentsColor: #cbd7e1;
+	--aberto-bg: #eef1f5;
+	--aberto-fg: #475569;
+	--ligar-bg: #e0eaff;
+	--ligar-fg: #1e40af;
+	--cartao-bg: #ffefd0;
+	--cartao-fg: #8a4b00;
+	--sem-bg: #fde4e4;
+	--sem-fg: #9b1c1c;
+	--comprou-bg: #ddf5e4;
+	--comprou-fg: #166534;
 
-	--backgroundInput: #dfe1e5;
-	--backgroundInputColor: #2a004f;
+	--shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 6px 20px rgba(15, 23, 42, 0.04);
+	--shadow-pop: 0 12px 32px rgba(15, 23, 42, 0.14);
+	--shadow-fab: 0 8px 24px rgba(11, 127, 115, 0.35);
+	--overlay: rgba(15, 23, 42, 0.45);
 
-	--backgroundButtonSecondary: #b3b3b3;
-	--backgroundButtonColorSecondary: #fff;
+	--radius-card: 20px;
+	--radius-panel: 16px;
+	--radius-row: 14px;
+	--radius-control: 12px;
+	--radius-small: 10px;
+	--radius-pill: 999px;
 
-	--backgroundSecondary: #1AAE9F;
-	--backgroundSecondaryHover: #0b7e72;
-	--backgroundSecondaryColor: #fff;
+	--control-height: 44px;
+	--page-max-width: 1360px;
+}
 
-	--card-lightBackground: #fff;
-	--card-lightColor: #636363;
+:root[data-theme='dark'] {
+	color-scheme: dark;
 
-	/* --backgroundButton: #04d361;
-    --backgroundButtonHover: #0df576;
-    --backgroundButtonDisabled: #95fcc1;
-    --backgroundButtonDisabledColor: #212025;
-    --backgroundButtonColor: #fff;
-	--primary: #04d361; */
+	--bg: #0a101c;
+	--surface: #111a2c;
+	--surface2: #17223a;
+	--border: #24304a;
+	--ink: #e8edf6;
+	--muted: #9cabc4;
 
+	--primary: #2dd4bf;
+	--primary-hover: #5eead4;
+	--primary-ink: #032421;
+	--primary-soft: #12302f;
+	--primary-text: #5eead4;
 
+	--danger: #f97066;
+	--danger-ink: #2a0906;
 
+	--aberto-bg: #1e2a44;
+	--aberto-fg: #b6c2d9;
+	--ligar-bg: #1b2d5e;
+	--ligar-fg: #a9c0ff;
+	--cartao-bg: #40290a;
+	--cartao-fg: #ffc878;
+	--sem-bg: #4a1b1f;
+	--sem-fg: #ffb3b3;
+	--comprou-bg: #12402a;
+	--comprou-fg: #8fe3ae;
 
+	--shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+	--shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.55);
+	--shadow-fab: 0 8px 24px rgba(0, 0, 0, 0.5);
+	--overlay: rgba(2, 6, 14, 0.7);
+}
+
+/* Nomes antigos, usados pelas telas e modais que ainda nao foram reescritos. */
+:root {
+	--background: var(--bg);
+	--backgroundColor: var(--ink);
+	--backgroundColorLight: var(--surface);
+	--backgroundColorMoreDark: var(--muted);
+	--colorPrimary: var(--primary);
+	--icons: var(--muted);
+
+	--backgroundButton: var(--primary);
+	--backgroundButtonHover: var(--primary-hover);
+	--backgroundButtonColor: var(--primary-ink);
+	--backgroundButtonDisabled: var(--surface2);
+	--backgroundButtonDisabledColor: var(--muted);
+	--backgroundButtonSecondary: var(--surface2);
+	--backgroundButtonColorSecondary: var(--ink);
+
+	--backgroundComponents: var(--surface);
+	--backgroundComponentsColor: var(--ink);
+	--backgroundInput: var(--surface2);
+	--backgroundInputColor: var(--ink);
+
+	--backgroundSecondary: var(--primary);
+	--backgroundSecondaryHover: var(--primary-hover);
+	--backgroundSecondaryColor: var(--primary-ink);
+
+	--card-lightBackground: var(--surface);
+	--card-lightColor: var(--ink);
 }

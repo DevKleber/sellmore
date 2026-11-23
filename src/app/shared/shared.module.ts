@@ -3,6 +3,7 @@ import { CommonModule, registerLocaleData } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { InputComponent } from './input/input.component';
+import { IconComponent } from './icon/icon.component';
 import { CommemorationsComponent } from './commemorations/commemorations.component';
 
 import { SnackbarComponent } from './messages/snackbar/snackbar.component';
@@ -57,6 +58,7 @@ export function playerFactory() {
 	declarations: [
 		SafeHtml,
 		InputComponent,
+		IconComponent,
 		CommemorationsComponent,
 		SnackbarComponent,
 		HelpersPipe,
@@ -83,6 +85,7 @@ export function playerFactory() {
 	exports: [
 		SafeHtml,
 		InputComponent,
+		IconComponent,
 		CommemorationsComponent,
 		CommonModule,
 		FormsModule,
