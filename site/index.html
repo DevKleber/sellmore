@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Wiseller — CRM de indicações para vendedores</title>
+		<title>Wiseller — CRM gratuito de indicações para vendedores</title>
 		<meta
 			name="description"
 			content="Organize seus leads e os contatos que cada cliente indica. Saiba para quem ligar hoje, agende retornos e acompanhe suas vendas. Gratuito, no celular e no computador."
@@ -84,6 +84,22 @@
 									"@type": "Answer",
 									"text": "Não. Cada conta enxerga apenas os próprios leads e referidos."
 								}
+							},
+							{
+								"@type": "Question",
+								"name": "Consigo trazer os contatos que já tenho no celular?",
+								"acceptedAnswer": {
+									"@type": "Answer",
+									"text": "Sim. Você exporta os contatos do celular em um arquivo e importa no Wiseller como referidos de um lead."
+								}
+							},
+							{
+								"@type": "Question",
+								"name": "Serve para substituir a minha planilha de clientes?",
+								"acceptedAnswer": {
+									"@type": "Answer",
+									"text": "Sim, principalmente se você vende por indicação: cada contato fica ligado a quem o indicou, com status e data de retorno."
+								}
 							}
 						]
 					}
@@ -103,6 +119,7 @@
 				<nav class="topo__menu" aria-label="Seções da página">
 					<a href="#como-funciona">Como funciona</a>
 					<a href="#recursos">Recursos</a>
+					<a href="/artigos/">Artigos</a>
 					<a href="#duvidas">Dúvidas</a>
 				</nav>
 				<div class="topo__acoes">
@@ -168,6 +185,33 @@
 				</div>
 			</section>
 
+			<section class="secao secao--destaque" id="problema">
+				<div class="largura">
+					<h2>Quantas vendas você já perdeu por esquecimento?</h2>
+					<p class="secao__resumo">Indicação é o contato mais fácil de fechar. E o mais fácil de perder.</p>
+					<div class="antes-depois">
+						<div class="antes-depois__lado">
+							<h3>Sem o Wiseller</h3>
+							<ul>
+								<li>A indicação fica em um papel, no WhatsApp ou na memória.</li>
+								<li>Você promete ligar na sexta e só lembra na outra semana.</li>
+								<li>Na hora da ligação, não sabe mais quem indicou a pessoa.</li>
+								<li>Não tem ideia de quantos contatos estão parados.</li>
+							</ul>
+						</div>
+						<div class="antes-depois__lado antes-depois__lado--bom">
+							<h3>Com o Wiseller</h3>
+							<ul>
+								<li>Cada indicação é cadastrada em segundos, ligada a quem indicou.</li>
+								<li>A agenda mostra para quem ligar hoje.</li>
+								<li>Você abre a conversa dizendo quem passou o contato.</li>
+								<li>Um toque mostra todos os que pediram para ligar depois.</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</section>
+
 			<section class="secao" id="como-funciona">
 				<div class="largura">
 					<h2>Como funciona</h2>
@@ -198,28 +242,28 @@
 					<p class="secao__resumo">Feito para a rotina de quem vende por telefone e por indicação.</p>
 					<ul class="recursos">
 						<li>
-							<h3>Árvore de indicações</h3>
-							<p>Veja quem indicou quem e descubra quais clientes mais trazem novos contatos.</p>
+							<h3>Saiba de onde vem cada venda</h3>
+							<p>A árvore de indicações mostra quem indicou quem. Você descobre quais clientes mais trazem gente e cuida deles.</p>
 						</li>
 						<li>
-							<h3>Status de cada atendimento</h3>
-							<p>Aberto, ligar depois, problemas com cartão, não tem interesse ou comprou. Filtre com um toque.</p>
+							<h3>Nunca mais esqueça um retorno</h3>
+							<p>"Me liga semana que vem" vira um compromisso na agenda, com dia e hora.</p>
 						</li>
 						<li>
-							<h3>Agenda de retornos</h3>
-							<p>Marque dia e hora para ligar de novo e não dependa da memória.</p>
+							<h3>Veja quem está parado</h3>
+							<p>Aberto, ligar depois, problemas com cartão, não tem interesse, comprou. Filtre por status com um toque.</p>
 						</li>
 						<li>
-							<h3>Ligação e WhatsApp em um toque</h3>
-							<p>Abra a conversa ou a chamada direto do cartão do contato.</p>
+							<h3>Ligue ou chame no WhatsApp em um toque</h3>
+							<p>Sem copiar número nem procurar na agenda do celular: o contato abre direto do cartão.</p>
 						</li>
 						<li>
-							<h3>Roteiro de venda</h3>
-							<p>Deixe sua abordagem escrita e tenha o roteiro aberto durante a ligação.</p>
+							<h3>Tenha o roteiro na frente durante a ligação</h3>
+							<p>Sua abordagem fica escrita e aparece ao lado do contato na hora de ligar.</p>
 						</li>
 						<li>
-							<h3>Busca e números do dia</h3>
-							<p>Encontre qualquer contato pelo nome e acompanhe referidos, vendas e retornos pendentes.</p>
+							<h3>Traga os contatos que você já tem</h3>
+							<p>Importe a lista do celular e encontre qualquer pessoa pelo nome.</p>
 						</li>
 					</ul>
 				</div>
@@ -260,15 +304,23 @@
 					</details>
 					<details>
 						<summary>Outros vendedores veem os meus contatos?</summary>
-						<p>Não. Cada conta enxerga apenas os próprios leads e referidos.</p>
+						<p>Não. Cada conta enxerga apenas os próprios leads e referidos. Veja a <a href="/privacidade.html">política de privacidade</a>.</p>
+					</details>
+					<details>
+						<summary>Consigo trazer os contatos que já tenho no celular?</summary>
+						<p>Sim. Você exporta os contatos do celular em um arquivo e importa no Wiseller como referidos de um lead.</p>
+					</details>
+					<details>
+						<summary>Serve para substituir a minha planilha de clientes?</summary>
+						<p>Sim, principalmente se você vende por indicação. Veja a comparação em <a href="/artigos/planilha-ou-crm-para-indicacoes.html">planilha ou CRM para controlar indicações</a>.</p>
 					</details>
 				</div>
 			</section>
 
 			<section class="chamada">
 				<div class="largura">
-					<h2>Comece a organizar suas indicações hoje</h2>
-					<p>Crie sua conta em menos de um minuto.</p>
+					<h2>Sua próxima venda já está na sua lista de contatos</h2>
+					<p>Crie sua conta em menos de um minuto e cadastre o primeiro lead hoje.</p>
 					<a class="botao botao--claro botao--grande" href="https://app.wiseller.com.br/login">Criar conta grátis</a>
 				</div>
 			</section>
@@ -282,8 +334,9 @@
 				</span>
 				<nav aria-label="Rodapé">
 					<a href="https://app.wiseller.com.br/login">Entrar</a>
-					<a href="#recursos">Recursos</a>
-					<a href="#duvidas">Dúvidas</a>
+					<a href="/artigos/">Artigos</a>
+					<a href="/privacidade.html">Privacidade</a>
+					<a href="mailto:contato@wiseller.com.br">Contato</a>
 				</nav>
 			</div>
 		</footer>
