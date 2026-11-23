@@ -36,6 +36,18 @@ import {
 import { LoaderService } from '../shared/loader/loader.service';
 import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
 
+const FILTRO_TODOS = 'todos';
+const MAXIMO_DE_INICIAIS = 2;
+
+/** Campo do componente que liga ou desliga cada status na listagem. */
+const CAMPO_DO_FILTRO: Record<string, string> = {
+	a: 'boShowAberto',
+	pc: 'boShowProblemasCartao',
+	ld: 'boShowLigarDepois',
+	n: 'boShowNaotemInteresse',
+	c: 'boShowComprou',
+};
+
 @Component({
 	selector: '[app-sell-more]',
 	templateUrl: './sell-more.component.html',
@@ -54,6 +66,25 @@ export class SellMoreComponent implements OnInit {
 	boShowComprou: boolean = false;
 	boShowAberto: boolean = false;
 	orderBy = '';
+
+	readonly filtros = [
+		{ chave: FILTRO_TODOS, rotulo: 'Todos' },
+		{ chave: 'a', rotulo: 'Em aberto' },
+		{ chave: 'pc', rotulo: 'Problemas com cartão' },
+		{ chave: 'ld', rotulo: 'Ligar depois' },
+		{ chave: 'n', rotulo: 'Não tem interesse' },
+		{ chave: 'c', rotulo: 'Comprou' },
+	];
+
+	readonly rotuloDoStatus: Record<string, string> = {
+		a: 'Em aberto',
+		pc: 'Problema com cartão',
+		ld: 'Ligar depois',
+		n: 'Não tem interesse',
+		c: 'Comprou',
+	};
+
+	buscaAbertaNoCelular = false;
 
 	showNaotemInteresse: string = 'false';
 	themeIsDark: boolean;
@@ -286,6 +317,17 @@ export class SellMoreComponent implements OnInit {
 
 		this.position += this.quantidade;
 		this.isLoadCard = false;
+
+		setTimeout(() => this.carregarMaisSeSobrarEspaco());
+	}
+
+	/** A proxima leva so e pedida ao rolar; se os cards nao enchem a tela nao ha rolagem, entao carrega ja. */
+	private carregarMaisSeSobrarEspaco() {
+		const haMaisCards = this.position < this.arCustomers.length;
+
+		if (haMaisCards && this.bottomReached()) {
+			this.addCustomers();
+		}
 	}
 
 	saveLogAccess() {
@@ -388,7 +430,8 @@ export class SellMoreComponent implements OnInit {
 		);
 
 		if (localStorageWisellerBoShowStatus === null) {
-			this.setStatusLocalStorage();
+			this.aplicarFiltro(FILTRO_TODOS);
+			this.gravarFiltros();
 			localStorageWisellerBoShowStatus = localStorage.getItem(
 				'wiseller_boShowStatus'
 			);
@@ -409,10 +452,66 @@ export class SellMoreComponent implements OnInit {
 		this.boShowComprou = boShowComprou;
 		this.boShowAberto = boShowAberto;
 		this.orderBy = orderBy;
+
+		this.garantirFiltroValido();
+	}
+
+	/** Filtro selecionado: "todos", um status, ou vazio quando o que esta gravado nao corresponde a nenhuma opcao. */
+	get filtroAtivo(): string {
+		const ligados = Object.keys(CAMPO_DO_FILTRO).filter(
+			(status) => this[CAMPO_DO_FILTRO[status]]
+		);
+
+		if (ligados.length === Object.keys(CAMPO_DO_FILTRO).length) {
+			return FILTRO_TODOS;
+		}
+
+		return ligados.length === 1 ? ligados[0] : '';
+	}
+
+	selecionarFiltro(chave: string) {
+		this.aplicarFiltro(chave);
+		this.setStatusLocalStorage();
+	}
+
+	private aplicarFiltro(chave: string) {
+		Object.keys(CAMPO_DO_FILTRO).forEach((status) => {
+			this[CAMPO_DO_FILTRO[status]] =
+				chave === FILTRO_TODOS || chave === status;
+		});
+	}
+
+	/** Sem nenhum status ligado a API nao devolve a listagem; nesse caso volta para "todos". */
+	private garantirFiltroValido() {
+		if (this.filtroAtivo !== '') {
+			return;
+		}
+
+		this.aplicarFiltro(FILTRO_TODOS);
+		this.gravarFiltros();
+	}
+
+	iniciais(nome: string): string {
+		return (nome ?? '')
+			.trim()
+			.split(/\s+/)
+			.filter((parte) => parte.length > 0)
+			.slice(0, MAXIMO_DE_INICIAIS)
+			.map((parte) => parte[0])
+			.join('');
+	}
+
+	alternarBuscaNoCelular() {
+		this.buscaAbertaNoCelular = !this.buscaAbertaNoCelular;
 	}
 	setStatusLocalStorage(order = null) {
 		this.orderBy = order ?? this.orderBy;
 
+		this.gravarFiltros();
+		this.getCustomers();
+	}
+
+	private gravarFiltros() {
 		const jsonShowStatus = {
 			boShowProblemasCartao: this.boShowProblemasCartao,
 			boShowLigarDepois: this.boShowLigarDepois,
@@ -426,8 +525,6 @@ export class SellMoreComponent implements OnInit {
 			'wiseller_boShowStatus',
 			JSON.stringify(jsonShowStatus)
 		);
-
-		this.getCustomers();
 	}
 
 	getStrategy() {

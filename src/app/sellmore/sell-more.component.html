@@ -1,614 +1,384 @@
-<div class="sellMore" >
-	<header>
-		<div class="logo">
-			<img src="/assets/img/system/wiseller.png" width="55px" />
-			<!-- <img src="/assets/img/logo/logo.svg" alt="" srcset="" width="56px" /> -->
+<div class="sellMore ws-app">
+	<header class="ws-topbar">
+		<div class="ws-brand">
+			<img class="ws-brand__logo" src="/assets/img/system/wiseller.png" alt="" />
+			<span class="ws-brand__name">Wiseller</span>
 		</div>
-		<div class="search">
-			<form [formGroup]='searchForm'>
-				<div class="input searchInput">
-					<div class="inputIcon">
-						<i class="fa fa-search"></i>
-					</div>
 
-					<div class="inputText">
-						<input type="text" (keydown)="isSearch=true" class="w-100" placeholder="Buscar"
-							formControlName="searchControl" />
-					</div>
-				</div>
+		<div class="ws-topbar__search" [class.is-collapsed]="!buscaAbertaNoCelular">
+			<form [formGroup]="searchForm" class="ws-search" role="search">
+				<app-icon name="search"></app-icon>
+				<input type="text" (keydown)="isSearch=true" placeholder="Buscar por nome ou telefone"
+					aria-label="Buscar por nome ou telefone" formControlName="searchControl" />
 			</form>
 		</div>
-		<button *ngIf="user?.id === 1" [routerLink]="[ '/access_log']" class="iconTheme mobileNo">
-			LOG
-		</button>
-		<button (click)="setDarkMode()" class="iconTheme mobileNo">
-			<ng-container *ngIf="themeIsDark; else elseTemplateDarkLight">
-				<i class="far fa-moon"></i>
-			</ng-container>
-			<ng-template #elseTemplateDarkLight>
-				<i class="fas fa-moon"></i>
-			</ng-template>
-		</button>
 
-		<button class="btn-secondary mobileNo" style="margin-top: 0!important; padding: 10px 32px!important; margin-right: 5px;"
-			data-toggle="modal" data-target="#modalBug">
-			Reportar bug
-		</button>
-		<button class="btn-secondary mobileNo" style="margin-top: 0!important; padding: 10px 32px!important;" data-toggle="modal"
-			data-target="#modalDonate">
-			Doar
-		</button>
-
-		<div class="profile">
-			<img class="cursor-pointer" src="/assets/img/user/user.png" alt="" width="55px"
+		<div class="ws-topbar__actions">
+			<button type="button" class="ws-btn ws-btn--quiet ws-btn--icon ws-only-mobile ws-search-toggle" aria-label="Abrir busca"
+				[attr.aria-expanded]="buscaAbertaNoCelular" (click)="alternarBuscaNoCelular()">
+				<app-icon name="search" [size]="22"></app-icon>
+			</button>
+			<button type="button" *ngIf="user?.id === 1" [routerLink]="[ '/access_log']"
+				class="ws-btn ws-btn--quiet ws-only-desktop">
+				Log
+			</button>
+			<button type="button" (click)="setDarkMode()" class="ws-btn ws-btn--icon ws-only-desktop"
+				aria-label="Tema escuro" [attr.aria-pressed]="themeIsDark" matTooltip="Tema escuro">
+				<app-icon [name]="themeIsDark ? 'sun' : 'moon'"></app-icon>
+			</button>
+			<button type="button" class="ws-btn ws-only-desktop" data-toggle="modal" data-target="#modalBug">
+				<app-icon name="bug" [size]="18"></app-icon>
+				Reportar bug
+			</button>
+			<button type="button" class="ws-btn ws-btn--soft ws-only-desktop" data-toggle="modal"
+				data-target="#modalDonate">
+				<app-icon name="heart" [size]="18"></app-icon>
+				Doar
+			</button>
+			<button type="button" class="ws-btn ws-btn--icon ws-btn--round ws-profile" aria-label="Minha conta"
 				[matMenuTriggerFor]="profile">
+				<app-icon name="user"></app-icon>
+			</button>
 		</div>
 
 		<mat-menu #profile="matMenu">
 			<button mat-menu-item>
-				<i class="fas fa-id-card-alt"></i>
+				<app-icon name="user" [size]="18"></app-icon>
 				{{user?.nome}}
 			</button>
 			<button mat-menu-item>
-				<i class="fas fa-id-card-alt"></i>
+				<app-icon name="edit" [size]="18"></app-icon>
 				Perfil: em desenvolvimento
 			</button>
+			<button mat-menu-item class="ws-only-mobile" *ngIf="user?.id === 1" [routerLink]="[ '/access_log']">
+				<app-icon name="list" [size]="18"></app-icon>
+				Log de acesso
+			</button>
+			<button mat-menu-item class="ws-only-mobile" (click)="setDarkMode()">
+				<app-icon [name]="themeIsDark ? 'sun' : 'moon'" [size]="18"></app-icon>
+				{{ themeIsDark ? 'Usar tema claro' : 'Usar tema escuro' }}
+			</button>
+			<button mat-menu-item class="ws-only-mobile" data-toggle="modal" data-target="#modalBug">
+				<app-icon name="bug" [size]="18"></app-icon>
+				Informar um problema
+			</button>
+			<button mat-menu-item class="ws-only-mobile" data-toggle="modal" data-target="#modalDonate">
+				<app-icon name="heart" [size]="18"></app-icon>
+				Fazer uma doação
+			</button>
 			<button mat-menu-item (click)="logout()">
-				<i class="fas fa-sign-out-alt"></i> Sair
+				<app-icon name="logout" [size]="18"></app-icon>
+				Sair
 			</button>
 		</mat-menu>
-
 	</header>
-	<div class="content pad40" *ngIf="customersFilter.length || searchForm.value.searchControl.length">
-		<div class="totalFilter">Filtro: {{searchForm.value.searchControl}} <span
-				class="totalRegisterFilter">{{customersFilter.length}}</span></div>
 
-		<div class="" *ngIf="!customersFilter.length && !isSearch">
-			<div class="row center-center" style="flex-direction: column;">
-				<ng-lottie [options]="options" class="lottieSearch"></ng-lottie>
-				<h2>Nenhum resultado encontrado</h2>
+	<!-- A troca de status para "ligar depois" abre a agenda por este botao, que precisa existir sempre. -->
+	<button type="button" hidden tabindex="-1" aria-hidden="true" #openCalendar (click)="setEvents()"
+		data-toggle="modal" data-target="#modalCalendar"></button>
+
+	<main class="ws-page">
+		<div class="ws-pagehead">
+			<div>
+				<h1 class="ws-title">Referidos</h1>
+				<p class="ws-subtitle totalLead">{{statistics?.a}} referidos à contactar</p>
+			</div>
+			<div class="ws-pagehead__actions">
+				<button type="button" class="ws-btn" (click)="setEvents()" data-toggle="modal"
+					data-target="#modalCalendar" matTooltip="Agenda">
+					<app-icon name="calendar" [size]="18"></app-icon>
+					Agenda
+				</button>
+				<button type="button" class="ws-btn" (click)="newLead()" data-toggle="modal"
+					data-target="#modalScriptAdd" matTooltip="Estratégia">
+					<app-icon name="script" [size]="18"></app-icon>
+					Roteiro
+				</button>
+				<button type="button" class="ws-btn ws-btn--primary ws-fab" (click)="newLead()" data-toggle="modal"
+					data-target="#modalStickyAdd" matTooltip="Novo lead">
+					<app-icon name="plus" [size]="18" [stroke]="2"></app-icon>
+					Novo lead
+				</button>
 			</div>
 		</div>
 
-		<div class="display-row">
-			<div class="row customersFilter" *ngFor="let item of customersFilter; index as indexItem; ">
-				<div class="row">
-					<div class="filterName">
-						<div class="filterNameRow">
-							{{ item.name }}
-							<small class="filtercreated_at">{{item.bo_ativo | booleanMessage:'bo_ativo'}}</small>
-						</div>
-						<div class="row flex-wrap">
-							<div class="filterPhone" *ngFor="let itemPhone of item.phones; let last = last">
-								<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
-								<span *ngIf="!last" class="mr-10">,</span>
+		<section class="ws-results" *ngIf="customersFilter.length || searchForm.value.searchControl.length">
+			<div class="ws-results__summary totalFilter">Filtro: {{searchForm.value.searchControl}} <span
+					class="ws-results__total totalRegisterFilter">{{customersFilter.length}}</span></div>
+
+			<div class="ws-results__none" *ngIf="!customersFilter.length && !isSearch">
+				<ng-lottie [options]="options" class="lottieSearch"></ng-lottie>
+				<h2>Nenhum resultado encontrado</h2>
+			</div>
+
+			<div class="ws-grid display-row">
+				<article class="ws-card customersFilter" *ngFor="let item of customersFilter; index as indexItem; ">
+					<div class="ws-card__head">
+						<span class="ws-avatar" aria-hidden="true">{{ iniciais(item.name) }}</span>
+						<div class="ws-card__who filterName">
+							<div class="ws-card__name filterNameRow">{{ item.name }}</div>
+							<div class="ws-phones">
+								<span class="ws-phone filterPhone" *ngFor="let itemPhone of item.phones">+{{itemPhone?.country_code}}&ngsp;{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}</span>
 							</div>
 						</div>
-
-					</div>
-					<div class="menuFilter">
-						<i class="fa fa-bars icon-finished cursor-pointer" style="margin-left: 15px" matTooltip="Menu"
-							[matMenuTriggerFor]="menu"></i>
+						<span class="ws-tag filtercreated_at" [class.ws-tag--inativo]="!item.bo_ativo"
+							[class.ws-tag--c]="item.bo_ativo">{{item.bo_ativo | booleanMessage:'bo_ativo'}}</span>
+						<button type="button" class="ws-btn ws-btn--quiet ws-btn--icon menuFilter" matTooltip="Menu"
+							[attr.aria-label]="'Mais opções de ' + item.name" [matMenuTriggerFor]="menu">
+							<app-icon name="dots"></app-icon>
+						</button>
 						<mat-menu #menu="matMenu">
 							<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
 								data-target="#modalImportContact">
-								<i class="fab fa-whatsapp"></i> Importar contatos
+								<app-icon name="upload" [size]="18"></app-icon> Importar contatos
 							</button>
-							<!-- <button mat-menu-item>
-								<a target="_BLANK" href="https://wa.me/55{{item.phone}}">
-									<i class="fab fa-whatsapp"></i>
-									Abrir no Whatsapp
-								</a>
-							</button> -->
 							<button mat-menu-item (click)="updateOpenForm(item)" data-toggle="modal"
 								data-target="#modalStickyAdd">
-								<i class="fas fa-edit"></i> Alterar
+								<app-icon name="edit" [size]="18"></app-icon> Alterar
 							</button>
 							<ng-container *ngIf="!item.bo_ativo; else elseTemplateActiveOrInative">
 								<button mat-menu-item (click)="ativar(item)">
-									<i class="fas fa-eye-slash"></i> Ativar
+									<app-icon name="restore" [size]="18"></app-icon> Ativar
 								</button>
-
 							</ng-container>
 							<ng-template #elseTemplateActiveOrInative>
 								<button mat-menu-item (click)="inativar(item)">
-									<i class="fas fa-eye-slash"></i> Arquivar
+									<app-icon name="archive" [size]="18"></app-icon> Arquivar
 								</button>
-
 							</ng-template>
-
 							<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
 								data-target="#modalStickyAdd">
-								<i class="fa fa-chalkboard-teacher"></i>
+								<app-icon name="promote" [size]="18"></app-icon>
 								Tornar Lead
 							</button>
-							<button mat-menu-item (click)="callTo(item, indexItem)" data-toggle="modal" data-target="#modalCall">
-								<i class="fa fa-phone-volume"></i>
+							<button mat-menu-item (click)="callTo(item, indexItem)" data-toggle="modal"
+								data-target="#modalCall">
+								<app-icon name="phone" [size]="18"></app-icon>
 								Ligar
 							</button>
 						</mat-menu>
 					</div>
-				</div>
 
-				<div class="filterstatus"> <strong>Status:</strong> {{item.status | helpers:'statusString' }}</div>
-
-				<div class="filterbo_ativo"> <strong>Criado em:</strong> {{item.created_at  | date: 'fullDate'}}</div>
-
+					<div class="ws-result__facts">
+						<div class="filterstatus"><strong>Status:</strong> {{item.status | helpers:'statusString' }}</div>
+						<div class="filterbo_ativo"><strong>Criado em:</strong> {{item.created_at | date: 'fullDate'}}</div>
+					</div>
+				</article>
 			</div>
-		</div>
-	</div>
-	<div class="content pad40" *ngIf="!customersFilter.length && !searchForm.value.searchControl.length">
-		<div class="row flex-direction-row flex-wrap" style="justify-content: space-between;">
-			<div class="row flex-direction-column">
-				<div class="totalLead">{{statistics?.a}} referidos à contactar</div>
-				<div class="totalOthers">{{statistics?.c}} {{statistics?.c <= 1 ?   'venda': 'vendas'}}</div>
-				<div class="totalOthers">{{statistics?.ld}} ligar depois</div>
-				<div class="totalOthers">
-					{{statistics?.pc}}
-					{{statistics?.pc <= 1 ? 'problema com cartão' : 'problemas com cartão'}}
-				</div>
+		</section>
 
+		<ng-container *ngIf="!customersFilter.length && !searchForm.value.searchControl.length">
+			<div class="ws-stats">
+				<div class="ws-stat">
+					<span class="ws-stat__icon ws-stat__icon--comprou">
+						<app-icon name="thumbs-up"></app-icon>
+					</span>
+					<p class="ws-stat__text totalOthers"><strong class="ws-stat__number">{{statistics?.c}}</strong>&ngsp;<span
+							class="ws-stat__label">{{statistics?.c <= 1 ? 'venda' : 'vendas'}}</span></p>
+				</div>
+				<div class="ws-stat">
+					<span class="ws-stat__icon ws-stat__icon--ligar">
+						<app-icon name="headset"></app-icon>
+					</span>
+					<p class="ws-stat__text totalOthers"><strong class="ws-stat__number">{{statistics?.ld}}</strong>&ngsp;<span
+							class="ws-stat__label">ligar depois</span></p>
+				</div>
+				<div class="ws-stat">
+					<span class="ws-stat__icon ws-stat__icon--cartao">
+						<app-icon name="card"></app-icon>
+					</span>
+					<p class="ws-stat__text totalOthers"><strong class="ws-stat__number">{{statistics?.pc}}</strong>&ngsp;<span
+							class="ws-stat__label">{{statistics?.pc <= 1 ? 'problema com cartão' : 'problemas com cartão'}}</span></p>
+				</div>
 			</div>
-			<div class="row flex-direction-row flex-wrap center-center showEachStatus">
-				<div class="">
-					<label for="">Em aberto</label>
-					<div class="onoffswitch">
-						<input type="checkbox" (change)="setStatusLocalStorage()" [(ngModel)]="boShowAberto" class="onoffswitch-checkbox"
-							id="boShowAberto" [ngModelOptions]="{standalone: true}">
-						<label class="onoffswitch-label" for="boShowAberto"></label>
-					</div>
-				</div>
-				<div class="">
-					<label for="">Problemas com cartão</label>
-					<div class="onoffswitch">
-						<input type="checkbox" (change)="setStatusLocalStorage()" [(ngModel)]="boShowProblemasCartao" class="onoffswitch-checkbox"
-							id="boShowProblemasCartao" [ngModelOptions]="{standalone: true}">
-						<label class="onoffswitch-label" for="boShowProblemasCartao"></label>
-					</div>
-				</div>
-				<div class="">
-					<label for="">Ligar depois</label>
-					<div class="onoffswitch">
-						<input type="checkbox" (change)="setStatusLocalStorage()" [(ngModel)]="boShowLigarDepois" class="onoffswitch-checkbox"
-							id="boShowLigarDepois" [ngModelOptions]="{standalone: true}">
-						<label class="onoffswitch-label" for="boShowLigarDepois"></label>
-					</div>
-				</div>
-				<div class="">
-					<label for="">Não tem interesse</label>
-					<div class="onoffswitch">
-						<input type="checkbox" (change)="setStatusLocalStorage()" [(ngModel)]="boShowNaotemInteresse" class="onoffswitch-checkbox"
-							id="idBoShowNaotemInteresse" [ngModelOptions]="{standalone: true}">
-						<label class="onoffswitch-label" for="idBoShowNaotemInteresse"></label>
-					</div>
-				</div>
-				<div class="">
-					<label for="">Comprou</label>
-					<div class="onoffswitch">
-						<input type="checkbox" (change)="setStatusLocalStorage()" [(ngModel)]="boShowComprou" class="onoffswitch-checkbox"
-							id="boShowComprou" [ngModelOptions]="{standalone: true}">
-						<label class="onoffswitch-label" for="boShowComprou"></label>
-					</div>
+
+			<div class="ws-toolbar">
+				<div class="ws-pills" role="group" aria-label="Filtrar por status">
+					<button type="button" class="ws-pill" *ngFor="let filtro of filtros"
+						[attr.aria-pressed]="filtroAtivo === filtro.chave" (click)="selecionarFiltro(filtro.chave)">
+						{{ filtro.rotulo }}
+					</button>
 				</div>
 
-
-				<div class="orderByMenu" matTooltip="Ordem">
-					<i class="fa  fa-bars" [matMenuTriggerFor]="orderByMenu"></i>
-					<!-- <img class="cursor-pointer" src="/assets/img/user/user.png" alt="" width="55px"> -->
-				</div>
+				<button type="button" class="ws-btn ws-btn--icon orderByMenu" matTooltip="Ordem" aria-label="Ordem"
+					[matMenuTriggerFor]="orderByMenu">
+					<app-icon name="sort"></app-icon>
+				</button>
 
 				<mat-menu #orderByMenu="matMenu">
-					<h3 style=" margin: 0px 15px; ">Ordem</h3>
+					<h3 style="margin: 8px 16px;">Ordem</h3>
 					<button mat-menu-item (click)="setStatusLocalStorage({column: 'id', type: 'desc'})">
-						<i class="fas fa-sort"></i>
-						Ordem de lançamento decrescente <i *ngIf="orderBy?.column == 'id' && orderBy?.type == 'desc'" class="fa fa-check-square checkOrder"></i>
+						Ordem de lançamento decrescente
+						<app-icon *ngIf="orderBy?.column == 'id' && orderBy?.type == 'desc'" class="checkOrder" name="check"
+							[size]="18"></app-icon>
 					</button>
 					<button mat-menu-item (click)="setStatusLocalStorage({column: 'id', type: 'asc'})">
-						<i class="fas fa-sort"></i>
-						Ordem de lançamento crescente <i *ngIf="orderBy?.column == 'id' && orderBy?.type == 'asc'" class="fa fa-check-square checkOrder"></i>
+						Ordem de lançamento crescente
+						<app-icon *ngIf="orderBy?.column == 'id' && orderBy?.type == 'asc'" class="checkOrder" name="check"
+							[size]="18"></app-icon>
 					</button>
 					<button mat-menu-item (click)="setStatusLocalStorage({column: 'name', type: 'asc'})">
-						<i class="fas fa-sort"></i>
-						Ordem alfabética
-						A <i class="fa fa-arrow-right menuOrderArrowSize" aria-hidden="true"></i> Z
-						<i *ngIf="orderBy?.column == 'name' && orderBy?.type == 'asc'" class="fa fa-check-square checkOrder"></i>
+						Ordem alfabética A → Z
+						<app-icon *ngIf="orderBy?.column == 'name' && orderBy?.type == 'asc'" class="checkOrder" name="check"
+							[size]="18"></app-icon>
 					</button>
 					<button mat-menu-item (click)="setStatusLocalStorage({column: 'name', type: 'desc'})">
-						<i class="fas fa-sort"></i>
-						Ordem alfabética
-						Z <i class="fa fa-arrow-left menuOrderArrowSize" aria-hidden="true"></i> A
-						<i *ngIf="orderBy?.column == 'name' && orderBy?.type == 'desc'" class="fa fa-check-square checkOrder"></i>
+						Ordem alfabética Z → A
+						<app-icon *ngIf="orderBy?.column == 'name' && orderBy?.type == 'desc'" class="checkOrder" name="check"
+							[size]="18"></app-icon>
 					</button>
 				</mat-menu>
-
-
 			</div>
 
-		</div>
-
-		<div class="contentWiseller" id="customersBody"
-			*ngIf="boShowProblemasCartao || boShowLigarDepois || boShowNaotemInteresse || boShowComprou || boShowAberto"
-		>
-			<!-- <div class="contatos">
-				<cdk-virtual-scroll-viewport  itemSize="540" class="viewport" > -->
-				<!-- <div class="customers" *ngFor="let itemLead of customers | keyvalue; let even = even;"> -->
-
-				<perfect-scrollbar class="contentscrollbar">
-					<div [class.customerswidth] = "itemLead?.referidos.length > 0 || itemLead?.bo_ativo" class="customerswidth" *ngFor="let itemLead of customersDynamic; let even = even; index as indexItemLead;" >
-						<div class="customers" *ngIf="itemLead?.referidos.length > 0 || itemLead?.bo_ativo">
-
-							<div class="parent center-center">
-								<div class="contact">
-									<div class="name">{{ itemLead?.name }} </div>
-
-									<div class="row flex-wrap">
-										<div class="contacto-phone"
-											*ngFor="let itemPhone of itemLead.phones; let last = last">
-											<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
-											<span *ngIf="!last" class="mr-10">,</span>
-										</div>
-									</div>
-
+			<div class="ws-grid contentWiseller" id="customersBody">
+				<ng-container *ngFor="let itemLead of customersDynamic; index as indexItemLead;">
+					<article class="ws-card customers" *ngIf="itemLead?.referidos.length > 0 || itemLead?.bo_ativo">
+						<div class="ws-card__head parent">
+							<span class="ws-avatar" aria-hidden="true">{{ iniciais(itemLead?.name) }}</span>
+							<div class="ws-card__who contact">
+								<div class="ws-card__name name">{{ itemLead?.name }}</div>
+								<div class="ws-phones">
+									<span class="ws-phone contacto-phone" *ngFor="let itemPhone of itemLead.phones">+{{itemPhone?.country_code}}&ngsp;{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}</span>
 								</div>
-								<div class="action">
-									<ng-container *ngIf="itemLead?.status != 'a'; else waiting">
-										<div class="finished">
-											<i *ngIf="itemLead?.status == 'pc'"
-												class="fa fa-credit-card icon-finished icon-finished-no">
-											</i>
-											<i *ngIf="itemLead?.status == 'ld'" class="fa fa-headset icon-finished">
-											</i>
-											<i *ngIf="itemLead?.status == 'n'"
-												class="fa fa-thumbs-down icon-finished icon-finished-no">
-											</i>
-											<i *ngIf="itemLead?.status == 'c'"
-												class="fa fa-thumbs-up icon-finished icon-finished-yes">
-											</i>
-											<i class="fa fa-bars icon-finished cursor-pointer" matTooltip="Menu"
-												[matMenuTriggerFor]="menu"></i>
-											<mat-menu #menu="matMenu">
-												<button mat-menu-item (click)="newChildren(itemLead)" data-toggle="modal"
-													data-target="#modalImportContact">
-													<i class="fab fa-whatsapp"></i> Importar contatos
-												</button>
-												<!-- <button mat-menu-item>
-													<a target="_BLANK" href="https://wa.me/55{{itemLead?.phone}}">
-														<i class="fab fa-whatsapp"></i>
-														Abrir no Whatsapp
-													</a>
-												</button> -->
-												<button mat-menu-item (click)="updateOpenForm(itemLead)" data-toggle="modal"
-													data-target="#modalStickyAdd">
-													<i class="fas fa-edit"></i> Alterar
-												</button>
-												<button mat-menu-item (click)="inativar(itemLead)">
-													<i class="fas fa-eye-slash"></i> Arquivar
-												</button>
+							</div>
+							<button type="button" class="ws-btn ws-btn--quiet ws-btn--icon" matTooltip="Menu"
+								[attr.aria-label]="'Mais opções de ' + itemLead?.name" [matMenuTriggerFor]="menuLead">
+								<app-icon name="dots"></app-icon>
+							</button>
+							<mat-menu #menuLead="matMenu">
+								<button mat-menu-item (click)="newChildren(itemLead)" data-toggle="modal"
+									data-target="#modalImportContact">
+									<app-icon name="upload" [size]="18"></app-icon> Importar contatos
+								</button>
+								<button mat-menu-item (click)="updateOpenForm(itemLead)" data-toggle="modal"
+									data-target="#modalStickyAdd">
+									<app-icon name="edit" [size]="18"></app-icon> Alterar
+								</button>
+								<button mat-menu-item (click)="inativar(itemLead)">
+									<app-icon name="archive" [size]="18"></app-icon> Arquivar
+								</button>
+							</mat-menu>
+						</div>
 
-											</mat-menu>
-										</div>
+						<div class="ws-card__meta info">
+							<span class="ws-tag ws-status" [ngClass]="'ws-tag--' + itemLead?.status"
+								[attr.data-status]="itemLead?.status">{{ rotuloDoStatus[itemLead?.status] }}</span>
+							<span class="ws-card__count quantitative">{{ itemLead?.referidos.length }} referidos</span>
+						</div>
+
+						<div class="ws-statusbar" role="group" aria-label="Status do atendimento"
+							[class.waiting]="itemLead?.status == 'a'" [class.finished]="itemLead?.status != 'a'">
+							<button type="button" class="ws-statusbtn ws-statusbtn--ld" matTooltip="Ligar depois"
+								aria-label="Ligar depois" [attr.aria-pressed]="itemLead?.status == 'ld'"
+								[disabled]="itemLead?.status != 'a'" (click)="changeStatus(itemLead, 'ld')">
+								<app-icon name="headset"></app-icon>
+							</button>
+							<button type="button" class="ws-statusbtn ws-statusbtn--pc"
+								matTooltip="Problemas com cartão de crédito" aria-label="Problemas com cartão de crédito"
+								[attr.aria-pressed]="itemLead?.status == 'pc'" [disabled]="itemLead?.status != 'a'"
+								(click)="changeStatus(itemLead, 'pc')">
+								<app-icon name="card"></app-icon>
+							</button>
+							<button type="button" class="ws-statusbtn ws-statusbtn--n" matTooltip="Não deu negócio 😭"
+								aria-label="Não tem interesse" [attr.aria-pressed]="itemLead?.status == 'n'"
+								[disabled]="itemLead?.status != 'a'" (click)="changeStatus(itemLead, 'n')">
+								<app-icon name="thumbs-down"></app-icon>
+							</button>
+							<button type="button" class="ws-statusbtn ws-statusbtn--c" matTooltip="Vendido 😃"
+								aria-label="Comprou" [attr.aria-pressed]="itemLead?.status == 'c'"
+								[disabled]="itemLead?.status != 'a'" (click)="changeStatus(itemLead, 'c')">
+								<app-icon name="thumbs-up"></app-icon>
+							</button>
+						</div>
+
+						<perfect-scrollbar class="ws-refs-scroll" *ngIf="itemLead?.referidos.length; else semReferidos">
+						<div class="ws-refs children">
+							<div class="ws-ref item" *ngFor=" let item of itemLead?.referidos; index as indexItemReferido;"
+								[class.waiting]="item?.status == 'a'" [class.finished]="item?.status != 'a'">
+								<div class="ws-ref__who contacto"
+									(click)="callTo(item, {itemLead, referido : indexItemReferido, indexItemLeade:indexItemLead})"
+									data-toggle="modal" data-target="#modalCall">
+									<div class="ws-ref__name">
+										<span class="contacto-name">{{ item?.name }}</span>
+										<app-icon *ngIf="item?.bo_preference" class="ws-ref__star" name="star-filled" [size]="14"
+											matTooltip="Preferido"></app-icon>
+										<span *ngIf="item?.status != 'a'" class="ws-tag ws-status"
+											[ngClass]="'ws-tag--' + item?.status" [attr.data-status]="item?.status">{{
+											rotuloDoStatus[item?.status] }}</span>
+									</div>
+									<div class="ws-ref__details">
+										<span class="ws-phone contacto-phone" *ngFor="let itemPhone of item?.phones">+{{itemPhone?.country_code}}&ngsp;{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}</span>
+										<span class="ws-ref__date">{{item?.created_at | date: 'dd/MM/yyyy'}}</span>
+									</div>
+								</div>
+
+								<button type="button" class="ws-btn ws-btn--soft ws-btn--icon ws-btn--round"
+									matTooltip="Ligar" [attr.aria-label]="'Ligar para ' + item?.name"
+									(click)="callTo(item, {itemLead, referido : indexItemReferido, indexItemLeade:indexItemLead})"
+									data-toggle="modal" data-target="#modalCall">
+									<app-icon name="phone" [size]="18"></app-icon>
+								</button>
+								<button type="button" class="ws-btn ws-btn--quiet ws-btn--icon" matTooltip="Menu"
+									[attr.aria-label]="'Mais opções de ' + item?.name" [matMenuTriggerFor]="menuReferido">
+									<app-icon name="dots"></app-icon>
+								</button>
+								<mat-menu #menuReferido="matMenu">
+									<ng-container *ngIf="item?.status == 'a'">
+										<button mat-menu-item (click)="preference(item)">
+											<app-icon [name]="item?.bo_preference ? 'star-filled' : 'star'" [size]="18"></app-icon>
+											{{ item?.bo_preference ? 'Tirar preferência' : 'Dar preferência' }}
+										</button>
+										<button mat-menu-item (click)="changeStatus(item, 'ld')">
+											<app-icon name="headset" [size]="18"></app-icon> Ligar depois
+										</button>
+										<button mat-menu-item (click)="changeStatus(item, 'pc')">
+											<app-icon name="card" [size]="18"></app-icon> Problemas com cartão
+										</button>
+										<button mat-menu-item (click)="changeStatus(item, 'n')">
+											<app-icon name="thumbs-down" [size]="18"></app-icon> Não tem interesse
+										</button>
+										<button mat-menu-item (click)="changeStatus(item, 'c')">
+											<app-icon name="thumbs-up" [size]="18"></app-icon> Comprou
+										</button>
 									</ng-container>
-									<ng-template #waiting>
-										<div class="waiting">
-											<i (click)="changeStatus(itemLead, 'pc')" class="fa fa-credit-card icon-waiting"
-												matTooltip="Problemas com cartão de crédito">
-											</i>
-											<i (click)="changeStatus(itemLead, 'ld')" class="fa fa-headset icon-waiting"
-												matTooltip="Ligar depois"></i>
-											<i (click)="changeStatus(itemLead, 'n')" class="fa fa-thumbs-down icon-waiting"
-												matTooltip="Não deu negócio 😭"></i>
-											<i (click)="changeStatus(itemLead, 'c')" class="fa fa-thumbs-up icon-waiting"
-												matTooltip="Vendido 😃"></i>
-											<i class="fa fa-bars icon-waiting cursor-pointer" matTooltip="Menu"
-												[matMenuTriggerFor]="menu"></i>
-											<mat-menu #menu="matMenu">
-												<button mat-menu-item (click)="newChildren(itemLead)" data-toggle="modal"
-													data-target="#modalImportContact">
-													<i class="fab fa-whatsapp"></i> Importar contatos
-												</button>
-												<!-- <button mat-menu-item>
-													<a target="_BLANK" href="https://wa.me/55{{itemLead?.phone}}">
-														<i class="fab fa-whatsapp"></i>
-														Abrir no Whatsapp
-													</a>
-												</button> -->
-												<button mat-menu-item (click)="updateOpenForm(itemLead)" data-toggle="modal"
-													data-target="#modalStickyAdd">
-													<i class="fas fa-edit"></i> Alterar
-												</button>
-												<button mat-menu-item (click)="inativar(itemLead)">
-													<i class="fas fa-eye-slash"></i> Arquivar
-												</button>
-											</mat-menu>
-										</div>
-									</ng-template>
-								</div>
-							</div>
-							<perfect-scrollbar class="zindex999">
-								<div class="children">
-									<div class="item" *ngFor=" let item of itemLead?.referidos; index as indexItemReferido;">
-
-										<div class="contacto cursor-pointer" (click)="callTo(item, {itemLead, referido : indexItemReferido, indexItemLeade:indexItemLead})" data-toggle="modal"
-											data-target="#modalCall">
-											<span>
-												<div class="contacto-name">
-													{{ item?.name }} <i *ngIf="item?.status != 'a' && item?.bo_preference" class="fa fa-star"></i>
-												</div>
-												<div class="row flex-wrap">
-													<div class="contacto-phone"
-														*ngFor="let itemPhone of item?.phones; let last = last">
-														<small>+{{itemPhone?.country_code}}</small> {{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
-														<!-- <small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | mask: "(00)00000-0000" }} -->
-														<span *ngIf="!last" class="mr-10">,</span>
-														<small><br>{{item?.created_at | date: 'dd/MM/yyyy'}}</small><br>
-													</div>
-												</div>
-											</span>
-										</div>
-
-										<ng-container *ngIf=" item?.status != 'a'; else waitingChildren ">
-											<div class="finished">
-
-												<!-- <i class="icon-waiting" ngIf="item.bo_preference"
-													[ngClass]="item.bo_preference ? 'fa fa-star' : 'far fa-star'"
-													(click)="preference(item)" matTooltip="Dar preferencia">
-												</i> -->
-
-												<i *ngIf="item?.status == 'pc'"
-													class="fa fa-credit-card icon-finished icon-finished-no">
-												</i>
-												<i *ngIf="item?.status == 'ld'" class="fa fa-headset icon-finished icon-finished-no">
-												</i>
-												<i *ngIf="item?.status == 'n'"
-													class="fa fa-thumbs-down icon-finished icon-finished-no">
-												</i>
-												<i *ngIf="item?.status == 'c'"
-													class="fa fa-thumbs-up icon-finished icon-finished-yes">
-												</i>
-												<i class="fa fa-bars icon-finished" style="margin-left: 15px" matTooltip="Menu"
-													[matMenuTriggerFor]="menu"></i>
-												<mat-menu #menu="matMenu">
-													<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
-														data-target="#modalImportContact">
-														<i class="fab fa-whatsapp"></i> Importar contatos
-													</button>
-													<!-- <button mat-menu-item>
-														<a target="_BLANK" href="https://wa.me/{{item?.}}{{item?.phone}}">
-															<i class="fab fa-whatsapp"></i>
-															Abrir no Whatsapp
-														</a>
-													</button> -->
-													<button mat-menu-item (click)="updateOpenForm(item)" data-toggle="modal"
-														data-target="#modalStickyAdd">
-														<i class="fas fa-edit"></i> Alterar
-													</button>
-													<button mat-menu-item (click)="inativar(item)">
-														<i class="fas fa-eye-slash"></i> Arquivar
-													</button>
-													<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
-														data-target="#modalStickyAdd">
-														<i class="fa fa-chalkboard-teacher"></i>
-														Tornar Lead
-													</button>
-												</mat-menu>
-											</div>
-										</ng-container>
-										<ng-template #waitingChildren>
-											<div class="waiting">
-												<i class="icon-waiting"
-													[ngClass]="item?.bo_preference ? 'fa fa-star' : 'far fa-star'"
-													(click)="preference(item)" matTooltip="Dar preferencia">
-												</i>
-
-												<i (click)="changeStatus(item, 'pc')" class="fa fa-credit-card icon-waiting"
-													matTooltip="Problemas com cartão de crédito">
-												</i>
-												<i (click)="changeStatus(item, 'ld')" class="fa fa-headset icon-waiting"
-													matTooltip="Ligar depois"></i>
-												<i (click)="changeStatus(item, 'n')" class="fa fa-thumbs-down icon-waiting"
-													matTooltip="Não deu negócio 😭"></i>
-												<i (click)="changeStatus(item, 'c')" class="fa fa-thumbs-up icon-waiting"
-													matTooltip="Vendido 😃"></i>
-												<i class="fa fa-bars icon-waiting" matTooltip="Menu" [matMenuTriggerFor]="menu"></i>
-												<mat-menu #menu="matMenu">
-													<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
-														data-target="#modalImportContact">
-														<i class="fab fa-whatsapp"></i> Importar contatos
-													</button>
-													<!-- <button mat-menu-item>
-														<a target="_BLANK" href="https://wa.me/55{{item?.phone}}">
-															<i class="fab fa-whatsapp"></i>
-															Abrir no Whatsapp
-														</a>
-													</button> -->
-													<button mat-menu-item (click)="updateOpenForm(item)" data-toggle="modal"
-														data-target="#modalStickyAdd">
-														<i class="fas fa-edit"></i> Alterar
-													</button>
-													<button mat-menu-item (click)="inativar(item)">
-														<i class="fas fa-eye-slash"></i> Arquivar
-													</button>
-													<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
-														data-target="#modalStickyAdd">
-														<i class="fa fa-chalkboard-teacher"></i>
-														Tornar Lead
-													</button>
-												</mat-menu>
-											</div>
-										</ng-template>
-									</div>
-								</div>
-							</perfect-scrollbar>
-
-							<div class="info center-center">
-								<div class="quantitative">
-									{{ itemLead?.referidos.length }} referidos
-									<br />
-									<!-- N à contactar -->
-								</div>
-								<div class="action">
-									<div class="actionButton" (click)="newChildren(itemLead)" data-toggle="modal"
-										data-target="#modalStickyAdd">
-										<i class="fa fa-plus"></i>
-									</div>
-
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<ng-container *ngIf="isLoadCard">
-						<div class="customers customerswidth skeleton piscando_div" *ngFor="let item of skeleton">
-						</div>
-					</ng-container>
-
-
-				<!-- </cdk-virtual-scroll-viewport> -->
-				</perfect-scrollbar>
-
-			<div class="card-agenda modal-dialog mobileNo" *ngIf="false">
-
-				<div class="modal-header">
-					<h3 class="modal-title">
-						<p>
-							<i class="far fa-calendar-alt"></i> Calendario
-						</p>
-					</h3>
-				</div>
-				<div class="modal-body">
-
-					<div class="calendarOptions">
-						<div class="calendarDate">
-							<button class="btn btn-secondary" style="margin:5px; padding:10px" mwlCalendarPreviousView
-								[view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
-								Anterior
-							</button>
-							<button class="btn btn-secondary" style="margin:5px; padding:10px" mwlCalendarToday
-								[(viewDate)]="viewDate">
-								Hoje
-							</button>
-							<button class="btn btn-secondary" style="margin:5px; padding:10px" mwlCalendarNextView [view]="view"
-								[(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
-								Próximo
-							</button>
-						</div>
-						<div class="calendarDateChosen">
-							<h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'pt-br' }}</h3>
-						</div>
-						<div class="calendarDateType">
-							<div class="row flex-direction-row">
-								<button class="btn btn-secondary" style="margin:5px; padding:10px"
-									(click)="setView(CalendarView.Month)" [class.active]="view === CalendarView.Month">
-									Mês
-								</button>
-								<button class="btn btn-secondary" style="margin:5px; padding:10px"
-									(click)="setView(CalendarView.Week)" [class.active]="view === CalendarView.Week">
-									Semana
-								</button>
-								<button class="btn btn-secondary" style="margin:5px; padding:10px"
-									(click)="setView(CalendarView.Day)" [class.active]="view === CalendarView.Day">
-									Dia
-								</button>
-							</div>
-						</div>
-					</div>
-					<br />
-					<div [ngSwitch]="view">
-						<mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events"
-							[refresh]="refresh" [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)"
-							(eventClicked)="handleEvent('Clicked', $event.event)"
-							(eventTimesChanged)="eventTimesChanged($event)">
-						</mwl-calendar-month-view>
-						<mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events"
-							[refresh]="refresh" (eventClicked)="handleEvent('Clicked', $event.event)"
-							(eventTimesChanged)="eventTimesChanged($event)">
-						</mwl-calendar-week-view>
-						<mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate" [events]="events"
-							[refresh]="refresh" (eventClicked)="handleEvent('Clicked', $event.event)"
-							(eventTimesChanged)="eventTimesChanged($event)">
-						</mwl-calendar-day-view>
-					</div>
-
-					<!-- Everything you see below is just for the demo, you don't need to include it in your app -->
-
-					<!-- <div class="" *ngIf="formCalendar.value.id_customers > 0"> -->
-					<div class="" style="margin-top: 5px;"  *ngIf="formCalendar?.value?.title || formCalendar.value.date">
-						<h2> Novo agendamento: clique no dia e informe o horário </h2>
-						<h2> {{formCalendar.value.title}}</h2>
-
-						<div class="card-light">
-							<form [formGroup]="formCalendar" novalidate>
-								<div class="row">
-									<div class="input" style="margin-right: 25px;">
-										<div class="inputIcon">
-											<i class="fa fa-calendar-alt"></i>
-										</div>
-										<select formControlName="id_customers" class="w-100">
-											<option value="" selected>
-												Referente
-											</option>
-											<option *ngFor="let item of customersLd" [value]="item?.id">
-												<div class="row flex-wrap">
-													{{ item?.name }} -
-													<div class="contacto-phone ml-5"
-														*ngFor="let itemPhone of item?.phones; let last = last">
-														<div class="cursor-pointer">
-															<i
-																[ngClass]="itemPhone.bo_whatsapp ? 'fab fa-whatsapp' : 'fa fa-mobile-alt'"></i>
-															<small>+{{itemPhone.country_code}}</small>{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
-															<span *ngIf="!last" class="mr-10">,</span>
-														</div>
-													</div>
-												</div>
-											</option>
-										</select>
-									</div>
-									<div class="input" style="margin-right: 25px;">
-										<div class="inputIcon">
-											<i class="fa fa-calendar-alt"></i>
-										</div>
-										<div class="inputText">
-											<input type="text" mask="dX/M0/0000" [showMaskTyped]="true" class="w-100"
-												formControlName="date" placeholder="Dia" />
-										</div>
-									</div>
-									<div class="input">
-										<div class="inputIcon">
-											<i class="fa fa-hourglass-start"></i>
-										</div>
-										<div class="inputText">
-											<input type="text" mask="Hh:m0:s0" [showMaskTyped]="true" class="w-100"
-												formControlName="hour" placeholder="Hora" />
-										</div>
-									</div>
-								</div>
-								<div class="modal-footer" style="justify-content: flex-start;">
-									<button type="button" class="btn btn-primary" (click)="addEvent()"
-										[disabled]="!formCalendar.valid">
-										Salvar
+									<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
+										data-target="#modalImportContact">
+										<app-icon name="upload" [size]="18"></app-icon> Importar contatos
 									</button>
-								</div>
-							</form>
+									<button mat-menu-item (click)="updateOpenForm(item)" data-toggle="modal"
+										data-target="#modalStickyAdd">
+										<app-icon name="edit" [size]="18"></app-icon> Alterar
+									</button>
+									<button mat-menu-item (click)="inativar(item)">
+										<app-icon name="archive" [size]="18"></app-icon> Arquivar
+									</button>
+									<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
+										data-target="#modalStickyAdd">
+										<app-icon name="promote" [size]="18"></app-icon>
+										Tornar Lead
+									</button>
+								</mat-menu>
+							</div>
 						</div>
-					</div>
-				</div>
+						</perfect-scrollbar>
+						<ng-template #semReferidos>
+							<div class="ws-empty">Nenhum referido ainda</div>
+						</ng-template>
+
+						<button type="button" class="ws-btn ws-btn--block ws-btn--link actionButton"
+							(click)="newChildren(itemLead)" data-toggle="modal" data-target="#modalStickyAdd">
+							<app-icon name="plus" [size]="18" [stroke]="2"></app-icon>
+							Adicionar referido
+						</button>
+					</article>
+				</ng-container>
+
+				<ng-container *ngIf="isLoadCard">
+					<div class="ws-skeleton skeleton piscando_div" *ngFor="let item of skeleton"></div>
+				</ng-container>
 			</div>
-		</div>
-	</div>
-	<footer>
-		<div class="footerItens " (click)="setEvents()" data-toggle="modal" data-target="#modalCalendar" #openCalendar
-			matTooltip="Agenda">
-			<i class="far fa-calendar-alt"></i>
-		</div>
-		<div class="footerItens" (click)="newLead()" data-toggle="modal" data-target="#modalScriptAdd"
-			matTooltip="Estratégia">
-			<i class="fa fa-receipt"></i>
-		</div>
-		<div class="footerItens" (click)="newLead()" data-toggle="modal" data-target="#modalStickyAdd"
-			matTooltip="Novo lead">
-			<i class="fa fa-plus"></i>
-		</div>
-	</footer>
+		</ng-container>
+	</main>
 </div>
 
 <!-- Modal cadastre indicados -->
@@ -634,27 +404,18 @@
 					<form [formGroup]="form" novalidate>
 						<div class="input">
 							<div class="inputIcon">
-								<i class="fa fa-user"></i>
+								<app-icon name="user" [size]="18"></app-icon>
 							</div>
 							<div class="inputText">
 								<input type="text" class="w-100" formControlName="name" placeholder="Nome" />
 							</div>
 						</div>
-						<!-- <div class="input">
-							<div class="inputIcon">
-								<i class="fa fa-mobile-alt"></i>
-							</div>
-							<div class="inputText">
-								<input type="text" class="w-100" formControlName="phone" placeholder="Telefone"
-									mask="(00)00000-0000" />
-							</div>
-						</div> -->
 						<textarea placeholder="Observação" class="textarea" formControlName="observation"
 							style="height: 265px;">
 						</textarea>
 						<div class="input">
 							<div class="inputIcon">
-								<i class="fa fa-info"></i>
+								<app-icon name="info" [size]="18"></app-icon>
 							</div>
 							<div class="inputText">
 								<select formControlName="status" class="w-100">
@@ -669,35 +430,27 @@
 							</div>
 						</div>
 
-						<!-- fk phone -->
-
-						<button class="btn-secondary mb-15" data-target="#modalPhoneNumber" data-toggle="modal"
-							style="border: none!important;">
-							<i class="fa fa-plus " style="margin-right: 5px;"> </i>Adicionar número de telefone
+						<button class="ws-btn ws-btn--block ws-btn--link mt-15 mb-15" data-target="#modalPhoneNumber"
+							data-toggle="modal">
+							<app-icon name="plus" [size]="18" [stroke]="2"></app-icon>
+							Adicionar número de telefone
 						</button>
 
-						<div class="card-input mb-15" *ngFor="let telefone of form.value.telefones; let j = index"
+						<div class="card-input ws-phone-item mb-15" *ngFor="let telefone of form.value.telefones; let j = index"
 							[attr.data-index]="j">
-							<div class="row">
-								<div class="phone-icon">
-									<ng-container *ngIf="telefone?.bo_whatsapp == 1; else IconTelefone">
-										<i class="fab fa-whatsapp" style="font-size: 2.28em;"></i>
-									</ng-container>
-									<ng-template #IconTelefone>
-										<i class="fa fa-mobile"></i>
-									</ng-template>
-
-								</div>
-								<div class="phone-number">
-									<small>+{{telefone?.country_code}}</small>{{telefone?.phone | helpers: "phoneByCountry" :telefone.country_code}}
-								</div>
-								<div class="phone-remove ">
-									<i class="fa fa-trash cursor-pointer" (click)="deleteTelefone(j)"></i>
-								</div>
+							<div class="phone-icon">
+								<app-icon [name]="telefone?.bo_whatsapp == 1 ? 'whatsapp' : 'smartphone'"></app-icon>
+							</div>
+							<div class="phone-number">
+								+{{telefone?.country_code}}&ngsp;{{telefone?.phone | helpers: "phoneByCountry" :telefone.country_code}}
+							</div>
+							<div class="phone-remove">
+								<button type="button" class="ws-btn ws-btn--quiet ws-btn--icon" aria-label="Remover telefone"
+									(click)="deleteTelefone(j)">
+									<app-icon name="trash" [size]="18"></app-icon>
+								</button>
 							</div>
 						</div>
-
-						<!-- end fk phone -->
 					</form>
 				</div>
 
@@ -739,13 +492,10 @@
 				<div class="content">
 
 					<form novalidate>
-						<!-- {{countryCodeSelected}} -->
-						<div class='form-group is-empty col-md-12'>
-
-
+						<div class='form-group is-empty'>
 							<div class="input">
 								<div class="inputIcon">
-									<i class="fa fa-globe-americas"></i>
+									<app-icon name="globe" [size]="18"></app-icon>
 								</div>
 								<div class="inputText">
 									<ng-select
@@ -762,7 +512,7 @@
 							</div>
 							<div class="input">
 								<div class="inputIcon">
-									<i class="fa fa-mobile-alt"></i>
+									<app-icon name="smartphone" [size]="18"></app-icon>
 								</div>
 								<div class="inputText">
 									<input [(ngModel)]="phone" mask="{{maskToInsert}}"
@@ -777,12 +527,6 @@
 									<label class="onoffswitch-label" for="myonoffswitch"></label>
 								</div>
 							</app-input-container>
-
-							<!-- <app-input-container errorMessage='Campo obrigatório' label='bo_whatsapp'>
-								<input class='form-control' [(ngModel)]="bo_whatsapp"
-									 [ngModelOptions]="{standalone: true}"
-									placeholder=''>
-							</app-input-container> -->
 						</div>
 					</form>
 				</div>
@@ -817,7 +561,7 @@
 
 						<div class="input">
 							<div class="inputIcon">
-								<i class="fa fa-link"></i>
+								<app-icon name="link" [size]="18"></app-icon>
 							</div>
 							<div class="inputText">
 								<input type="text" class="w-100" formControlName="url_sale"
@@ -847,7 +591,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h3 class="modal-title" id="modalNewImportContact">
-					<p>Importanto contatos indicados do(a) {{ parent.name }} </p>
+					<p>Importando contatos indicados do(a) {{ parent.name }} </p>
 				</h3>
 			</div>
 			<div class="modal-body">
@@ -858,21 +602,22 @@
 							<input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput />
 							<div class="uploadArquivo"
 								[style.background-image]=" 'url(' + img + ' )' | safeHtml: 'style' "></div>
-							<button class="btn btn-upload btn-secondary" (click)="fileInput.click()"> Anexar arquivo
+							<button class="btn btn-upload btn-secondary" (click)="fileInput.click()">
+								<app-icon name="upload" [size]="18"></app-icon>
+								Anexar arquivo
 							</button>
 						</div>
 					</span>
 					<ng-container *ngIf="customersImported.length != 0">
-						<div class="card"
-							style="background: transparent; color: var(--backgroundColor); margin-bottom: 15px;">
+						<div class="card mb-15">
 							<h3>Importado {{customersImported?.res.length}}</h3>
-							<div *ngFor="let item of customersImported?.res" style="margin-top: 15px;">
+							<div *ngFor="let item of customersImported?.res" class="mt-15">
 								{{ item?.name }} <br>
 								{{ item?.phone}}
 							</div>
 
 						</div>
-						<div class="card" style="background: transparent; color: var(--backgroundColor)">
+						<div class="card">
 							<h3>Indicado por outro lead {{customersImported?.repetidos.length}}</h3>
 							<p *ngFor="let item of customersImported?.repetidos">
 								{{item}}
@@ -884,8 +629,12 @@
 
 				</div>
 			</div>
-			<div class="modal-footer" *ngIf="customersImported.length == 0">
-				<button type="button" class="btn btn-primary" (click)="importContact(formScript.value)">
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">
+					Fechar
+				</button>
+				<button type="button" class="btn btn-primary" *ngIf="customersImported.length == 0"
+					(click)="importContact(formScript.value)">
 					Importar
 				</button>
 			</div>
@@ -898,10 +647,12 @@
 <div class="modal fade" id="modalCall" tabindex="-1" aria-labelledby="modalStapcall" aria-hidden="true">
 	<div class="modal-dialog modal-exlg">
 		<div class="modal-content">
+			<button type="button" class="ws-btn ws-btn--quiet ws-btn--icon ws-modal-close" data-dismiss="modal"
+				aria-label="Fechar">
+				<app-icon name="close"></app-icon>
+			</button>
 			<div class="modal-header">
 				<h2 class="modal-title" id="modalStapcall">
-					<!-- <pre>{{ person | json }}</pre> -->
-
 					<div class="row flex-wrap">
 						Ligando para {{ person.name }} -
 						<div class="contacto-phone" *ngFor="let itemPhone of person.phones; let last = last">
@@ -909,8 +660,8 @@
 								<a target="_BLANK"
 									href="https://api.whatsapp.com/send/?phone={{itemPhone.country_code}}{{itemPhone.phone}}&text={{strategy?.url_sale}}"
 									title="Enviar link">
-									<i [ngClass]="itemPhone.bo_whatsapp ? 'fab fa-whatsapp' : 'fa fa-mobile-alt'"></i>
-									<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
+									<app-icon [name]="itemPhone.bo_whatsapp ? 'whatsapp' : 'smartphone'" [size]="18"></app-icon>
+									+{{itemPhone?.country_code}}&ngsp;{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
 									<span *ngIf="!last" class="mr-10">,</span>
 								</a>
 							</div>
@@ -921,50 +672,35 @@
 						</div>
 					</div>
 
-					<div class="row">
-						<br>
-						<div class="flex-direction-column">
-							<div class="row" *ngIf="strategy?.url_sale">
-								<a target="_BLANK" href="{{strategy?.url_sale}}" title="Fazer a venda.">
-									<div class="card mr-5 cursor-pointer">
-										<i class="fab fa-wpforms"></i>
-									</div>
-								</a>
-							</div>
+					<div class="ws-call__actions">
+						<a *ngIf="strategy?.url_sale" class="ws-btn ws-btn--soft ws-btn--icon" target="_BLANK"
+							href="{{strategy?.url_sale}}" title="Fazer a venda.">
+							<app-icon name="cart"></app-icon>
+						</a>
 
-							<br>
-							<h4>Deseja alterar o status?</h4>
-							<div class="row flex-direction-row" >
-								<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'pc')"
-									title="Problemas com cartão de crédito" *ngIf="person.status != 'pc'">
-									<i class="fa fa-credit-card icon-waiting">
-									</i>
-								</div>
-								<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'ld')"
-									title="Ligar depois"  *ngIf="person.status != 'ld'">
-									<i class="fa fa-headset icon-waiting">
-									</i>
-								</div>
-								<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'n')"
-									title="Não deu negócio 😭"  *ngIf="person.status != 'n'">
-									<i class="fa fa-thumbs-down icon-waiting">
-									</i>
-								</div>
-								<div class="card mr-5 cursor-pointer" (click)="changeStatus(person, 'c')"
-									title="Vendido 😃"  *ngIf="person.status != 'c'">
-									<i class="fa fa-thumbs-up icon-waiting">
-									</i>
-								</div>
-							</div>
+						<h4>Deseja alterar o status?</h4>
+						<div class="ws-call__statusbar">
+							<button type="button" class="ws-statusbtn" (click)="changeStatus(person, 'pc')"
+								title="Problemas com cartão de crédito" *ngIf="person.status != 'pc'">
+								<app-icon name="card"></app-icon>
+							</button>
+							<button type="button" class="ws-statusbtn" (click)="changeStatus(person, 'ld')"
+								title="Ligar depois" *ngIf="person.status != 'ld'">
+								<app-icon name="headset"></app-icon>
+							</button>
+							<button type="button" class="ws-statusbtn" (click)="changeStatus(person, 'n')"
+								title="Não deu negócio 😭" *ngIf="person.status != 'n'">
+								<app-icon name="thumbs-down"></app-icon>
+							</button>
+							<button type="button" class="ws-statusbtn" (click)="changeStatus(person, 'c')"
+								title="Vendido 😃" *ngIf="person.status != 'c'">
+								<app-icon name="thumbs-up"></app-icon>
+							</button>
 						</div>
-
 					</div>
 				</h2>
 			</div>
 			<div class="modal-body">
-				<!-- <p>Observação: {{ person.observation }}</p>
-				<br /> -->
-
 				<div class="content rowCall">
 					<div class="person">
 						<form [formGroup]="form" novalidate>
@@ -973,35 +709,32 @@
 								Referido alterado em: {{person?.updated_at | date: 'dd/MM/yyyy H:mm:ss'}}
 							</label>
 							<textarea (change)="update(form.value,false,false,true)" placeholder="Observação" class="textarea"
-								formControlName="observation" style="width: 95%; height: 300px;">
+								formControlName="observation" style="height: 300px;">
 							</textarea>
 						</form>
 						<b>Árvores de indicações</b>
 						<div class="tree margint-25" *ngFor="let itemParent of parents; let i = index">
 							<div [style.marginLeft.px]="20 * i">
 								<div class="parentName">
-									<i class="fa fa-folder-open"></i>
+									<app-icon name="folder"></app-icon>
 
 									{{ itemParent.name }}
-									<span *ngIf="itemParent.status != 'a'">
-										<i *ngIf="itemParent.status == 'pc'"
-											class="fa fa-credit-card icon-finished icon-finished-no">
-										</i>
-										<i *ngIf="itemParent.status == 'ld'" class="fa fa-headset icon-finished">
-										</i>
-										<i *ngIf="itemParent.status == 'n'"
-											class="fa fa-thumbs-down icon-finished icon-finished-no">
-										</i>
-										<i *ngIf="itemParent.status == 'c'"
-											class="fa fa-thumbs-up icon-finished icon-finished-yes">
-										</i>
-									</span>
+									<ng-container *ngIf="itemParent.status != 'a'">
+										<app-icon *ngIf="itemParent.status == 'pc'" class="icon-finished icon-finished-no"
+											name="card"></app-icon>
+										<app-icon *ngIf="itemParent.status == 'ld'" class="icon-finished" name="headset">
+										</app-icon>
+										<app-icon *ngIf="itemParent.status == 'n'" class="icon-finished icon-finished-no"
+											name="thumbs-down"></app-icon>
+										<app-icon *ngIf="itemParent.status == 'c'" class="icon-finished icon-finished-yes"
+											name="thumbs-up"></app-icon>
+									</ng-container>
 								</div>
 								<div class="row">
 
 									<div class="parentPhone"
 										*ngFor="let itemPhone of itemParent.phones; let last = last">
-										<small>+{{itemPhone?.country_code}}</small>{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
+										+{{itemPhone?.country_code}}&ngsp;{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
 										<span *ngIf="!last" class="mr-10">,</span>
 									</div>
 								</div>
@@ -1015,10 +748,8 @@
 						<perfect-scrollbar>
 							<h1>Strategy</h1>
 							<span *ngFor="let item of strategy?.staps">
-								<!-- <span *ngIf="item.length"> -->
 								{{ item }}
 								<br />
-								<!-- </span> -->
 							</span>
 						</perfect-scrollbar>
 					</div>
@@ -1032,6 +763,10 @@
 <div class="modal fade" id="modalDonate" tabindex="-1" aria-labelledby="modalNewDonate" aria-hidden="true">
 	<div class="modal-dialog ">
 		<div class="modal-content">
+			<button type="button" class="ws-btn ws-btn--quiet ws-btn--icon ws-modal-close" data-dismiss="modal"
+				aria-label="Fechar">
+				<app-icon name="close"></app-icon>
+			</button>
 			<div class="modal-body">
 				<div class="content">
 					<p class="mb-15">
@@ -1046,45 +781,33 @@
 						Faça sua parte. Ajude-nos a manter o servidor sempre on-line.
 					</p>
 					<div class="row center-center mb-25">
-						<div class="pix mr-25">
+						<div class="pix">
 							<div class="row center-center">
-								<img style="text-align: center;" src="/assets/img/system/pix.png" width="128px" alt="">
+								<img src="/assets/img/system/pix.png" width="128" alt="">
 							</div>
 							<button class="w-100">
 								PIX
 							</button>
 						</div>
-						<!-- <div class="paypal">
-							<div class="row center-center">
-								<img style="text-align: center;" src="/assets/img/system/donate.png" alt="">
-							</div>
-							<button class="w-100">
-								<a href="https://www.paypal.com/donate?hosted_button_id=JPB4P9HQXT3KS" target="_BLANK"
-									style="color:#fff !important">
-									Acessar link Paypal
-								</a>
-							</button>
-						</div> -->
 					</div>
 					<div class="row center-center">
 						<h2>Ou</h2>
 					</div>
-					<div class="row center-center">
-						<br>
-						<div class="card light" style="margin-left: 10px;">
-							<h3>Itau</h3> <br><br>
+					<div class="row center-center ws-donate__banks">
+						<div class="card">
+							<h3>Itau</h3>
 							Agência: 0322<br>
 							Conta: 58119-0 <br>
 							CPF: 040.712.881-67
 						</div>
-						<div class="card light" style="margin-left: 10px;">
-							<h3>Banco inter</h3> <br><br>
+						<div class="card">
+							<h3>Banco inter</h3>
 							Agência: 0001<br>
 							Conta: 1961169-2 <br>
 							CPF: 040.712.881-67
 						</div>
-						<div class="card light" style="margin-left: 10px;">
-							<h3>NuBank</h3><br><br>
+						<div class="card">
+							<h3>NuBank</h3>
 							Agência: 0001<br>
 							Conta: 9506125-2 <br>
 							CPF: 040.712.881-67
@@ -1099,10 +822,11 @@
 <!-- Modal bug -->
 <div class="modal fade" id="modalBug" tabindex="-1" aria-labelledby="modalNewBug" aria-hidden="true">
 	<div class="modal-dialog ">
+		<div class="modal-content">
 		<div class="modal-header">
-			<h3 class="modal-title" id="modalNewSticky">
+			<h3 class="modal-title" id="modalNewBug">
 				<p>
-					<i class="fa fa-bug"></i> Enviar um relatório de erro (Bug)
+					<app-icon name="bug"></app-icon> Enviar um relatório de erro (Bug)
 				</p>
 			</h3>
 		</div>
@@ -1113,7 +837,8 @@
 					Para que possamos identificar o erro, digite em detalhes tudo que aconteceu<br><br>
 				</p>
 				<p class="mb-15">
-					<a target="_BLANK" href="https://trello.com/b/GQpoOLdf/sell-more"> <i class="fab fa-trello"></i> Veja no que estamos trabalhando</a>
+					<a class="ws-bug__link" target="_BLANK" href="https://trello.com/b/GQpoOLdf/sell-more">
+						<app-icon name="external" [size]="16"></app-icon> Veja no que estamos trabalhando</a>
 				</p>
 
 				<form [formGroup]="formBug" novalidate>
@@ -1133,16 +858,22 @@
 				Salvar
 			</button>
 		</div>
+		</div>
 	</div>
 </div>
 
 <!-- Modal Calendar -->
 <div class="modal fade" id="modalCalendar" tabindex="-1" aria-labelledby="modalCalendar" aria-hidden="true">
 	<div class="modal-dialog modal-exlg">
+		<div class="modal-content">
+		<button type="button" class="ws-btn ws-btn--quiet ws-btn--icon ws-modal-close" data-dismiss="modal"
+			aria-label="Fechar">
+			<app-icon name="close"></app-icon>
+		</button>
 		<div class="modal-header">
 			<h3 class="modal-title">
 				<p>
-					<i class="far fa-calendar-alt"></i> Calendario
+					<app-icon name="calendar"></app-icon> Calendario
 				</p>
 			</h3>
 		</div>
@@ -1150,15 +881,15 @@
 
 			<div class="calendarOptions">
 				<div class="calendarDate">
-					<button class="btn btn-secondary" style="margin:5px; padding:10px" mwlCalendarPreviousView
+					<button class="btn btn-secondary" mwlCalendarPreviousView
 						[view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
 						Anterior
 					</button>
-					<button class="btn btn-secondary" style="margin:5px; padding:10px" mwlCalendarToday
+					<button class="btn btn-secondary" mwlCalendarToday
 						[(viewDate)]="viewDate">
 						Hoje
 					</button>
-					<button class="btn btn-secondary" style="margin:5px; padding:10px" mwlCalendarNextView [view]="view"
+					<button class="btn btn-secondary" mwlCalendarNextView [view]="view"
 						[(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
 						Próximo
 					</button>
@@ -1168,15 +899,15 @@
 				</div>
 				<div class="calendarDateType">
 					<div class="row flex-direction-row">
-						<button class="btn btn-secondary" style="margin:5px; padding:10px"
+						<button class="btn btn-secondary"
 							(click)="setView(CalendarView.Month)" [class.active]="view === CalendarView.Month">
 							Mês
 						</button>
-						<button class="btn btn-secondary" style="margin:5px; padding:10px"
+						<button class="btn btn-secondary"
 							(click)="setView(CalendarView.Week)" [class.active]="view === CalendarView.Week">
 							Semana
 						</button>
-						<button class="btn btn-secondary" style="margin:5px; padding:10px"
+						<button class="btn btn-secondary"
 							(click)="setView(CalendarView.Day)" [class.active]="view === CalendarView.Day">
 							Dia
 						</button>
@@ -1200,20 +931,16 @@
 				</mwl-calendar-day-view>
 			</div>
 
-			<!-- Everything you see below is just for the demo, you don't need to include it in your app -->
-
-
-			<!-- <div class="" *ngIf="formCalendar.value.id_customers > 0"> -->
-			<div class="">
+			<div class="calendarNew">
 				<h3> Novo agendamento: clique no dia e informe o horário </h3>
 				<h2> {{formCalendar.value.title}}</h2>
 
 				<div class="card-light">
 					<form [formGroup]="formCalendar" novalidate>
 						<div class="row">
-							<div class="input" style="margin-right: 25px;">
+							<div class="input">
 								<div class="inputIcon">
-									<i class="fa fa-calendar-alt"></i>
+									<app-icon name="user" [size]="18"></app-icon>
 								</div>
 								<select formControlName="id_customers" class="w-100">
 									<option value="" selected>
@@ -1227,7 +954,7 @@
 												<div class="cursor-pointer">
 													<i
 														[ngClass]="itemPhone.bo_whatsapp ? 'fab fa-whatsapp' : 'fa fa-mobile-alt'"></i>
-													<small>+{{itemPhone.country_code}}</small>{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
+													+{{itemPhone.country_code}}&ngsp;{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
 													<span *ngIf="!last" class="mr-10">,</span>
 												</div>
 											</div>
@@ -1235,9 +962,9 @@
 									</option>
 								</select>
 							</div>
-							<div class="input" style="margin-right: 25px;">
+							<div class="input">
 								<div class="inputIcon">
-									<i class="fa fa-calendar-alt"></i>
+									<app-icon name="calendar" [size]="18"></app-icon>
 								</div>
 								<div class="inputText">
 									<input type="text" mask="dX/M0/0000" [showMaskTyped]="true" class="w-100"
@@ -1246,7 +973,7 @@
 							</div>
 							<div class="input">
 								<div class="inputIcon">
-									<i class="fa fa-hourglass-start"></i>
+									<app-icon name="clock" [size]="18"></app-icon>
 								</div>
 								<div class="inputText">
 									<input type="text" mask="Hh:m0:s0" [showMaskTyped]="true" class="w-100"
@@ -1264,6 +991,7 @@
 				</div>
 			</div>
 		</div>
+		</div>
 	</div>
 </div>
 
@@ -1272,39 +1000,39 @@
 <div class="modal fade" id="modalDetailCalendar" tabindex="-1" aria-labelledby="modalDetailCalendar" aria-hidden="true">
 	<div class="modal-dialog ">
 		<div class="modal-content">
+			<button type="button" class="ws-btn ws-btn--quiet ws-btn--icon ws-modal-close" data-dismiss="modal"
+				aria-label="Fechar">
+				<app-icon name="close"></app-icon>
+			</button>
 			<div class="modal-body">
-				<!-- <pre>{{ calendarDetail | json }}</pre> -->
-				<div class="content">
-					<div class="card light" style="margin-left: 10px;">
-						<h3 [innerHtml]="calendarDetail?.title"></h3>
-						<p *ngIf="calendarDetail?.referido?.id" class="mt-15">
-							Referido adicionado no dia {{calendarDetail?.referido.created_at | date: 'dd/MM/yyyy H:mm:ss'}} <br>
-							Você alterou esse contato no dia {{calendarDetail?.referido.updated_at | date: 'dd/MM/yyyy H:mm:ss'}}
-						</p>
+				<div class="content ws-appointment">
+					<h3 [innerHtml]="calendarDetail?.title"></h3>
+					<p *ngIf="calendarDetail?.referido?.id">
+						Referido adicionado no dia {{calendarDetail?.referido.created_at | date: 'dd/MM/yyyy H:mm:ss'}} <br>
+						Você alterou esse contato no dia {{calendarDetail?.referido.updated_at | date: 'dd/MM/yyyy H:mm:ss'}}
+					</p>
 
-						<button
-							*ngIf="calendarDetail?.referido?.id"
-							data-dismiss="modal"
-							mat-menu-item (click)="callTo(calendarDetail?.referido)"
-							data-toggle="modal"
-							data-target="#modalCall"
-						>
-							<i class="fa fa-phone-volume"></i>
-							Ligar
-						</button>
+					<button
+						*ngIf="calendarDetail?.referido?.id"
+						type="button"
+						class="ws-btn ws-btn--soft ws-appointment__call"
+						data-dismiss="modal"
+						(click)="callTo(calendarDetail?.referido)"
+						data-toggle="modal"
+						data-target="#modalCall"
+					>
+						<app-icon name="phone" [size]="18"></app-icon>
+						Ligar
+					</button>
 
-						<small [innerHtml]="calendarDetail?.referido?.observation"></small>
-						<br>
-						<br>
-						<small>
-							Mova o conatato para alterar.
-						</small>
-						<div class="buttonsAgendaRemover">
-							<button (click)="removerAgendamento()" data-dismiss="modal">Remover agendamento</button>
-							<button (click)="removerAgendamento(true)" data-dismiss="modal">Remover agendamento e filtrar referido</button>
-						</div>
+					<small [innerHtml]="calendarDetail?.referido?.observation"></small>
+					<small>
+						Mova o conatato para alterar.
+					</small>
+					<div class="buttonsAgendaRemover">
+						<button type="button" class="ws-btn" (click)="removerAgendamento()" data-dismiss="modal">Remover agendamento</button>
+						<button type="button" class="ws-btn" (click)="removerAgendamento(true)" data-dismiss="modal">Remover agendamento e filtrar referido</button>
 					</div>
-
 				</div>
 			</div>
 		</div>
