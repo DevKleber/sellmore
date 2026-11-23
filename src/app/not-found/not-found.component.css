@@ -1,3 +1,51 @@
-.iconesExemplos{
-	font-size: 50px;padding: 15px;
+.not-found {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+	padding: 32px 16px;
+	background: radial-gradient(circle at 50% 0, var(--primary-soft), transparent 55%), var(--bg);
+	color: var(--ink);
+}
+
+.not-found__card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+	max-width: 400px;
+	padding: 32px;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-card);
+	box-shadow: var(--shadow);
+	text-align: center;
+}
+
+.not-found__code {
+	margin: 28px 0 0;
+	font-family: var(--font-display);
+	font-size: 72px;
+	font-weight: 800;
+	line-height: 1;
+	letter-spacing: -0.04em;
+	color: var(--primary-text);
+}
+
+.not-found__title {
+	margin: 8px 0 24px;
+	font-size: 22px;
+	font-weight: 700;
+	line-height: 1.25;
+}
+
+.not-found__back:hover,
+.not-found__back:focus {
+	text-decoration: none;
+}
+
+@media (max-width: 480px) {
+	.not-found__card {
+		padding: 24px 20px;
+	}
 }

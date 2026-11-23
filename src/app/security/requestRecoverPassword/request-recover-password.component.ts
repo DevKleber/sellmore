@@ -9,7 +9,7 @@ import { LoaderService } from '../../shared/loader/loader.service';
 @Component({
 	selector: 'app-request-recover-password',
 	templateUrl: './request-recover-password.component.html',
-	styleUrls: ['./request-recover-password.component.css'],
+	styleUrls: ['../auth-card.css'],
 })
 export class RequestRecoverPasswordComponent implements OnInit {
 	alterarSenhaForm: FormGroup;

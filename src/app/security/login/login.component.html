@@ -1,109 +1,109 @@
-<div class="login-box">
-	<div class="login">
-		<ng-container *ngIf="!isNewAccount; else elseTemplateNewAccount">
-			<div class="cardTitle">
-				<div class="title">Wi<span style="text-decoration: underline;">se</span>ller</div>
-				<div class="subTitle">Login</div>
+<main class="auth">
+	<section class="auth__card" aria-labelledby="auth-title">
+		<div class="auth__head">
+			<div class="ws-brand">
+				<img class="ws-brand__logo" src="/assets/img/system/wiseller.png" alt="" />
+				<span class="ws-brand__name">Wiseller</span>
 			</div>
-		</ng-container>
-		<ng-template #elseTemplateNewAccount>
-			<div class="cardTitle">
-				<div class="title">
-					<p>wi<span style="text-decoration: underline;">se</span>ller</p>
-				</div>
-				<div class="subTitle">Create account</div>
-			</div>
-		</ng-template>
+			<h1 id="auth-title" class="auth__title">{{ isNewAccount ? 'Create account' : 'Login' }}</h1>
+		</div>
 
-		<br />
-
-		<form [formGroup]="loginForm" *ngIf="!isNewAccount">
+		<form [formGroup]="loginForm" *ngIf="!isNewAccount" class="auth__form">
 			<app-input-container>
+				<label class="visually-hidden" for="login-email">E-mail</label>
 				<input
+					id="login-email"
 					type="text"
 					formControlName="email"
 					class="form-control"
 					placeholder="E-mail"
+					inputmode="email"
+					autocomplete="username"
 					autofocus
 				/>
 			</app-input-container>
 
 			<app-input-container>
+				<label class="visually-hidden" for="login-password">Password</label>
 				<input
+					id="login-password"
 					type="password"
 					formControlName="password"
 					class="form-control"
 					placeholder="Password"
+					autocomplete="current-password"
 				/>
 			</app-input-container>
 
 			<button
 				(click)="login()"
-				class="btn btn-primary btn-lg btn-block btnentrar"
+				class="ws-btn ws-btn--primary ws-btn--block auth__submit"
 				[disabled]="loginForm.invalid"
 			>
 				Entrar
 			</button>
 
-			<br>
-			<a [routerLink]="[ '/request-recover-password']">Esqueci a senha</a>
+			<a class="auth__link" [routerLink]="['/request-recover-password']">Esqueci a senha</a>
 
-			<hr />
-			<h3>Novo no Wi<span style="text-decoration: underline;">se</span>ller?</h3>
-			<button
-				(click)="changeToNewAccount()"
-				class="btn btn-secondary btn-block btnNewAccount"
-			>
+			<h2 class="auth__alt">Novo no Wiseller?</h2>
+			<button (click)="changeToNewAccount()" class="ws-btn ws-btn--block">
 				Crie sua conta
 			</button>
 		</form>
 
-		<form [formGroup]="newAccountForm" *ngIf="isNewAccount">
+		<form [formGroup]="newAccountForm" *ngIf="isNewAccount" class="auth__form">
 			<app-input-container>
+				<label class="visually-hidden" for="new-account-name">Name</label>
 				<input
+					id="new-account-name"
 					type="text"
 					formControlName="nome"
 					class="form-control"
 					placeholder="Name"
+					autocomplete="name"
 					autofocus
 				/>
 			</app-input-container>
 
 			<app-input-container>
+				<label class="visually-hidden" for="new-account-email">E-mail</label>
 				<input
+					id="new-account-email"
 					type="text"
 					formControlName="email"
 					class="form-control"
 					placeholder="E-mail"
+					inputmode="email"
+					autocomplete="email"
 					email
 				/>
 			</app-input-container>
+
 			<app-input-container>
+				<label class="visually-hidden" for="new-account-password">Password</label>
 				<input
+					id="new-account-password"
 					type="password"
 					formControlName="password"
 					class="form-control"
 					placeholder="Password"
+					autocomplete="new-password"
 				/>
 			</app-input-container>
 
 			<button
 				(click)="newAccount()"
-				class="btn btn-primary btn-lg btn-block btnentrar"
+				class="ws-btn ws-btn--primary ws-btn--block auth__submit"
 				[disabled]="newAccountForm.invalid"
 				*ngIf="showButton"
 			>
 				Crie sua conta
 			</button>
-			<hr />
-			<h3>Já tem uma conta?</h3>
-			<button
-				(click)="changeToLogin()"
-				class="btn btn-secondary btn-block btnNewAccount"
-			>
+
+			<h2 class="auth__alt">Já tem uma conta?</h2>
+			<button (click)="changeToLogin()" class="ws-btn ws-btn--block">
 				Faça login
 			</button>
 		</form>
-	</div>
-</div>
-<div class="bg-img"></div>
+	</section>
+</main>
