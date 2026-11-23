@@ -1,44 +1,39 @@
 import { expect, Locator, Page } from '@playwright/test';
-import { ALL_STATUSES, CustomerStatusCode, STATUS_FILTER_LABEL } from '../../support/data/customer-status';
+import { CustomerStatusCode, STATUS_FILTER_LABEL } from '../../support/data/customer-status';
 
-/**
- * Switches "Em aberto", "Problemas com cartão"... da tela principal. O checkbox real fica
- * escondido (display: none); o usuário clica no desenho do switch ao lado dele.
- */
+const ALL_LABEL = 'Todos';
+
+/** Pílulas de filtro da tela principal: "Todos" ou um status por vez. */
 export class StatusFilters {
-	constructor(private readonly page: Page) {}
+	private readonly group: Locator;
 
-	checkbox(status: CustomerStatusCode): Locator {
-		return this.container(status).locator('input[type="checkbox"]');
+	constructor(page: Page) {
+		this.group = page.getByRole('group', { name: 'Filtrar por status' });
 	}
 
-	async toggle(status: CustomerStatusCode): Promise<void> {
-		await this.container(status).locator('.onoffswitch-label').click();
+	pill(status: CustomerStatusCode): Locator {
+		return this.group.getByRole('button', { name: STATUS_FILTER_LABEL[status], exact: true });
 	}
 
-	async set(status: CustomerStatusCode, enabled: boolean): Promise<void> {
-		if ((await this.checkbox(status).isChecked()) === enabled) {
-			return;
-		}
-		await this.toggle(status);
-		await expect(this.checkbox(status)).toBeChecked({ checked: enabled });
+	get allPill(): Locator {
+		return this.group.getByRole('button', { name: ALL_LABEL, exact: true });
 	}
 
-	async showOnly(...statuses: CustomerStatusCode[]): Promise<void> {
-		for (const status of ALL_STATUSES) {
-			await this.set(status, statuses.includes(status));
-		}
+	async showOnly(status: CustomerStatusCode): Promise<void> {
+		await this.pill(status).click();
+		await this.expectSelected(this.pill(status));
 	}
 
 	async showAll(): Promise<void> {
-		await this.showOnly(...ALL_STATUSES);
+		await this.allPill.click();
+		await this.expectSelected(this.allPill);
 	}
 
-	async hideAll(): Promise<void> {
-		await this.showOnly();
+	async expectSelected(pill: Locator): Promise<void> {
+		await expect(pill).toHaveAttribute('aria-pressed', 'true');
 	}
 
-	private container(status: CustomerStatusCode): Locator {
-		return this.page.locator('.showEachStatus > div').filter({ has: this.page.getByText(STATUS_FILTER_LABEL[status], { exact: true }) });
+	async expectNotSelected(pill: Locator): Promise<void> {
+		await expect(pill).toHaveAttribute('aria-pressed', 'false');
 	}
 }

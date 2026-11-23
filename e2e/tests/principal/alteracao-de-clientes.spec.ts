@@ -21,7 +21,7 @@ test.describe('Alteração de clientes', () => {
 		await expect(home.leadForm.title).toHaveText('Alterando referido');
 		await expect(home.leadForm.nameInput).toHaveValue(referral.name);
 		await expect(home.leadForm.observationInput).toHaveValue('Prefere ligação à tarde');
-		await expect(home.leadForm.phones).toHaveText([`+${BRAZIL.code}${displayBrazilianMobile(number)}`]);
+		await expect(home.leadForm.phones).toHaveText([`+${BRAZIL.code} ${displayBrazilianMobile(number)}`]);
 		await expect(home.leadForm.updateButton).toBeEnabled();
 	});
 
@@ -41,9 +41,9 @@ test.describe('Alteração de clientes', () => {
 		await home.leadForm.close();
 
 		const card = home.leadCard(lead.name);
-		await expect(card.referral(newName).finishedIcon(CustomerStatus.NaoTemInteresse)).toBeVisible();
+		await expect(card.referral(newName).statusTag(CustomerStatus.NaoTemInteresse)).toBeVisible();
 		await home.reload();
-		await expect(card.referral(newName).finishedIcon(CustomerStatus.NaoTemInteresse)).toBeVisible();
+		await expect(card.referral(newName).statusTag(CustomerStatus.NaoTemInteresse)).toBeVisible();
 		await expect(card.referral(referral.name).root).toHaveCount(0);
 	});
 
@@ -88,7 +88,7 @@ test.describe('Alteração de clientes', () => {
 			name: uniqueName('Lead'),
 			phones: [{ number: portugueseNumber, whatsapp: false, country: PORTUGAL }],
 		});
-		const portugueseDisplay = `+${PORTUGAL.code}${displayPortugueseMobile(portugueseNumber)}`;
+		const portugueseDisplay = `+${PORTUGAL.code} ${displayPortugueseMobile(portugueseNumber)}`;
 		await home.goto();
 
 		const menu = await home.leadCard(lead.name).openMenu();

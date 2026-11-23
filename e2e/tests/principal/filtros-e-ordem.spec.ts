@@ -36,21 +36,30 @@ test.describe('Filtros de status', () => {
 		await expect(card.referralNames).toHaveCount(ALL_STATUSES.length);
 
 		for (const status of ALL_STATUSES) {
-			await test.step(`só "${STATUS_FILTER_LABEL[status]}" ligado`, async () => {
+			await test.step(`filtro "${STATUS_FILTER_LABEL[status]}"`, async () => {
 				await home.filters.showOnly(status);
 				await expect(card.referralNames).toHaveText([referrals[status].name]);
 			});
 		}
 	});
 
-	test('com todos os filtros desligados nenhum card é exibido', async ({ home, api }) => {
-		const lead = await api.createCustomer({ name: uniqueName('Lead') });
+	test('"Todos" volta a mostrar os referidos de todos os status', async ({ home, api }) => {
+		const { lead } = await leadWithOneReferralPerStatus(api);
 		await home.goto();
-		await expect(home.leadCard(lead.name).root).toBeVisible();
+		const card = home.leadCard(lead.name);
+		await home.filters.showOnly(CustomerStatus.Comprou);
+		await expect(card.referralNames).toHaveCount(1);
 
-		await home.filters.hideAll();
+		await home.filters.showAll();
 
-		await expect(home.leadNames).toHaveCount(0);
+		await expect(card.referralNames).toHaveCount(ALL_STATUSES.length);
+	});
+
+	test('a tela abre com "Todos" selecionado', async ({ home }) => {
+		await home.goto();
+
+		await home.filters.expectSelected(home.filters.allPill);
+		await home.filters.expectNotSelected(home.filters.pill(CustomerStatus.Aberto));
 	});
 
 	test('os filtros escolhidos continuam valendo depois de recarregar a página', async ({ home, api }) => {
@@ -63,8 +72,8 @@ test.describe('Filtros de status', () => {
 		await home.filters.showOnly(CustomerStatus.Comprou);
 		await home.page.reload();
 
-		await expect(home.filters.checkbox(CustomerStatus.Comprou)).toBeChecked();
-		await expect(home.filters.checkbox(CustomerStatus.Aberto)).not.toBeChecked();
+		await home.filters.expectSelected(home.filters.pill(CustomerStatus.Comprou));
+		await home.filters.expectNotSelected(home.filters.allPill);
 		const card = home.leadCard(lead.name);
 		await expect(card.referralNames).toHaveText([buyer.name]);
 		await expect(card.referral(waiting.name).root).toHaveCount(0);

@@ -5,8 +5,8 @@ import { byHint } from './hints';
 export const CardOrder = {
 	NewestFirst: /Ordem de lançamento decrescente/,
 	OldestFirst: /Ordem de lançamento crescente/,
-	AToZ: /Ordem alfabética\s+A\s+Z/,
-	ZToA: /Ordem alfabética\s+Z\s+A/,
+	AToZ: /Ordem alfabética\s+A\s*→\s*Z/,
+	ZToA: /Ordem alfabética\s+Z\s*→\s*A/,
 } as const;
 
 export type CardOrderOption = (typeof CardOrder)[keyof typeof CardOrder];

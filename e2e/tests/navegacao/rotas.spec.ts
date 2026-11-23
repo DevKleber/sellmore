@@ -10,6 +10,15 @@ test.describe('Rotas públicas', () => {
 		await expect(notFoundPage.code).toBeVisible();
 	});
 
+	test('"Voltar para a tela principal" na página 404 abre a tela principal, que sem login leva ao login', async ({ page, notFoundPage, loginPage }) => {
+		await notFoundPage.goto();
+
+		await notFoundPage.backLink.click();
+
+		await expect(page).toHaveURL('/login');
+		await loginPage.expectVisible();
+	});
+
 	test('F5 na página 404 continua na página 404', async ({ page, notFoundPage }) => {
 		await notFoundPage.goto();
 		await page.reload();

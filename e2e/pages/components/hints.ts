@@ -1,6 +1,6 @@
 /**
- * Os ícones de ação da tela principal não têm texto nem papel acessível: a única descrição
- * é a dica (tooltip) do Angular Material, presente no atributo `mattooltip` do template.
+ * Botões só com ícone são localizados pela dica (tooltip) do Angular Material, presente no
+ * atributo `mattooltip` do template.
  */
 export function byHint(hint: string): string {
 	return `[mattooltip="${hint}"]`;

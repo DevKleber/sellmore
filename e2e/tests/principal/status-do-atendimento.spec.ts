@@ -20,10 +20,10 @@ test.describe('Status do atendimento', () => {
 			await item.markStatus(status);
 			await home.alert.acknowledge(STATUS_SAVED);
 
-			await expect(item.finishedIcon(status)).toBeVisible();
+			await expect(item.statusTag(status)).toBeVisible();
 			await expect(item.waitingActions).toBeHidden();
 			await home.reload();
-			await expect(item.finishedIcon(status)).toBeVisible();
+			await expect(item.statusTag(status)).toBeVisible();
 		});
 	}
 
@@ -37,7 +37,7 @@ test.describe('Status do atendimento', () => {
 		await item.markStatus(CustomerStatus.Comprou);
 
 		await home.waitSaleCelebrationToEnd();
-		await expect(item.finishedIcon(CustomerStatus.Comprou)).toBeVisible();
+		await expect(item.statusTag(CustomerStatus.Comprou)).toBeVisible();
 		await expect(home.statistics.sales).toHaveText(new RegExp(`^${salesBefore + 1} vendas?$`));
 	});
 
@@ -53,7 +53,7 @@ test.describe('Status do atendimento', () => {
 		await home.calendar.expectOpen();
 		await expect(home.calendar.selectedCustomer).toContainText(referral.name);
 		await home.calendar.closeByClickingOutside();
-		await expect(item.finishedIcon(CustomerStatus.LigarDepois)).toBeVisible();
+		await expect(item.statusTag(CustomerStatus.LigarDepois)).toBeVisible();
 	});
 
 	test('o próprio lead do card também pode receber um status', async ({ home, api }) => {
@@ -64,7 +64,7 @@ test.describe('Status do atendimento', () => {
 		await card.markStatus(CustomerStatus.NaoTemInteresse);
 		await home.alert.acknowledge(STATUS_SAVED);
 
-		await expect(card.finishedIcon(CustomerStatus.NaoTemInteresse)).toBeVisible();
+		await expect(card.statusTag(CustomerStatus.NaoTemInteresse)).toBeVisible();
 		await expect(card.waitingActions).toBeHidden();
 	});
 
@@ -83,6 +83,6 @@ test.describe('Status do atendimento', () => {
 		await expect(home.callModal.currentStatus).toHaveText(`Status atual: ${STATUS_DESCRIPTION.pc}`);
 		await expect(home.callModal.statusOption(CustomerStatus.ProblemasComCartao)).toBeHidden();
 		await home.callModal.closeByClickingOutside();
-		await expect(item.finishedIcon(CustomerStatus.ProblemasComCartao)).toBeVisible();
+		await expect(item.statusTag(CustomerStatus.ProblemasComCartao)).toBeVisible();
 	});
 });

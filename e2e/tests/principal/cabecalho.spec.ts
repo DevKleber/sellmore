@@ -13,14 +13,14 @@ test.describe('Cabeçalho da tela principal', () => {
 		const lightBackground = await home.backgroundColor();
 
 		await home.toggleTheme();
-		await expect(home.darkThemeIcon).toBeVisible();
+		await expect(home.darkThemeActive).toBeVisible();
 		await expect.poll(() => home.backgroundColor()).not.toBe(lightBackground);
 		await home.reload();
-		await expect(home.darkThemeIcon).toBeVisible();
+		await expect(home.darkThemeActive).toBeVisible();
 		await expect.poll(() => home.backgroundColor()).not.toBe(lightBackground);
 
 		await home.toggleTheme();
-		await expect(home.darkThemeIcon).toBeHidden();
+		await expect(home.darkThemeActive).toBeHidden();
 		await expect.poll(() => home.backgroundColor()).toBe(lightBackground);
 	});
 
