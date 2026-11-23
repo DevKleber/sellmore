@@ -1,0 +1,22 @@
+{
+  "name": "wiseller-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Testes end-to-end (Playwright) do front-end do Wiseller",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "report": "playwright show-report",
+    "typecheck": "tsc --noEmit",
+    "install:browser": "playwright install chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@types/node": "22.20.5",
+    "typescript": "5.9.3"
+  }
+}
