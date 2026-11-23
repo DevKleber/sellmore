@@ -54,8 +54,11 @@ const CAMPO_DO_FILTRO: Record<string, string> = {
 	styleUrls: ['./sell-more.component.css'],
 })
 export class SellMoreComponent implements OnInit {
-	position: number = 0;
 	quantidade: number = 8;
+	private paginaCarregada = 0;
+	private totalDeLeads = 0;
+	private carregandoPagina = false;
+	private ultimoPedidoDeLeads = 0;
 	scrollTo: number = 0;
 	skeleton: any[] = [];
 	isLoadCard: boolean;
@@ -89,7 +92,6 @@ export class SellMoreComponent implements OnInit {
 	showNaotemInteresse: string = 'false';
 	themeIsDark: boolean;
 	countryCodes: any[] = [];
-	arCustomers: any[] = [];
 	customersDynamic: any[] = [];
 	customers: any[] = [];
 	customersFilter: any[] = [];
@@ -181,10 +183,7 @@ export class SellMoreComponent implements OnInit {
 
 	@HostListener('window:scroll', [])
 	onScroll(): void {
-		if (this.bottomReached()) {
-			this.isLoadCard = true;
-			this.addCustomers();
-		}
+		this.carregarMaisSeSobrarEspaco();
 	}
 	bottomReached(): boolean {
 		return (
@@ -272,8 +271,27 @@ export class SellMoreComponent implements OnInit {
 		});
 	}
 
+	/** Recarrega a listagem a partir da primeira pagina. */
 	getCustomers() {
 		this.loaderService.isLoad(true);
+		this.paginaCarregada = 0;
+		this.totalDeLeads = 0;
+		this.carregarProximaPagina(true);
+	}
+
+	/**
+	 * A API devolve os leads em paginas; as seguintes sao pedidas conforme o usuario rola a tela.
+	 * Uma resposta que chega depois de um pedido mais novo (troca de filtro, por exemplo) e descartada.
+	 */
+	private carregarProximaPagina(reiniciar = false) {
+		if (this.carregandoPagina && !reiniciar) {
+			return;
+		}
+
+		const pedido = ++this.ultimoPedidoDeLeads;
+		this.carregandoPagina = true;
+		this.isLoadCard = true;
+
 		this.sellMoreService
 			.getCustomers(
 				this.boShowProblemasCartao,
@@ -281,52 +299,55 @@ export class SellMoreComponent implements OnInit {
 				this.boShowNaotemInteresse,
 				this.boShowComprou,
 				this.boShowAberto,
-				this.orderBy
+				this.orderBy,
+				this.paginaCarregada + 1,
+				this.quantidade
 			)
-			.subscribe((res) => {
-				this.loaderService.isLoad(false);
-				this.customersDynamic = [];
-				this.position = 0;
+			.subscribe(
+				(res) => {
+					if (pedido !== this.ultimoPedidoDeLeads) {
+						return;
+					}
 
-				this.customers = res['arCustomers'];
-				this.statistics = res['statistics'];
-
-				this.arCustomers = Object.entries(this.customers);
-				this.addCustomers(
-					this.customersDynamic.length > 0
-						? this.customersDynamic.length
-						: this.quantidade
-				);
-				// setInterval(() => {
-				// }, 2000);
-			});
+					this.receberPagina(res, reiniciar);
+				},
+				() => this.encerrarCarregamento(pedido)
+			);
 	}
 
-	addCustomers(quantidade = null) {
-		this.isLoadCard = true;
-		const moreItems = quantidade === null ? this.quantidade : quantidade;
-		let item = this.arCustomers.slice(
-			this.position,
-			this.position + moreItems
-		);
+	private receberPagina(res: any, reiniciar: boolean) {
+		if (reiniciar) {
+			this.customersDynamic = [];
+		}
 
-		item.forEach((element) => {
-			// console.log(element);
-			this.customersDynamic.push(element[1]);
-		});
+		this.customersDynamic.push(...Object.values(res['arCustomers'] ?? {}));
+		this.customers = this.customersDynamic;
+		this.statistics = res['statistics'];
+		this.totalDeLeads = res['total'] ?? this.customersDynamic.length;
+		this.paginaCarregada += 1;
 
-		this.position += this.quantidade;
-		this.isLoadCard = false;
-
+		this.encerrarCarregamento(this.ultimoPedidoDeLeads);
 		setTimeout(() => this.carregarMaisSeSobrarEspaco());
 	}
 
-	/** A proxima leva so e pedida ao rolar; se os cards nao enchem a tela nao ha rolagem, entao carrega ja. */
-	private carregarMaisSeSobrarEspaco() {
-		const haMaisCards = this.position < this.arCustomers.length;
+	private encerrarCarregamento(pedido: number) {
+		if (pedido !== this.ultimoPedidoDeLeads) {
+			return;
+		}
 
-		if (haMaisCards && this.bottomReached()) {
-			this.addCustomers();
+		this.carregandoPagina = false;
+		this.isLoadCard = false;
+		this.loaderService.isLoad(false);
+	}
+
+	private haMaisLeads(): boolean {
+		return this.paginaCarregada * this.quantidade < this.totalDeLeads;
+	}
+
+	/** A proxima pagina so e pedida ao rolar; se os cards nao enchem a tela nao ha rolagem, entao carrega ja. */
+	private carregarMaisSeSobrarEspaco() {
+		if (this.haMaisLeads() && this.bottomReached()) {
+			this.carregarProximaPagina();
 		}
 	}
 

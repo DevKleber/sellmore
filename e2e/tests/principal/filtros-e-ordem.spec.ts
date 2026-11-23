@@ -9,6 +9,12 @@ type ReferralsByStatus = Record<CustomerStatusCode, Customer>;
 
 const CARDS_PER_PAGE = 8;
 const EXTRA_CARDS = 2;
+const FIRST_PAGE = 1;
+
+function isCustomersPage(url: string, page: number): boolean {
+	const { pathname, searchParams } = new URL(url);
+	return pathname.endsWith('/api/customers') && searchParams.get('page') === String(page) && searchParams.get('perPage') === String(CARDS_PER_PAGE);
+}
 
 /** Lead com um referido em cada status. */
 async function leadWithOneReferralPerStatus(api: WisellerApi): Promise<{ lead: Customer; referrals: ReferralsByStatus }> {
@@ -125,6 +131,22 @@ test.describe('Ordem e paginação dos cards', () => {
 
 		await home.scrollToBottom();
 
+		await expect(home.leadNames).toHaveCount(CARDS_PER_PAGE + EXTRA_CARDS);
+	});
+
+	test('a listagem é pedida à API uma página por vez', async ({ home, api }) => {
+		for (let created = 0; created < CARDS_PER_PAGE + EXTRA_CARDS; created++) {
+			await api.createCustomer({ name: uniqueName('Lead') });
+		}
+		const firstPage = home.page.waitForRequest((request) => isCustomersPage(request.url(), FIRST_PAGE));
+		await home.goto();
+		await firstPage;
+		await expect(home.leadNames).toHaveCount(CARDS_PER_PAGE);
+
+		const secondPage = home.page.waitForRequest((request) => isCustomersPage(request.url(), FIRST_PAGE + 1));
+		await home.scrollToBottom();
+
+		await secondPage;
 		await expect(home.leadNames).toHaveCount(CARDS_PER_PAGE + EXTRA_CARDS);
 	});
 
