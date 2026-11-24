@@ -18,9 +18,9 @@ export class LoginPage {
 
 	constructor(readonly page: Page) {
 		this.alert = new AlertDialog(page);
-		this.heading = page.getByText('Login', { exact: true });
+		this.heading = page.getByRole('heading', { name: 'Entrar' });
 		this.emailInput = page.getByPlaceholder('E-mail');
-		this.passwordInput = page.getByPlaceholder('Password');
+		this.passwordInput = page.getByPlaceholder('Senha');
 		this.submitButton = page.getByRole('button', { name: 'Entrar' });
 		this.forgotPasswordLink = page.getByRole('link', { name: 'Esqueci a senha' });
 		this.createAccountButton = page.getByRole('button', { name: 'Crie sua conta' });

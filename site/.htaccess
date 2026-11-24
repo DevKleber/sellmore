@@ -8,7 +8,7 @@ RewriteCond %{HTTP_HOST} !^wiseller\.com\.br$ [NC]
 RewriteRule ^ https://wiseller.com.br%{REQUEST_URI} [L,R=301]
 
 # A plataforma mudou para app.wiseller.com.br; os enderecos antigos continuam valendo.
-RewriteRule ^(login|request-recover-password|access_log|not-found)(/.*)?$ https://app.wiseller.com.br/$1$2 [L,R=302]
+RewriteRule ^(login|criar-conta|request-recover-password|access_log|not-found)(/.*)?$ https://app.wiseller.com.br/$1$2 [L,R=302]
 
 ErrorDocument 404 /404.html
 

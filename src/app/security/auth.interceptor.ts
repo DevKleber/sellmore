@@ -1,11 +1,4 @@
-import {
-	HttpInterceptor,
-	HttpRequest,
-	HttpHandler,
-	HttpEvent,
-	// HttpResponse,
-	// HttpErrorResponse
-} from '@angular/common/http';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
 import {
 	Observable,
 	// throwError

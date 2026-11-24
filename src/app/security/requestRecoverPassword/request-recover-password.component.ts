@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from './../login/login.service';
 
@@ -10,10 +10,12 @@ import { LoaderService } from '../../shared/loader/loader.service';
 	selector: 'app-request-recover-password',
 	templateUrl: './request-recover-password.component.html',
 	styleUrls: ['../auth-card.css'],
+	changeDetection: ChangeDetectionStrategy.Eager,
+	standalone: false
 })
 export class RequestRecoverPasswordComponent implements OnInit {
-	alterarSenhaForm: FormGroup;
-	solictarAlteracaoSenhaForm: FormGroup;
+	alterarSenhaForm: UntypedFormGroup;
+	solictarAlteracaoSenhaForm: UntypedFormGroup;
 	navigateTo: string;
 	isRequestRecoverPassword: boolean = true;
 	showButton: boolean = true;
@@ -21,7 +23,7 @@ export class RequestRecoverPasswordComponent implements OnInit {
 	url: any;
 
 	constructor(
-		private fb: FormBuilder,
+		private fb: UntypedFormBuilder,
 		private loginService: LoginService,
 		private notificationService: NotificationService,
 		private activatedRoute: ActivatedRoute,

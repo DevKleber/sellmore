@@ -5,6 +5,7 @@ import {
 	ElementRef,
 	ViewChild,
 	HostListener,
+	ChangeDetectionStrategy
 } from '@angular/core';
 import { isSameDay, isSameMonth } from 'date-fns';
 import {
@@ -27,14 +28,13 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { AnimationOptions } from 'ngx-lottie';
 
 import {
-	FormBuilder,
-	FormControl,
-	FormGroup,
+	UntypedFormBuilder,
+	UntypedFormControl,
+	UntypedFormGroup,
 	Validators,
-	FormArray,
+	UntypedFormArray,
 } from '@angular/forms';
 import { LoaderService } from '../shared/loader/loader.service';
-import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
 
 const FILTRO_TODOS = 'todos';
 const MAXIMO_DE_INICIAIS = 2;
@@ -52,6 +52,8 @@ const CAMPO_DO_FILTRO: Record<string, string> = {
 	selector: '[app-sell-more]',
 	templateUrl: './sell-more.component.html',
 	styleUrls: ['./sell-more.component.css'],
+	changeDetection: ChangeDetectionStrategy.Eager,
+	standalone: false
 })
 export class SellMoreComponent implements OnInit {
 	quantidade: number = 8;
@@ -122,14 +124,14 @@ export class SellMoreComponent implements OnInit {
 	path: string = API_SITE_PATH_IMG;
 	isDevMode: boolean = isDevMode();
 
-	searchForm: FormGroup;
-	searchControl: FormControl;
+	searchForm: UntypedFormGroup;
+	searchControl: UntypedFormControl;
 
-	form: FormGroup;
-	formScript: FormGroup;
-	formBug: FormGroup;
-	formCategory: FormGroup;
-	formCalendar: FormGroup;
+	form: UntypedFormGroup;
+	formScript: UntypedFormGroup;
+	formBug: UntypedFormGroup;
+	formCategory: UntypedFormGroup;
+	formCalendar: UntypedFormGroup;
 
 	calendarDetail: any;
 
@@ -148,8 +150,6 @@ export class SellMoreComponent implements OnInit {
 	@ViewChild('openCalendarDetail', { static: true })
 	openCalendarDetail: ElementRef;
 	@ViewChild('closeModalPhone', { static: true }) closeModalPhone: ElementRef;
-	@ViewChild(PerfectScrollbarComponent)
-	componentRef?: PerfectScrollbarComponent;
 	@ViewChild('contentScroll') contentScroll: ElementRef;
 
 	options: AnimationOptions = {
@@ -173,7 +173,7 @@ export class SellMoreComponent implements OnInit {
 	constructor(
 		private sellMoreService: SellMoreService,
 		private loginService: LoginService,
-		private formBuilder: FormBuilder,
+		private formBuilder: UntypedFormBuilder,
 		public helper: Helper,
 		public themeService: ThemeService,
 		public notificationService: NotificationService,
@@ -425,17 +425,17 @@ export class SellMoreComponent implements OnInit {
 		bo_whatsapp = this.bo_whatsapp,
 		countryCode = this.countryCodeSelected
 	) {
-		let items = this.form.get('telefones') as FormArray;
+		let items = this.form.get('telefones') as UntypedFormArray;
 		items.push(this.telefoneItem(phone, bo_whatsapp, countryCode));
 		this.closeModalPhone.nativeElement.click();
 		this.phone = '';
 		this.bo_whatsapp = false;
 	}
 	deleteTelefone(i: number) {
-		const control = <FormArray>this.form.controls['telefones'];
+		const control = <UntypedFormArray>this.form.controls['telefones'];
 		control.removeAt(i);
 	}
-	telefoneItem(phone = '', bo_whatsapp = false, countryCode = ''): FormGroup {
+	telefoneItem(phone = '', bo_whatsapp = false, countryCode = ''): UntypedFormGroup {
 		if (phone != '') {
 			return this.formBuilder.group({
 				phone: this.formBuilder.control(phone),
@@ -572,7 +572,7 @@ export class SellMoreComponent implements OnInit {
 		this.form.controls['observation'].setValue(person.observation);
 		this.form.controls['id_parent'].setValue(person.id_parent);
 
-		let items = this.form.get('telefones') as FormArray;
+		let items = this.form.get('telefones') as UntypedFormArray;
 		if (items.length) {
 			items.clear();
 		}
@@ -726,7 +726,7 @@ export class SellMoreComponent implements OnInit {
 		this.form.controls['address'].setValue('');
 		this.form.controls['status'].setValue('');
 		this.form.controls['observation'].setValue('');
-		let items = this.form.get('telefones') as FormArray;
+		let items = this.form.get('telefones') as UntypedFormArray;
 		if (items.length) {
 			items.clear();
 		}

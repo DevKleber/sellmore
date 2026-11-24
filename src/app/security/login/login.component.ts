@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from './login.service';
 import { User } from './user.model';
@@ -10,16 +10,18 @@ import { LoaderService } from '../../shared/loader/loader.service';
 	selector: 'app-login',
 	templateUrl: './login.component.html',
 	styleUrls: ['../auth-card.css'],
+	changeDetection: ChangeDetectionStrategy.Eager,
+	standalone: false
 })
 export class LoginComponent implements OnInit {
-	loginForm: FormGroup;
-	newAccountForm: FormGroup;
+	loginForm: UntypedFormGroup;
+	newAccountForm: UntypedFormGroup;
 	navigateTo: string;
 	isNewAccount: boolean = false;
 	showButton: boolean = true;
 
 	constructor(
-		private fb: FormBuilder,
+		private fb: UntypedFormBuilder,
 		private loginService: LoginService,
 		private notificationService: NotificationService,
 		private activatedRoute: ActivatedRoute,
@@ -38,6 +40,7 @@ export class LoginComponent implements OnInit {
 			email: this.fb.control('', [Validators.required]),
 			password: this.fb.control('', [Validators.required]),
 		});
+		this.isNewAccount = this.activatedRoute.snapshot.data['novaConta'] === true;
 		//btoa é para criptografar com javascript puro
 		this.navigateTo =
 			this.activatedRoute.snapshot.params['to'] || btoa('/');

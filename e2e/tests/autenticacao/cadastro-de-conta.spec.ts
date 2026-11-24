@@ -9,10 +9,18 @@ function newAccount() {
 test.describe('Cadastro de conta pela tela', () => {
 	test.use({ authenticated: false });
 
-	test('"Crie sua conta" abre o formulário "Create account" e "Faça login" volta ao login', async ({ loginPage, signUpPage }) => {
+	test('"Crie sua conta" abre o formulário "Criar conta" e "Faça login" volta ao login', async ({ loginPage, signUpPage }) => {
 		await loginPage.goto();
 
 		await loginPage.createAccountButton.click();
+		await signUpPage.expectVisible();
+
+		await signUpPage.backToLoginButton.click();
+		await loginPage.expectVisible();
+	});
+
+	test('o endereço /criar-conta abre direto o formulário de cadastro', async ({ page, loginPage, signUpPage }) => {
+		await page.goto('/criar-conta');
 		await signUpPage.expectVisible();
 
 		await signUpPage.backToLoginButton.click();

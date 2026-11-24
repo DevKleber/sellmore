@@ -10,6 +10,11 @@ export const ROUTES: Routes = [
 	{ path: 'login/:to', component: LoginComponent },
 	{ path: 'login', component: LoginComponent },
 	{
+		path: 'criar-conta',
+		component: LoginComponent,
+		data: { novaConta: true },
+	},
+	{
 		path: 'request-recover-password',
 		component: RequestRecoverPasswordComponent,
 	},

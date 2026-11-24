@@ -4,10 +4,15 @@ Interface do Wiseller, um CRM simples para vendedores acompanharem leads e os co
 
 ## Stack
 
-- Angular 13.1, TypeScript 4.5, RxJS 7.4.
-- Angular Material, `@ng-select/ng-select`, `angular-calendar`, `ngx-mask`, `sweetalert2`, `ngx-lottie`.
+- Angular 22.3 (NgModules, com `standalone: false` nos componentes), TypeScript 6.0, RxJS 7.8, zone.js 0.16.
+- Build com `@angular/build:application` (esbuild/Vite). A saída continua em `dist/wiseller`, com o `index.html` na raiz (`outputPath.browser: ""` no `angular.json`).
+- Angular Material 22 (só menu e tooltip, componentes MDC), `@ng-select/ng-select`, `angular-calendar` + `date-fns`, `ngx-mask`, `sweetalert2`, `ngx-lottie` + `lottie-web`.
+- `ngx-scrollbar` na lista de referidos de cada card (substituiu a `ngx-perfect-scrollbar`, abandonada). A barra só aparece ao passar o mouse ou rolar: opções em `SharedModule`, medidas e cores em `.ws-refs-scroll` (`wiseller-ui.css`). O polyfill de ScrollTimeline é servido do próprio site (`assets/lib/ngx-scrollbar`), não de CDN.
 - Bootstrap 3 e jQuery embutidos em `src/assets/lib` (carregados pelo `angular.json`, não pelo npm).
-- Node 16 para instalar e fazer o build. Não use Node mais novo na raiz do projeto.
+- Node 24 (`^22.22.3 || ^24.15.0`) para instalar e fazer o build; rode `npm` e `ng` dentro do container `web`.
+- Os templates usam o controle de fluxo novo (`@if`, `@for`). `$safeNavigationMigration(...)` veio da migração do Angular 22 e mantém o `?.` devolvendo `null` como antes.
+- Não há testes unitários (karma e jasmine foram removidos); os testes são os E2E.
+- `tsconfig.json` mantém `strict: false`: o TypeScript 6 liga o modo estrito por padrão.
 
 ## Como rodar
 
@@ -16,6 +21,7 @@ O ambiente fica na pasta acima deste repositório (`docker-compose.yml` com fron
 ```bash
 docker compose up -d            # na pasta acima
 docker compose logs -f web      # acompanha o build
+docker compose exec web npx ng build   # build de produção, dentro do container
 ```
 
 - Front em `http://localhost:4200`, API em `http://localhost:8000`.
@@ -26,7 +32,7 @@ docker compose logs -f web      # acompanha o build
 
 | Pasta | Conteúdo |
 |---|---|
-| `src/app/app.routes.ts` | rotas: `/login`, `/login/:to`, `/request-recover-password`, `/` (tela principal), `/access_log`, `/not-found` |
+| `src/app/app.routes.ts` | rotas: `/login`, `/login/:to`, `/criar-conta` (a mesma tela, já no formulário de cadastro; é para onde o site manda), `/request-recover-password`, `/` (tela principal), `/access_log`, `/not-found` |
 | `src/app/security/` | login, cadastro de conta, recuperação de senha, guard e interceptors do token JWT |
 | `src/app/sellmore/` | a tela principal: um único componente grande (`sell-more.component.*`) com leads, referidos, filtros, busca, agenda, roteiro e importação |
 | `src/app/log/` | relatório de acesso (só o usuário administrador enxerga) |
@@ -103,7 +109,7 @@ Todo push em `master` ou `main` publica em produção. São dois workflows, que 
 
 Plataforma:
 
-1. `npm ci` e `ng build` de produção, em Node 16.
+1. `npm ci` e `ng build` de produção, em Node 24.
 2. Envia `dist/wiseller` por `rsync` com `--delete` para o destino `app/`.
 3. Confere a página inicial e a rota interna `/login`.
 

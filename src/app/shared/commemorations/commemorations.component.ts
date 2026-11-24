@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { AnimationOptions } from 'ngx-lottie';
 import { LoginService } from 'src/app/security/login/login.service';
 
@@ -6,6 +6,8 @@ import { LoginService } from 'src/app/security/login/login.service';
 	selector: 'app-commemorations',
 	templateUrl: './commemorations.component.html',
 	styleUrls: ['./commemorations.component.css'],
+	changeDetection: ChangeDetectionStrategy.Eager,
+	standalone: false
 })
 export class CommemorationsComponent implements OnInit {
 	showCommemorations: boolean = false;

@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  NODE_VERSION: 16
+  NODE_VERSION: 24
   BUILD_DIR: dist/wiseller
   DEPLOY_HOST: wiseller.com.br
   # A chave de deploy so envia arquivos; o destino "app/" e a pasta de app.wiseller.com.br no servidor.
