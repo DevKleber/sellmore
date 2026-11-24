@@ -25,10 +25,11 @@ export class PhoneModal extends BootstrapModal {
 		return this.root.locator('input[type="checkbox"]');
 	}
 
+	/** A lista de países abre numa camada sobre a página (CDK Overlay), fora do modal. */
 	async selectCountry(name: string): Promise<void> {
 		await this.countrySelect.click();
 		await this.countrySelect.locator('input').fill(name);
-		await this.root.getByRole('option', { name, exact: true, includeHidden: true }).click();
+		await this.page.getByRole('option', { name, exact: true, includeHidden: true }).click();
 		await expect(this.selectedCountry).toHaveText(name);
 	}
 
