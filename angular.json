@@ -32,6 +32,7 @@
 							"src/favicon.png",
 							"src/favicon-33.png",
 							"src/favicon",
+							"src/manifest.webmanifest",
 							"src/assets",
 							{
 								"glob": "scroll-timeline-polyfill.js",
