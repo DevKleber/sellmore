@@ -1,0 +1,66 @@
+<main class="ws-app ws-refer">
+	<div class="ws-brand">
+		<img class="ws-brand__logo" src="/assets/img/system/wiseller.png" alt="" />
+		<span class="ws-brand__name">Wiseller</span>
+	</div>
+
+	<section class="ws-refer__card">
+		@switch (etapa) {
+			@case ('formulario') {
+				<h1 class="ws-refer__title">{{ convite.cliente }}, quem você indica?</h1>
+				<p class="ws-subtitle">
+					{{ convite.vendedor }} pediu sua indicação. Informe o nome e o telefone com DDD de quem pode se
+					interessar. Só {{ convite.vendedor }} vai receber esses contatos.
+				</p>
+
+				<form (ngSubmit)="enviar()" novalidate>
+					@for (indicado of indicados; track $index; let numero = $index) {
+						<div class="ws-refer__row">
+							<input type="text" class="ws-refer__field indicado-nome" [(ngModel)]="indicado.nome"
+								[name]="'nome' + numero" placeholder="Nome" maxlength="80"
+								[attr.aria-label]="'Nome da pessoa ' + (numero + 1)" autocomplete="off" />
+							<input type="tel" class="ws-refer__field indicado-telefone" [(ngModel)]="indicado.telefone"
+								[name]="'telefone' + numero" placeholder="Telefone com DDD" maxlength="20"
+								[attr.aria-label]="'Telefone da pessoa ' + (numero + 1)" autocomplete="off" />
+						</div>
+					}
+
+					@if (erro) {
+						<p class="ws-hint indicar-erro" role="alert">{{ erro }}</p>
+					}
+
+					<div class="ws-refer__actions">
+						<button type="submit" class="ws-btn ws-btn--primary indicar-enviar"
+							[disabled]="!preenchidos.length || enviando">
+							Enviar {{ preenchidos.length > 1 ? preenchidos.length + ' indicações' : 'indicação' }}
+						</button>
+						@if (podeAdicionar) {
+							<button type="button" class="ws-btn indicar-adicionar" (click)="adicionarLinha()">
+								<app-icon name="plus" [size]="18" [stroke]="2"></app-icon>
+								Mais uma pessoa
+							</button>
+						}
+					</div>
+				</form>
+			}
+			@case ('enviado') {
+				<h1 class="ws-refer__title indicar-obrigado">Obrigado, {{ convite.cliente }}!</h1>
+				<p class="ws-subtitle">Suas indicações foram enviadas para {{ convite.vendedor }}.</p>
+				<div class="ws-refer__actions">
+					<button type="button" class="ws-btn indicar-mais" (click)="indicarMais()">Indicar mais pessoas</button>
+				</div>
+			}
+			@case ('indisponivel') {
+				<h1 class="ws-refer__title indicar-indisponivel">Este link não está mais disponível</h1>
+				<p class="ws-subtitle">Peça um link novo a quem enviou este para você.</p>
+			}
+			@default {
+				<p class="ws-subtitle">Carregando…</p>
+			}
+		}
+	</section>
+
+	<p class="ws-refer__footer">
+		Wiseller · <a href="https://wiseller.com.br/privacidade.html" target="_blank" rel="noopener">Política de privacidade</a>
+	</p>
+</main>

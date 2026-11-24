@@ -48,9 +48,10 @@
 				<app-icon name="user" [size]="18"></app-icon>
 				{{user?.nome}}
 			</button>
-			<button mat-menu-item>
+			<button mat-menu-item class="abrirMinhaConta" (click)="minhaConta.abrir()" data-toggle="modal"
+				data-target="#modalMinhaConta">
 				<app-icon name="edit" [size]="18"></app-icon>
-				Perfil: em desenvolvimento
+				Minha conta
 			</button>
 			@if (user?.id === 1) {
 				<button mat-menu-item class="ws-only-mobile" [routerLink]="[ '/access_log']">
@@ -93,6 +94,11 @@
 					<app-icon name="calendar" [size]="18"></app-icon>
 					Agenda
 				</button>
+				<button type="button" class="ws-btn abrirResultados" (click)="resultados.abrir()" data-toggle="modal"
+					data-target="#modalResultados" matTooltip="Meus resultados">
+					<app-icon name="sort" [size]="18"></app-icon>
+					Resultados
+				</button>
 				<button type="button" class="ws-btn" (click)="newLead()" data-toggle="modal"
 					data-target="#modalScriptAdd" matTooltip="Estratégia">
 					<app-icon name="script" [size]="18"></app-icon>
@@ -105,6 +111,8 @@
 				</button>
 			</div>
 		</div>
+
+		<app-primeiros-passos [versaoDaLista]="versaoDaLista" (novoLead)="newLead()"></app-primeiros-passos>
 
 		@if (customersFilter.length || searchForm.value.searchControl.length) {
 			<section class="ws-results">
@@ -263,6 +271,10 @@
 						<app-icon name="dots"></app-icon>
 					</button>
 					<mat-menu #menuLead="matMenu">
+						<button mat-menu-item class="pedirIndicacao" (click)="pedirIndicacao.abrir(itemLead)" data-toggle="modal"
+							data-target="#modalPedirIndicacao">
+							<app-icon name="link" [size]="18"></app-icon> Pedir indicações
+						</button>
 						<button mat-menu-item (click)="newChildren(itemLead)" data-toggle="modal"
 							data-target="#modalImportContact">
 							<app-icon name="upload" [size]="18"></app-icon> Importar contatos
@@ -572,6 +584,10 @@
 	</div>
 </div>
 
+
+<app-resultados #resultados></app-resultados>
+<app-minha-conta #minhaConta></app-minha-conta>
+<app-pedir-indicacao #pedirIndicacao></app-pedir-indicacao>
 
 <!-- Modal roteiro -->
 <div class="modal fade" id="modalScriptAdd" tabindex="-1" aria-labelledby="modalNewScript" aria-hidden="true">

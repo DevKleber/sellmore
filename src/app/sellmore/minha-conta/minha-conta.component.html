@@ -1,0 +1,87 @@
+<div class="modal fade" id="modalMinhaConta" tabindex="-1" aria-labelledby="tituloMinhaConta" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title" id="tituloMinhaConta">
+					<p>Minha conta</p>
+				</h3>
+			</div>
+			<div class="modal-body ws-account">
+				<p class="ws-account__who">
+					<strong class="conta-nome">{{ conta?.nome }}</strong><br />
+					<span class="conta-email">{{ conta?.email }}</span>
+				</p>
+
+				<section class="ws-account__section">
+					<h4 class="ws-section-title">Lembrete por e-mail</h4>
+					<label class="ws-check">
+						<input type="checkbox" class="conta-lembrete" [(ngModel)]="receberLembrete" (change)="alterarLembrete()" />
+						Receber de manhã um e-mail com as ligações agendadas para o dia
+					</label>
+				</section>
+
+				<section class="ws-account__section">
+					<h4 class="ws-section-title">Meus dados</h4>
+					<p class="ws-hint">Baixe uma planilha com todos os seus leads e referidos, inclusive os arquivados.</p>
+					<button type="button" class="ws-btn conta-exportar" (click)="exportar()">
+						<app-icon name="upload" [size]="18"></app-icon>
+						Exportar para planilha
+					</button>
+				</section>
+
+				<section class="ws-account__section">
+					<h4 class="ws-section-title">Trocar a senha</h4>
+					<form [formGroup]="formSenha" novalidate class="ws-account__form">
+						<div class="input">
+							<div class="inputIcon"><app-icon name="lock" [size]="18"></app-icon></div>
+							<div class="inputText">
+								<input type="password" class="w-100" formControlName="currentPassword" placeholder="Senha atual"
+									autocomplete="current-password" />
+							</div>
+						</div>
+						<div class="input">
+							<div class="inputIcon"><app-icon name="lock" [size]="18"></app-icon></div>
+							<div class="inputText">
+								<input type="password" class="w-100" formControlName="newPassword"
+									placeholder="Nova senha (mínimo de 6 caracteres)" autocomplete="new-password" />
+							</div>
+						</div>
+						<div class="input">
+							<div class="inputIcon"><app-icon name="lock" [size]="18"></app-icon></div>
+							<div class="inputText">
+								<input type="password" class="w-100" formControlName="confirmPassword"
+									placeholder="Repita a nova senha" autocomplete="new-password" />
+							</div>
+						</div>
+						<button type="button" class="ws-btn conta-trocar-senha" [disabled]="!formSenha.valid" (click)="trocarSenha()">
+							Trocar a senha
+						</button>
+					</form>
+				</section>
+
+				<section class="ws-account__section ws-account__danger">
+					<h4 class="ws-section-title">Excluir a conta</h4>
+					<p class="ws-hint">
+						Apaga a conta e todos os dados dela de forma definitiva. Se quiser guardar seus contatos, exporte a
+						planilha antes.
+					</p>
+					<div class="input">
+						<div class="inputIcon"><app-icon name="lock" [size]="18"></app-icon></div>
+						<div class="inputText">
+							<input type="password" class="w-100 conta-senha-excluir" [(ngModel)]="senhaParaExcluir"
+								placeholder="Digite sua senha para confirmar" autocomplete="current-password" />
+						</div>
+					</div>
+					<button type="button" class="ws-btn ws-btn--danger conta-excluir" [disabled]="!senhaParaExcluir"
+						(click)="confirmarExclusao()">
+						<app-icon name="trash" [size]="18"></app-icon>
+						Excluir minha conta
+					</button>
+				</section>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+			</div>
+		</div>
+	</div>
+</div>

@@ -53,6 +53,12 @@ export class WisellerApi {
 		});
 	}
 
+	/** Código do link público pelo qual o cliente informa quem indica. */
+	async referralLinkCode(customer: CustomerReference): Promise<string> {
+		const { dados } = await this.http.send<{ dados: { codigo: string } }>('POST', `/api/link-indicacao/customers/${customer.id}`);
+		return dados.codigo;
+	}
+
 	async updateStrategy({ steps, saleUrl }: Strategy): Promise<void> {
 		await this.http.send('PUT', '/api/strategy', { strategy: steps, url_sale: saleUrl });
 	}
