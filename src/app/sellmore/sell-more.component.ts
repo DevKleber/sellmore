@@ -710,6 +710,19 @@ export class SellMoreComponent implements OnInit {
 				this.parents = res;
 			});
 	}
+	tituloDoFormulario(): string {
+		const cliente = this.form.value;
+		if (cliente.id && cliente.id_parent) {
+			return 'Alterando referido';
+		}
+		if (cliente.id) {
+			return 'Alterando lead';
+		}
+		if (this.parent.id) {
+			return `Cadastre abaixo os indicados do(a) ${this.parent.name}`;
+		}
+		return 'Novo lead';
+	}
 	newChildren(parent) {
 		this.parent = parent;
 		this.customersImported = [];
