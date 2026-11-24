@@ -1,0 +1,71 @@
+name: Deploy do site
+
+on:
+  push:
+    branches: [master, main]
+    paths:
+      - 'site/**'
+      - '.github/workflows/deploy-site.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-producao
+  cancel-in-progress: false
+
+env:
+  PASTA_DO_SITE: site
+  DEPLOY_HOST: wiseller.com.br
+  # A chave de deploy so envia arquivos; "." e a pasta de wiseller.com.br no servidor.
+  DEPLOY_PATH: .
+  SITE_URL: https://wiseller.com.br
+  PLATAFORMA_URL: https://app.wiseller.com.br
+  # Endereco antigo da plataforma: precisa continuar levando para ela.
+  ROTA_ANTIGA_DA_PLATAFORMA: /login
+  TEXTO_DA_PAGINA_INICIAL: CRM de indica
+  HOST_KEY: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKhOUkK8Ib4xHzEsaqZU3Mas8+uKe4hsRYFKlybXjgld
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Conferir arquivos do site
+        run: |
+          test -s "$PASTA_DO_SITE/index.html"
+          test -s "$PASTA_DO_SITE/.htaccess"
+          test -s "$PASTA_DO_SITE/robots.txt"
+
+      - name: Configurar SSH
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          echo "$DEPLOY_HOST $HOST_KEY" > ~/.ssh/known_hosts
+
+      # O .htaccess do site e versionado e vai junto. Os demais arquivos com ponto
+      # (.well-known do certificado, copias antigas) existem so no servidor e ficam intocados.
+      - name: Enviar para o servidor
+        env:
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        run: |
+          rsync --recursive --links --times --compress --delete \
+            --include='/.htaccess' \
+            --exclude='/.*' \
+            --exclude='/indexManutencao.html' \
+            -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes" \
+            "$PASTA_DO_SITE/" "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH"
+
+      - name: Conferir site no ar
+        run: |
+          curl --fail --silent --show-error "$SITE_URL/" | grep --quiet "$TEXTO_DA_PAGINA_INICIAL"
+          curl --fail --silent --show-error "$SITE_URL/robots.txt" | grep --quiet '^Sitemap:'
+          destino=$(curl --silent --output /dev/null --write-out '%{redirect_url}' "$SITE_URL$ROTA_ANTIGA_DA_PLATAFORMA")
+          test "$destino" = "$PLATAFORMA_URL$ROTA_ANTIGA_DA_PLATAFORMA"
