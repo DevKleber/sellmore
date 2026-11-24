@@ -710,140 +710,128 @@
 				aria-label="Fechar">
 				<app-icon name="close"></app-icon>
 			</button>
-			<div class="modal-header">
-				<h2 class="modal-title" id="modalStapcall">
-					<div class="row flex-wrap">
-						Ligando para {{ person.name }} -
-						@for (itemPhone of person.phones; track itemPhone; let last = $last) {
-							<div class="contacto-phone">
-								<div class="cursor-pointer">
-									<a target="_BLANK"
-										href="https://api.whatsapp.com/send/?phone={{itemPhone.country_code}}{{itemPhone.phone}}&text={{strategy?.url_sale}}"
-										title="Enviar link">
-										<app-icon [name]="itemPhone.bo_whatsapp ? 'whatsapp' : 'smartphone'" [size]="18"></app-icon>
-										+{{itemPhone?.country_code}}&ngsp;{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
-										@if (!last) {
-											<span class="mr-10">,</span>
-										}
-									</a>
-								</div>
-							</div>
+			<div class="modal-header ws-call__header">
+				<div class="ws-call__who">
+					<span class="ws-avatar" aria-hidden="true">{{ iniciais(person.name) }}</span>
+					<div>
+						<h2 class="modal-title" id="modalStapcall">Ligando para {{ person.name }}</h2>
+						@if (person.status != 'a') {
+							<div class="filterstatus"><strong>Status atual:</strong> {{person.status | helpers:'statusString' }}</div>
 						}
 					</div>
-					@if (person.status != 'a') {
-						<div class="row">
-							<div class="filterstatus"> <strong>Status atual:</strong> {{person.status | helpers:'statusString' }}
-						</div>
-					</div>
-				}
+				</div>
 
-				<div class="ws-call__actions">
-					@if (strategy?.url_sale) {
-						<a class="ws-btn ws-btn--soft ws-btn--icon" target="_BLANK"
-							href="{{strategy?.url_sale}}" title="Fazer a venda.">
-							<app-icon name="cart"></app-icon>
+				<div class="ws-call__phones">
+					@for (itemPhone of person.phones; track itemPhone) {
+						<a class="ws-call__phone contacto-phone" target="_BLANK"
+							href="https://api.whatsapp.com/send/?phone={{itemPhone.country_code}}{{itemPhone.phone}}&text={{strategy?.url_sale}}"
+							title="Enviar link">
+							<app-icon [name]="itemPhone.bo_whatsapp ? 'whatsapp' : 'smartphone'" [size]="18"></app-icon>
+							+{{itemPhone?.country_code}}&ngsp;{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
 						</a>
 					}
+					@if (strategy?.url_sale) {
+						<a class="ws-btn ws-btn--primary ws-call__sale" target="_BLANK" href="{{strategy?.url_sale}}"
+							title="Fazer a venda.">
+							<app-icon name="cart" [size]="18"></app-icon>
+							Fazer a venda
+						</a>
+					}
+				</div>
 
-					<h4>Deseja alterar o status?</h4>
+				<div class="ws-call__actions">
+					<h4>Como foi a ligação?</h4>
 					<div class="ws-call__statusbar">
-						@if (person.status != 'pc') {
-							<button type="button" class="ws-statusbtn" (click)="changeStatus(person, 'pc')"
-								title="Problemas com cartão de crédito">
-								<app-icon name="card"></app-icon>
-							</button>
-						}
 						@if (person.status != 'ld') {
-							<button type="button" class="ws-statusbtn" (click)="changeStatus(person, 'ld')"
+							<button type="button" class="ws-statusbtn ws-statusbtn--ld" (click)="changeStatus(person, 'ld')"
 								title="Ligar depois">
 								<app-icon name="headset"></app-icon>
+								<span>Ligar depois</span>
+							</button>
+						}
+						@if (person.status != 'pc') {
+							<button type="button" class="ws-statusbtn ws-statusbtn--pc" (click)="changeStatus(person, 'pc')"
+								title="Problemas com cartão de crédito">
+								<app-icon name="card"></app-icon>
+								<span>Problema com cartão</span>
 							</button>
 						}
 						@if (person.status != 'n') {
-							<button type="button" class="ws-statusbtn" (click)="changeStatus(person, 'n')"
+							<button type="button" class="ws-statusbtn ws-statusbtn--n" (click)="changeStatus(person, 'n')"
 								title="Não deu negócio 😭">
 								<app-icon name="thumbs-down"></app-icon>
+								<span>Não tem interesse</span>
 							</button>
 						}
 						@if (person.status != 'c') {
-							<button type="button" class="ws-statusbtn" (click)="changeStatus(person, 'c')"
+							<button type="button" class="ws-statusbtn ws-statusbtn--c" (click)="changeStatus(person, 'c')"
 								title="Vendido 😃">
 								<app-icon name="thumbs-up"></app-icon>
+								<span>Comprou</span>
 							</button>
 						}
 					</div>
 				</div>
-			</h2>
-		</div>
-		<div class="modal-body">
-			<div class="content rowCall">
-				<div class="person">
-					<form [formGroup]="form" novalidate>
-						<label for="">
-							Referido criado em: {{$safeNavigationMigration(person?.created_at) | date: 'dd/MM/yyyy H:mm:ss'}} <br>
-							Referido alterado em: {{$safeNavigationMigration(person?.updated_at) | date: 'dd/MM/yyyy H:mm:ss'}}
-						</label>
-						<textarea (change)="update(form.value,false,false,true)" placeholder="Observação" class="textarea"
-							formControlName="observation" style="height: 300px;">
-						</textarea>
-					</form>
-					<b>Árvores de indicações</b>
-					@for (itemParent of parents; track itemParent; let i = $index) {
-						<div class="tree margint-25">
-							<div [style.marginLeft.px]="20 * i">
+			</div>
+			<div class="modal-body">
+				<div class="content rowCall">
+					<div class="person">
+						<form [formGroup]="form" novalidate>
+							<label class="ws-call__label" for="anotacoesDaLigacao">Anotações sobre {{ person.name }}</label>
+							<p class="ws-hint">
+								Anote aqui o máximo que puder sobre a pessoa: o que faz, do que precisa, família, objeções,
+								melhor horário e o que ficou combinado. É a sua memória de cada conversa: na próxima ligação,
+								e nas vendas futuras, você vai saber tudo sobre ela e sobre quem a indicou.
+							</p>
+							<textarea id="anotacoesDaLigacao" (change)="update(form.value,false,false,true)"
+								placeholder="Ex.: É dentista, casada, dois filhos. Gostou da proposta, mas achou caro. Pediu para ligar depois do dia 10, de preferência à noite."
+								class="textarea ws-call__notes" formControlName="observation"></textarea>
+							<p class="ws-call__meta">
+								As anotações são salvas sozinhas ao sair do campo. ·
+								Referido criado em: {{$safeNavigationMigration(person?.created_at) | date: 'dd/MM/yyyy H:mm:ss'}} ·
+								Referido alterado em: {{$safeNavigationMigration(person?.updated_at) | date: 'dd/MM/yyyy H:mm:ss'}}
+							</p>
+						</form>
+
+						@if (parents.length) {
+							<h3 class="ws-section-title">Quem indicou</h3>
+							<p class="ws-hint">O caminho das indicações até chegar a esta pessoa, com o que você anotou de cada um.</p>
+						}
+						@for (itemParent of parents; track itemParent; let i = $index) {
+							<div class="tree" [style.marginLeft.px]="16 * i">
 								<div class="parentName">
-									<app-icon name="folder"></app-icon>
+									<span class="ws-avatar ws-avatar--small" aria-hidden="true">{{ iniciais(itemParent.name) }}</span>
 									{{ itemParent.name }}
 									@if (itemParent.status != 'a') {
-										@if (itemParent.status == 'pc') {
-											<app-icon class="icon-finished icon-finished-no"
-											name="card"></app-icon>
-										}
-										@if (itemParent.status == 'ld') {
-											<app-icon class="icon-finished" name="headset">
-											</app-icon>
-										}
-										@if (itemParent.status == 'n') {
-											<app-icon class="icon-finished icon-finished-no"
-											name="thumbs-down"></app-icon>
-										}
-										@if (itemParent.status == 'c') {
-											<app-icon class="icon-finished icon-finished-yes"
-											name="thumbs-up"></app-icon>
-										}
+										<span class="ws-tag" [ngClass]="'ws-tag--' + itemParent.status">{{ rotuloDoStatus[itemParent.status] }}</span>
 									}
 								</div>
-								<div class="row">
+								<div class="ws-call__tree-phones">
 									@for (itemPhone of itemParent.phones; track itemPhone; let last = $last) {
-										<div class="parentPhone"
-											>
-											+{{itemPhone?.country_code}}&ngsp;{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
-											@if (!last) {
-												<span class="mr-10">,</span>
-											}
-										</div>
+										<span class="parentPhone">
+											+{{itemPhone?.country_code}}&ngsp;{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}@if (!last) {<span>, </span>}
+										</span>
 									}
 								</div>
-								<div class="parentDesc">
-									{{ itemParent.observation }}
-								</div>
+								@if (itemParent.observation) {
+									<div class="parentDesc">{{ itemParent.observation }}</div>
+								}
 							</div>
-						</div>
-					}
-				</div>
-				<div class="strategy">
-					<h1>Strategy</h1>
-					@for (item of strategy?.staps; track $index) {
-						<span>
-							{{ item }}
-							<br />
-						</span>
-					}
+						}
+					</div>
+					<aside class="strategy">
+						<h3 class="ws-section-title">Roteiro</h3>
+						@for (item of strategy?.staps; track $index) {
+							<span>
+								{{ item }}
+								<br />
+							</span>
+						}
+					</aside>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
 </div>
 
 <!-- Modal doação -->

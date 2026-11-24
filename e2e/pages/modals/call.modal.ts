@@ -28,10 +28,10 @@ export class CallModal extends BootstrapModal {
 	}
 
 	get observationInput(): Locator {
-		return this.root.getByPlaceholder('Observação');
+		return this.root.locator('.ws-call__notes');
 	}
 
-	/** Cada nível da "Árvores de indicações", do indicador mais próximo ao mais distante. */
+	/** Cada nível de "Quem indicou", do indicador mais próximo ao mais distante. */
 	get referralTree(): Locator {
 		return this.root.locator('.tree');
 	}

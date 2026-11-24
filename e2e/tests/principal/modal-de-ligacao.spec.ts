@@ -62,7 +62,7 @@ test.describe('Modal de ligação', () => {
 
 		await home.leadCard(lead.name).referral(referral.name).open();
 
-		await expect(home.callModal.strategy).toContainText('Strategy');
+		await expect(home.callModal.strategy).toContainText('Roteiro');
 		for (const step of DEFAULT_STRATEGY_STEPS) {
 			await expect(home.callModal.strategy).toContainText(step);
 		}

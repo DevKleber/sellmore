@@ -63,6 +63,7 @@ docker compose exec web npx ng build   # build de produção, dentro do containe
 - **Status do atendimento**: aberto, ligar depois, problemas com cartão, não tem interesse, comprou. Os filtros da tela ligam e desligam cada status.
 - **Arquivar** esconde o cliente sem apagar; dá para reativar.
 - **Roteiro** ("estratégia"): texto e link de venda do vendedor, usados no modal de ligação e nas mensagens de WhatsApp.
+- **Modal de ligação**: telefones, botão de venda, resultado da ligação, anotações sobre a pessoa (salvas ao sair do campo), "Quem indicou" (a cadeia de indicações com as anotações de cada um) e o roteiro.
 - **Agenda**: compromissos de "ligar depois".
 - **Importação**: arquivo `.vcf` de contatos, que vira uma lista de referidos de um lead.
 - **Link de indicação**: "Pedir indicações" no menu do lead gera um link público; quem recebe preenche nome e telefone, ou importa um arquivo `.vcf` (lido no navegador por `indicar/leitor-de-vcard.ts`), e os contatos entram como referidos dele. A API avisa o vendedor por e-mail.
