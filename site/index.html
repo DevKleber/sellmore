@@ -148,40 +148,16 @@
 						<p class="abertura__nota">Sem instalar nada. Funciona no celular e no computador.</p>
 					</div>
 
-					<div class="demonstracao" role="img" aria-label="Exemplo da tela do Wiseller: um lead com três contatos indicados e o status de cada um">
-						<div class="demonstracao__numeros" aria-hidden="true">
-							<div><strong>84</strong><span>referidos</span></div>
-							<div><strong>23</strong><span>vendas</span></div>
-							<div><strong>12</strong><span>ligar depois</span></div>
-						</div>
-						<div class="cartao" aria-hidden="true">
-							<div class="cartao__topo">
-								<span class="avatar">MS</span>
-								<div>
-									<strong>Marina Souza</strong>
-									<span>Indicou 3 contatos</span>
-								</div>
-								<span class="etiqueta etiqueta--comprou">Comprou</span>
-							</div>
-							<ul class="cartao__lista">
-								<li>
-									<span class="avatar avatar--pequeno">RA</span>
-									<span>Rafael Alves</span>
-									<span class="etiqueta etiqueta--ligar">Ligar depois</span>
-								</li>
-								<li>
-									<span class="avatar avatar--pequeno">CL</span>
-									<span>Carla Lima</span>
-									<span class="etiqueta etiqueta--comprou">Comprou</span>
-								</li>
-								<li>
-									<span class="avatar avatar--pequeno">JP</span>
-									<span>João Pedro</span>
-									<span class="etiqueta etiqueta--aberto">Aberto</span>
-								</li>
-							</ul>
-						</div>
-					</div>
+					<picture class="tela">
+						<source srcset="/assets/img/site/tela-escura.webp" media="(prefers-color-scheme: dark)" type="image/webp" />
+						<img
+							src="/assets/img/site/tela-clara.webp"
+							width="1600"
+							height="1000"
+							alt="Tela do Wiseller: leads em cartões, com os contatos indicados por cada um e o status de cada atendimento"
+							fetchpriority="high"
+						/>
+					</picture>
 				</div>
 			</section>
 
@@ -269,7 +245,28 @@
 				</div>
 			</section>
 
-			<section class="secao" id="para-quem">
+			<section class="secao" id="no-celular">
+				<div class="largura para-quem">
+					<div>
+						<h2>No bolso, na hora da ligação</h2>
+						<p>
+							O Wiseller abre no navegador do celular, sem instalar nada. Você cadastra a indicação
+							assim que recebe, liga com um toque e marca o resultado antes de guardar o aparelho.
+						</p>
+						<a class="botao botao--principal botao--grande botao--com-folga" href="https://app.wiseller.com.br/login">Criar conta grátis</a>
+					</div>
+					<img
+						class="tela tela--celular"
+						src="/assets/img/site/tela-celular.webp"
+						width="780"
+						height="1688"
+						loading="lazy"
+						alt="Wiseller no celular: lista de leads e referidos com botão de ligar"
+					/>
+				</div>
+			</section>
+
+			<section class="secao secao--destaque" id="para-quem">
 				<div class="largura para-quem">
 					<div>
 						<h2>Para quem é</h2>
@@ -287,7 +284,7 @@
 				</div>
 			</section>
 
-			<section class="secao secao--destaque" id="duvidas">
+			<section class="secao" id="duvidas">
 				<div class="largura largura--estreita">
 					<h2>Dúvidas frequentes</h2>
 					<details>
