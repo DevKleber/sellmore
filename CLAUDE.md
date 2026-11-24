@@ -32,10 +32,11 @@ docker compose exec web npx ng build   # build de produção, dentro do containe
 
 | Pasta | Conteúdo |
 |---|---|
-| `src/app/app.routes.ts` | rotas: `/login`, `/login/:to`, `/criar-conta` (a mesma tela, já no formulário de cadastro; é para onde o site manda), `/request-recover-password`, `/` (tela principal), `/access_log`, `/not-found` |
+| `src/app/app.routes.ts` | rotas: `/login`, `/login/:to`, `/criar-conta` (a mesma tela, já no formulário de cadastro; é para onde o site manda), `/request-recover-password`, `/indicar/:codigo` (página pública de indicação, sem login), `/` (tela principal) e `/access_log` (painel do administrador), as duas protegidas por `LoggedInGuard`, e `/not-found` |
 | `src/app/security/` | login, cadastro de conta, recuperação de senha, guard e interceptors do token JWT |
-| `src/app/sellmore/` | a tela principal: um único componente grande (`sell-more.component.*`) com leads, referidos, filtros, busca, agenda, roteiro e importação |
-| `src/app/log/` | relatório de acesso (só o usuário administrador enxerga) |
+| `src/app/sellmore/` | a tela principal: um componente grande (`sell-more.component.*`) com leads, referidos, filtros, busca, agenda, roteiro e importação. O que é novo fica em componentes próprios nas subpastas: `primeiros-passos/`, `resultados/`, `minha-conta/` e `pedir-indicacao/`, com as chamadas em `conta.service.ts` |
+| `src/app/indicar/` | página pública em que o cliente de um vendedor informa quem indica |
+| `src/app/log/` | painel do administrador: atividade do dia, contas novas, ativação, retorno e relatório de acesso |
 | `src/app/layout/` | cabeçalho e menu |
 | `src/app/shared/` | campos, mensagens, tema escuro, serviços auxiliares |
 | `src/app/app.api.ts` | endereços da API, lidos de `environment` |
@@ -52,8 +53,9 @@ docker compose exec web npx ng build   # build de produção, dentro do containe
 - O modelo que originou o layout está em `tarefas/modelo-painel/`, na pasta acima do repositório.
 
 - O usuário logado e o token ficam no `localStorage` (chave `user`); o tema em `darkmodeWiseller`; a versão vista em `wiseller_version`.
-- O aviso de versão nova compara o valor guardado em `wiseller_version` com o que `GET /api/currentVersion` devolve; quem define a versão é a API.
+- O aviso de versão nova compara o valor guardado em `wiseller_version` com o que `GET /api/currentVersion` devolve; quem define a versão é a API. O botão "Ver as novidades" abre o `link` que a API manda (a página da versão no Notion).
 - Modais são do Bootstrap 3, abertos por jQuery.
+- O interceptor liga o indicador de carregamento em toda requisição e ninguém o desliga sozinho: serviço novo deve terminar com `finalize(() => loaderService.isLoad(false))`, como em `conta.service.ts`.
 
 ## Domínio (o que a tela mostra)
 
@@ -63,6 +65,9 @@ docker compose exec web npx ng build   # build de produção, dentro do containe
 - **Roteiro** ("estratégia"): texto e link de venda do vendedor, usados no modal de ligação e nas mensagens de WhatsApp.
 - **Agenda**: compromissos de "ligar depois".
 - **Importação**: arquivo `.vcf` de contatos, que vira uma lista de referidos de um lead.
+- **Link de indicação**: "Pedir indicações" no menu do lead gera um link público; quem recebe preenche nome e telefone e os contatos entram como referidos dele.
+- **Primeiros passos**: guia de três passos para conta nova; some ao concluir ou dispensar (chave `wiseller_primeiros_passos_concluidos` no `localStorage`).
+- **Aplicativo instalável**: `src/manifest.webmanifest` e os ícones em `src/assets/img/app`. Não há service worker, de propósito: a tela sempre carrega a versão publicada.
 
 ## Testes E2E
 
