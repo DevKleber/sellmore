@@ -1,3 +1,4 @@
+import { Page } from '@playwright/test';
 import { AccessReport } from '../../pages/access-log.page';
 import { mockApi } from '../../support/mock-api';
 import { expect, test } from '../../support/fixtures';
@@ -34,6 +35,27 @@ function fakeAccessLog(userName: string) {
 	};
 }
 
+const USAGE_METRICS = {
+	contas: { total: 40, ultimos7Dias: 5, ultimos30Dias: 12 },
+	ativacao: { comCliente: 30, comIndicacao: 20 },
+	ativos: { ultimos7Dias: 9, ultimos30Dias: 18 },
+	semanas: [{ inicio: '2026-11-16', criaram: 4, cadastraramCliente: 3, voltaram: 1 }],
+	hoje: { contasQueAcessaram: 7, contasNovas: 2, clientesCadastrados: 15, vendas: 3 },
+	acessosPorDia: [
+		{ dia: '2026-11-22', contas: 4 },
+		{ dia: '2026-11-23', contas: 8 },
+	],
+	contasRecentes: [
+		{ id: 2, nome: 'Conta Fictícia', email: 'ficticia@wiseller.test', criadaEm: '2026-11-22 10:00:00', clientes: 6, ultimoAcesso: null },
+	],
+};
+
+async function mockAdministratorPanel(page: Page, userName: string) {
+	await mockApi(page, '/api/metricas-de-uso', () => ({ dados: USAGE_METRICS }));
+
+	return mockApi(page, '/api/access_log', () => fakeAccessLog(userName));
+}
+
 test.describe('Log de acesso', () => {
 	test('vendedor comum vê "Sem permissão" ao abrir o log de acesso', async ({ accessLogPage }) => {
 		await accessLogPage.goto();
@@ -44,7 +66,7 @@ test.describe('Log de acesso', () => {
 	});
 
 	test('mostra a tabela de acessos e os relatórios devolvidos pela API', async ({ accessLogPage, page }) => {
-		await mockApi(page, '/api/access_log', () => fakeAccessLog('Vendedor Fictício'));
+		await mockAdministratorPanel(page, 'Vendedor Fictício');
 
 		await accessLogPage.goto();
 
@@ -63,8 +85,26 @@ test.describe('Log de acesso', () => {
 		await expect(accessLogPage.reportCells(AccessReport.Language)).toHaveText(['pt-BR', '33']);
 	});
 
+	test('mostra o que aconteceu hoje, o uso da plataforma, o funil por semana e as contas recentes', async ({ accessLogPage, page }) => {
+		await mockAdministratorPanel(page, 'Vendedor Fictício');
+
+		await accessLogPage.goto();
+
+		await expect(accessLogPage.metric('hoje-acessos')).toHaveText('7');
+		await expect(accessLogPage.metric('hoje-contas-novas')).toHaveText('2');
+		await expect(accessLogPage.metric('hoje-clientes')).toHaveText('15');
+		await expect(accessLogPage.metric('hoje-vendas')).toHaveText('3');
+		await expect(accessLogPage.metric('metrica-contas')).toHaveText('40');
+		await expect(accessLogPage.metric('metrica-com-cliente')).toHaveText('30');
+		await expect(accessLogPage.metric('metrica-ativos')).toHaveText('9');
+		await expect(accessLogPage.dailyAccessValues).toHaveText(['4', '8']);
+		await expect(accessLogPage.weeklyFunnelCells).toHaveText(['16/11/2026', '4', '3 (75%)', '1 (25%)']);
+		await expect(accessLogPage.recentAccountCells).toHaveText(['Conta Fictícia', 'ficticia@wiseller.test', '22/11/2026 10:00', '6', 'nunca']);
+	});
+
 	test('"Atualizar lista" busca os dados de novo', async ({ accessLogPage, page }) => {
 		let userName = 'Primeira Consulta';
+		await mockApi(page, '/api/metricas-de-uso', () => ({ dados: USAGE_METRICS }));
 		const accessLog = await mockApi(page, '/api/access_log', () => fakeAccessLog(userName));
 		await accessLogPage.goto();
 		await expect(accessLogPage.accessRows.first()).toContainText('Primeira Consulta');
@@ -77,7 +117,7 @@ test.describe('Log de acesso', () => {
 	});
 
 	test('a marca "Wiseller" no topo volta para a tela principal', async ({ accessLogPage, page }) => {
-		await mockApi(page, '/api/access_log', () => fakeAccessLog('Vendedor Fictício'));
+		await mockAdministratorPanel(page, 'Vendedor Fictício');
 		await accessLogPage.goto();
 		await expect(accessLogPage.accessRows).toHaveCount(1);
 

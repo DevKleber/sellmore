@@ -113,3 +113,12 @@
 		grid-template-columns: minmax(0, 1fr) minmax(0, 520px);
 	}
 }
+
+.log-acessos-por-dia {
+	grid-template-columns: repeat(14, minmax(0, 1fr));
+}
+
+.log-funil,
+.log-contas-recentes {
+	margin-top: 16px;
+}

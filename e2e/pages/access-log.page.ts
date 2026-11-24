@@ -22,13 +22,24 @@ export class AccessLogPage {
 	readonly refreshButton: Locator;
 	readonly homeLink: Locator;
 	readonly accessRows: Locator;
+	readonly dailyAccessValues: Locator;
+	readonly weeklyFunnelCells: Locator;
+	readonly recentAccountCells: Locator;
 
 	constructor(readonly page: Page) {
 		this.alert = new AlertDialog(page);
-		this.heading = page.getByRole('heading', { name: 'Access log' });
+		this.heading = page.getByRole('heading', { name: 'Painel do administrador' });
 		this.refreshButton = page.getByRole('button', { name: 'Atualizar lista' });
 		this.homeLink = page.getByRole('link', { name: 'Wiseller' });
 		this.accessRows = page.locator('.log-access tbody tr');
+		this.dailyAccessValues = page.locator('.log-acessos-por-dia .ws-chart__values');
+		this.weeklyFunnelCells = page.locator('.log-funil tbody td');
+		this.recentAccountCells = page.locator('.log-contas-recentes tbody td');
+	}
+
+	/** Número de um indicador do painel, pela classe que o identifica (ex.: "hoje-vendas"). */
+	metric(name: string): Locator {
+		return this.page.locator(`.${name}`);
 	}
 
 	async goto(): Promise<void> {
