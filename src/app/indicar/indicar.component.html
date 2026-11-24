@@ -13,6 +13,27 @@
 					interessar. Só {{ convite.vendedor }} vai receber esses contatos.
 				</p>
 
+				<div class="ws-refer__import">
+					<input type="file" accept=".vcf,text/vcard,text/x-vcard" hidden #arquivoDeContatos class="indicar-arquivo"
+						(change)="importarArquivo($event)" />
+					<button type="button" class="ws-btn indicar-importar" (click)="arquivoDeContatos.click()">
+						<app-icon name="upload" [size]="18"></app-icon>
+						Importar contatos do WhatsApp
+					</button>
+					<details class="ws-refer__help">
+						<summary>Como baixar os contatos do WhatsApp</summary>
+						<ol>
+							<li>No WhatsApp do celular, abra uma conversa de confiança (pode ser com {{ convite.vendedor }}), toque em anexar, escolha "Contato", marque as pessoas que quer indicar e envie.</li>
+							<li>No computador, abra o WhatsApp Web (web.whatsapp.com) e entre nessa conversa.</li>
+							<li>Passe o mouse sobre a mensagem com os contatos, clique na setinha que aparece e escolha "Baixar". Um arquivo de contatos será salvo no computador.</li>
+							<li>Volte a esta página, clique em "Importar contatos do WhatsApp" e escolha esse arquivo.</li>
+						</ol>
+					</details>
+					@if (avisoDaImportacao) {
+						<p class="ws-hint indicar-aviso" role="status">{{ avisoDaImportacao }}</p>
+					}
+				</div>
+
 				<form (ngSubmit)="enviar()" novalidate>
 					@for (indicado of indicados; track $index; let numero = $index) {
 						<div class="ws-refer__row">
@@ -22,6 +43,10 @@
 							<input type="tel" class="ws-refer__field indicado-telefone" [(ngModel)]="indicado.telefone"
 								[name]="'telefone' + numero" placeholder="Telefone com DDD" maxlength="20"
 								[attr.aria-label]="'Telefone da pessoa ' + (numero + 1)" autocomplete="off" />
+							<button type="button" class="ws-btn ws-btn--quiet ws-btn--icon indicar-remover"
+								[attr.aria-label]="'Tirar a pessoa ' + (numero + 1) + ' da lista'" (click)="removerLinha(numero)">
+								<app-icon name="close" [size]="18"></app-icon>
+							</button>
 						</div>
 					}
 

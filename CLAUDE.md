@@ -65,7 +65,7 @@ docker compose exec web npx ng build   # build de produção, dentro do containe
 - **Roteiro** ("estratégia"): texto e link de venda do vendedor, usados no modal de ligação e nas mensagens de WhatsApp.
 - **Agenda**: compromissos de "ligar depois".
 - **Importação**: arquivo `.vcf` de contatos, que vira uma lista de referidos de um lead.
-- **Link de indicação**: "Pedir indicações" no menu do lead gera um link público; quem recebe preenche nome e telefone e os contatos entram como referidos dele.
+- **Link de indicação**: "Pedir indicações" no menu do lead gera um link público; quem recebe preenche nome e telefone, ou importa um arquivo `.vcf` (lido no navegador por `indicar/leitor-de-vcard.ts`), e os contatos entram como referidos dele. A API avisa o vendedor por e-mail.
 - **Primeiros passos**: guia de três passos para conta nova; some ao concluir ou dispensar (chave `wiseller_primeiros_passos_concluidos` no `localStorage`).
 - **Aplicativo instalável**: `src/manifest.webmanifest` e os ícones em `src/assets/img/app`. Não há service worker, de propósito: a tela sempre carrega a versão publicada.
 

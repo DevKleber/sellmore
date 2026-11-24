@@ -11,6 +11,10 @@ export class ReferPage {
 	readonly referMoreButton: Locator;
 	readonly unavailable: Locator;
 	readonly error: Locator;
+	readonly fileInput: Locator;
+	readonly importNotice: Locator;
+	readonly removeButtons: Locator;
+	readonly help: Locator;
 
 	constructor(readonly page: Page) {
 		this.heading = page.getByRole('heading', { level: 1 });
@@ -22,10 +26,19 @@ export class ReferPage {
 		this.referMoreButton = page.locator('.indicar-mais');
 		this.unavailable = page.locator('.indicar-indisponivel');
 		this.error = page.locator('.indicar-erro');
+		this.fileInput = page.locator('.indicar-arquivo');
+		this.importNotice = page.locator('.indicar-aviso');
+		this.removeButtons = page.locator('.indicar-remover');
+		this.help = page.locator('.ws-refer__help');
 	}
 
 	async goto(code: string): Promise<void> {
 		await this.page.goto(`/indicar/${code}`);
+	}
+
+	/** Escolhe um arquivo de contatos (.vcf) com o conteúdo informado. */
+	async importContacts(vCard: string): Promise<void> {
+		await this.fileInput.setInputFiles({ name: 'contatos.vcf', mimeType: 'text/vcard', buffer: Buffer.from(vCard, 'utf8') });
 	}
 
 	async fillPerson(row: number, name: string, phone: string): Promise<void> {

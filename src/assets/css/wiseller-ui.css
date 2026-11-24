@@ -1380,9 +1380,36 @@ textarea.textarea {
 
 .ws-refer__row {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
 	gap: 8px;
 	margin-top: 12px;
+	align-items: center;
+}
+
+.ws-refer__import {
+	margin-top: 16px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid var(--border);
+}
+
+.ws-refer__help {
+	margin-top: 12px;
+	font-size: 14px;
+	color: var(--muted);
+}
+
+.ws-refer__help summary {
+	color: var(--primary-text);
+	cursor: pointer;
+}
+
+.ws-refer__help ol {
+	margin: 8px 0 0;
+	padding-left: 20px;
+}
+
+.ws-refer__help li {
+	margin-bottom: 6px;
 }
 
 .ws-refer__actions {
@@ -1412,9 +1439,23 @@ textarea.textarea {
 
 @media (max-width: 480px) {
 	.ws-refer__row {
-		grid-template-columns: minmax(0, 1fr);
+		grid-template-columns: minmax(0, 1fr) auto;
 		padding-bottom: 12px;
 		border-bottom: 1px solid var(--border);
+	}
+
+	.ws-refer__row .indicado-nome {
+		grid-column: 1;
+	}
+
+	.ws-refer__row .indicado-telefone {
+		grid-column: 1;
+		grid-row: 2;
+	}
+
+	.ws-refer__row .indicar-remover {
+		grid-column: 2;
+		grid-row: 1 / span 2;
 	}
 }
 

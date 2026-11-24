@@ -644,6 +644,15 @@
 					@if (customersImported.length == 0) {
 						<span>
 							<h2>Anexe o arquivo baixado na conversa com o(a) {{ parent.name }} </h2>
+							<details class="ws-refer__help importar-ajuda">
+								<summary>Como baixar os contatos do WhatsApp</summary>
+								<ol>
+									<li>Peça ao cliente para enviar os contatos pelo WhatsApp: na conversa, anexar, "Contato", marcar as pessoas e enviar.</li>
+									<li>No computador, abra o WhatsApp Web (web.whatsapp.com) e entre na conversa.</li>
+									<li>Passe o mouse sobre a mensagem com os contatos, clique na setinha que aparece e escolha "Baixar".</li>
+									<li>Clique em "Anexar arquivo" aqui embaixo, escolha o arquivo baixado e depois em "Importar".</li>
+								</ol>
+							</details>
 							<div class="form-group margint-25">
 								<input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput />
 								<div class="uploadArquivo"
