@@ -5,7 +5,7 @@
 				<img class="ws-brand__logo" src="/assets/img/system/wiseller.png" alt="" />
 				<span class="ws-brand__name">Wiseller</span>
 			</div>
-			<h1 id="auth-title" class="auth__title">{{ isNewAccount ? 'Create account' : 'Login' }}</h1>
+			<h1 id="auth-title" class="auth__title">{{ isNewAccount ? 'Criar conta' : 'Entrar' }}</h1>
 		</div>
 
 		@if (!isNewAccount) {
@@ -24,13 +24,13 @@
 						/>
 				</app-input-container>
 				<app-input-container>
-					<label class="visually-hidden" for="login-password">Password</label>
+					<label class="visually-hidden" for="login-password">Senha</label>
 					<input
 						id="login-password"
 						type="password"
 						formControlName="password"
 						class="form-control"
-						placeholder="Password"
+						placeholder="Senha"
 						autocomplete="current-password"
 						/>
 				</app-input-container>
@@ -52,13 +52,13 @@
 		@if (isNewAccount) {
 			<form [formGroup]="newAccountForm" class="auth__form">
 				<app-input-container>
-					<label class="visually-hidden" for="new-account-name">Name</label>
+					<label class="visually-hidden" for="new-account-name">Nome</label>
 					<input
 						id="new-account-name"
 						type="text"
 						formControlName="nome"
 						class="form-control"
-						placeholder="Name"
+						placeholder="Nome"
 						autocomplete="name"
 						autofocus
 						/>
@@ -77,13 +77,13 @@
 						/>
 				</app-input-container>
 				<app-input-container>
-					<label class="visually-hidden" for="new-account-password">Password</label>
+					<label class="visually-hidden" for="new-account-password">Senha</label>
 					<input
 						id="new-account-password"
 						type="password"
 						formControlName="password"
 						class="form-control"
-						placeholder="Password"
+						placeholder="Senha"
 						autocomplete="new-password"
 						/>
 				</app-input-container>

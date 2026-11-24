@@ -7,7 +7,7 @@ export interface NewAccount {
 	password: string;
 }
 
-/** Formulário "Create account", aberto pelo botão "Crie sua conta" da tela de login. */
+/** Formulário "Criar conta", aberto pelo botão "Crie sua conta" da tela de login. */
 export class SignUpPage {
 	readonly alert: AlertDialog;
 	readonly heading: Locator;
@@ -19,10 +19,10 @@ export class SignUpPage {
 
 	constructor(readonly page: Page) {
 		this.alert = new AlertDialog(page);
-		this.heading = page.getByText('Create account', { exact: true });
-		this.nameInput = page.getByPlaceholder('Name');
+		this.heading = page.getByRole('heading', { name: 'Criar conta' });
+		this.nameInput = page.getByPlaceholder('Nome');
 		this.emailInput = page.getByPlaceholder('E-mail');
-		this.passwordInput = page.getByPlaceholder('Password');
+		this.passwordInput = page.getByPlaceholder('Senha');
 		this.submitButton = page.getByRole('button', { name: 'Crie sua conta' });
 		this.backToLoginButton = page.getByRole('button', { name: 'Faça login' });
 	}

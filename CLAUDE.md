@@ -32,7 +32,7 @@ docker compose exec web npx ng build   # build de produção, dentro do containe
 
 | Pasta | Conteúdo |
 |---|---|
-| `src/app/app.routes.ts` | rotas: `/login`, `/login/:to`, `/request-recover-password`, `/` (tela principal), `/access_log`, `/not-found` |
+| `src/app/app.routes.ts` | rotas: `/login`, `/login/:to`, `/criar-conta` (a mesma tela, já no formulário de cadastro; é para onde o site manda), `/request-recover-password`, `/` (tela principal), `/access_log`, `/not-found` |
 | `src/app/security/` | login, cadastro de conta, recuperação de senha, guard e interceptors do token JWT |
 | `src/app/sellmore/` | a tela principal: um único componente grande (`sell-more.component.*`) com leads, referidos, filtros, busca, agenda, roteiro e importação |
 | `src/app/log/` | relatório de acesso (só o usuário administrador enxerga) |

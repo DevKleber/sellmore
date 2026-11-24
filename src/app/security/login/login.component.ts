@@ -40,6 +40,7 @@ export class LoginComponent implements OnInit {
 			email: this.fb.control('', [Validators.required]),
 			password: this.fb.control('', [Validators.required]),
 		});
+		this.isNewAccount = this.activatedRoute.snapshot.data['novaConta'] === true;
 		//btoa é para criptografar com javascript puro
 		this.navigateTo =
 			this.activatedRoute.snapshot.params['to'] || btoa('/');
