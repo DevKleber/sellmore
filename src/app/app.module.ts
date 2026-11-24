@@ -7,7 +7,7 @@ import { MenuComponent } from './layout/menu/menu.component';
 import { FooterComponent } from './layout/footer/footer.component';
 import { LoaderComponent } from './shared/loader/loader.component';
 
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -35,15 +35,17 @@ import { RequestRecoverPasswordComponent } from './security/requestRecoverPasswo
 	imports: [
 		BrowserModule,
 		BrowserAnimationsModule,
-		HttpClientModule,
 		SharedModule.forRoot(),
 
 		// RouterModule.forRoot(ROUTES, { preloadingStrategy: PreloadAllModules })
 		// RouterModule.forRoot(ROUTES, { preloadingStrategy: PreloadAllModules })
-		RouterModule.forRoot(ROUTES, { relativeLinkResolution: 'legacy' }),
+		RouterModule.forRoot(ROUTES),
 		// RouterModule.forRoot(ROUTES, { useHash: true }), // .../#/crisis-center/
 	],
-	providers: [{ provide: ErrorHandler, useClass: ApplicationErrorHandler }],
+	providers: [
+		{ provide: ErrorHandler, useClass: ApplicationErrorHandler },
+		provideHttpClient(withXhr(), withInterceptorsFromDi()),
+	],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

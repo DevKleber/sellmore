@@ -8,102 +8,99 @@
 			<h1 id="auth-title" class="auth__title">{{ isNewAccount ? 'Create account' : 'Login' }}</h1>
 		</div>
 
-		<form [formGroup]="loginForm" *ngIf="!isNewAccount" class="auth__form">
-			<app-input-container>
-				<label class="visually-hidden" for="login-email">E-mail</label>
-				<input
-					id="login-email"
-					type="text"
-					formControlName="email"
-					class="form-control"
-					placeholder="E-mail"
-					inputmode="email"
-					autocomplete="username"
-					autofocus
-				/>
-			</app-input-container>
+		@if (!isNewAccount) {
+			<form [formGroup]="loginForm" class="auth__form">
+				<app-input-container>
+					<label class="visually-hidden" for="login-email">E-mail</label>
+					<input
+						id="login-email"
+						type="text"
+						formControlName="email"
+						class="form-control"
+						placeholder="E-mail"
+						inputmode="email"
+						autocomplete="username"
+						autofocus
+						/>
+				</app-input-container>
+				<app-input-container>
+					<label class="visually-hidden" for="login-password">Password</label>
+					<input
+						id="login-password"
+						type="password"
+						formControlName="password"
+						class="form-control"
+						placeholder="Password"
+						autocomplete="current-password"
+						/>
+				</app-input-container>
+				<button
+					(click)="login()"
+					class="ws-btn ws-btn--primary ws-btn--block auth__submit"
+					[disabled]="loginForm.invalid"
+					>
+					Entrar
+				</button>
+				<a class="auth__link" [routerLink]="['/request-recover-password']">Esqueci a senha</a>
+				<h2 class="auth__alt">Novo no Wiseller?</h2>
+				<button (click)="changeToNewAccount()" class="ws-btn ws-btn--block">
+					Crie sua conta
+				</button>
+			</form>
+		}
 
-			<app-input-container>
-				<label class="visually-hidden" for="login-password">Password</label>
-				<input
-					id="login-password"
-					type="password"
-					formControlName="password"
-					class="form-control"
-					placeholder="Password"
-					autocomplete="current-password"
-				/>
-			</app-input-container>
-
-			<button
-				(click)="login()"
-				class="ws-btn ws-btn--primary ws-btn--block auth__submit"
-				[disabled]="loginForm.invalid"
-			>
-				Entrar
-			</button>
-
-			<a class="auth__link" [routerLink]="['/request-recover-password']">Esqueci a senha</a>
-
-			<h2 class="auth__alt">Novo no Wiseller?</h2>
-			<button (click)="changeToNewAccount()" class="ws-btn ws-btn--block">
-				Crie sua conta
-			</button>
-		</form>
-
-		<form [formGroup]="newAccountForm" *ngIf="isNewAccount" class="auth__form">
-			<app-input-container>
-				<label class="visually-hidden" for="new-account-name">Name</label>
-				<input
-					id="new-account-name"
-					type="text"
-					formControlName="nome"
-					class="form-control"
-					placeholder="Name"
-					autocomplete="name"
-					autofocus
-				/>
-			</app-input-container>
-
-			<app-input-container>
-				<label class="visually-hidden" for="new-account-email">E-mail</label>
-				<input
-					id="new-account-email"
-					type="text"
-					formControlName="email"
-					class="form-control"
-					placeholder="E-mail"
-					inputmode="email"
-					autocomplete="email"
-					email
-				/>
-			</app-input-container>
-
-			<app-input-container>
-				<label class="visually-hidden" for="new-account-password">Password</label>
-				<input
-					id="new-account-password"
-					type="password"
-					formControlName="password"
-					class="form-control"
-					placeholder="Password"
-					autocomplete="new-password"
-				/>
-			</app-input-container>
-
-			<button
-				(click)="newAccount()"
-				class="ws-btn ws-btn--primary ws-btn--block auth__submit"
-				[disabled]="newAccountForm.invalid"
-				*ngIf="showButton"
-			>
-				Crie sua conta
-			</button>
-
-			<h2 class="auth__alt">Já tem uma conta?</h2>
-			<button (click)="changeToLogin()" class="ws-btn ws-btn--block">
-				Faça login
-			</button>
-		</form>
+		@if (isNewAccount) {
+			<form [formGroup]="newAccountForm" class="auth__form">
+				<app-input-container>
+					<label class="visually-hidden" for="new-account-name">Name</label>
+					<input
+						id="new-account-name"
+						type="text"
+						formControlName="nome"
+						class="form-control"
+						placeholder="Name"
+						autocomplete="name"
+						autofocus
+						/>
+				</app-input-container>
+				<app-input-container>
+					<label class="visually-hidden" for="new-account-email">E-mail</label>
+					<input
+						id="new-account-email"
+						type="text"
+						formControlName="email"
+						class="form-control"
+						placeholder="E-mail"
+						inputmode="email"
+						autocomplete="email"
+						email
+						/>
+				</app-input-container>
+				<app-input-container>
+					<label class="visually-hidden" for="new-account-password">Password</label>
+					<input
+						id="new-account-password"
+						type="password"
+						formControlName="password"
+						class="form-control"
+						placeholder="Password"
+						autocomplete="new-password"
+						/>
+				</app-input-container>
+				@if (showButton) {
+					<button
+						(click)="newAccount()"
+						class="ws-btn ws-btn--primary ws-btn--block auth__submit"
+						[disabled]="newAccountForm.invalid"
+						>
+						Crie sua conta
+					</button>
+				}
+				<h2 class="auth__alt">Já tem uma conta?</h2>
+				<button (click)="changeToLogin()" class="ws-btn ws-btn--block">
+					Faça login
+				</button>
+			</form>
+		}
 	</section>
 </main>

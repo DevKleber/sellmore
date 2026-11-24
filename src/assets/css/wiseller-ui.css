@@ -580,10 +580,22 @@ a.ws-brand:focus {
 
 /* ---------- Referidos ---------- */
 
-/* A lista rola dentro do card; a barra so aparece ao passar o mouse (perfect-scrollbar). */
+/* A lista rola dentro do card; a barra so aparece ao passar o mouse (ngx-scrollbar). */
 .ws-refs-scroll {
 	height: var(--refs-height);
 	margin: 0 -4px;
+	--scrollbar-track-thickness: 6px;
+	--scrollbar-track-hover-thickness: 11px;
+	--scrollbar-container-offset: 2px;
+	--scrollbar-track-color: transparent;
+	--scrollbar-track-shape: 6px;
+	--scrollbar-thumb-color: var(--scroll-thumb);
+	--scrollbar-thumb-hover-color: var(--scroll-thumb-hover);
+	--scrollbar-thumb-active-color: var(--scroll-thumb-hover);
+	--scrollbar-hover-opacity-transition-enter-duration: 0.2s;
+	--scrollbar-hover-opacity-transition-leave-duration: 0.2s;
+	--scrollbar-hover-opacity-transition-leave-delay: 0s;
+	--scrollbar-mobile-overscroll-behavior: auto;
 }
 
 .ws-refs {

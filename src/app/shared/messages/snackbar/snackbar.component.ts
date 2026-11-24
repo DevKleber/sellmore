@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { trigger, state, style, transition, animate,keyframes } from '@angular/animations'
 import { NotificationService } from '../notification.service'
 import { Observable ,  timer } from 'rxjs'
 import {tap,switchMap} from 'rxjs/operators'
-import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Component({
   selector: 'app-snackbar',
@@ -43,7 +42,9 @@ import { Message } from '@angular/compiler/src/i18n/i18n_ast';
       //   style({opacity:0,transform:'translateX(130px)',offset:1}),
       // ])))
     ])
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false
 })
 export class SnackbarComponent implements OnInit {
   message: string = 'Desculpe aparecer sem ser convidado'

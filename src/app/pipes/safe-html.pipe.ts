@@ -1,9 +1,12 @@
 
 import { Pipe } from '@angular/core';
 import {DomSanitizer, SafeStyle, SafeScript, SafeUrl, SafeResourceUrl} from '@angular/platform-browser';
-@Pipe({name: 'safeHtml'})
+@Pipe({
+	name: 'safeHtml',
+	standalone: false
+})
 export class SafeHtml {
-    constructor(protected _sanitizer: DomSanitizer) {
+	constructor(protected _sanitizer: DomSanitizer) {
 
 	}
 

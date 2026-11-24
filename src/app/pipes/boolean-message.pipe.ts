@@ -2,6 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
 	name: 'booleanMessage',
+	standalone: false
 })
 export class BooleanMessagePipe implements PipeTransform {
 	transform(value: any, args?: any, args1?: any): any {

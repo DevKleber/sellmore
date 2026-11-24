@@ -4,12 +4,15 @@ import {
 	Input,
 	ContentChild,
 	AfterContentInit,
+	ChangeDetectionStrategy
 } from '@angular/core';
 import { NgModel, FormControlName } from '@angular/forms';
 @Component({
 	selector: 'app-input-container',
 	templateUrl: './input.component.html',
 	styleUrls: ['./input.component.css'],
+	changeDetection: ChangeDetectionStrategy.Eager,
+	standalone: false
 })
 export class InputComponent implements OnInit, AfterContentInit {
 	@Input() class: string;

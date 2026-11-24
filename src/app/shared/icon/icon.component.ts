@@ -67,6 +67,7 @@ const ICONS: Record<string, string> = {
 	></svg>`,
 	styles: [':host { display: inline-flex; flex: none; line-height: 0; }'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: false
 })
 export class IconComponent {
 	@Input() size = DEFAULT_SIZE;

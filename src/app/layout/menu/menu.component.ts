@@ -1,8 +1,9 @@
 import {
-	Component,
-	OnInit,
-	AfterViewInit,
-	AfterContentInit,
+  Component,
+  OnInit,
+  AfterViewInit,
+  AfterContentInit,
+  ChangeDetectionStrategy
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { LoginService } from "src/app/security/login/login.service";
@@ -15,6 +16,8 @@ import { API_PATH_IMG } from "./../../app.api";
 	selector: "app-menu",
 	templateUrl: "./menu.component.html",
 	styleUrls: ["./menu.component.css"],
+	changeDetection: ChangeDetectionStrategy.Eager,
+	standalone: false
 })
 export class MenuComponent implements OnInit, AfterContentInit, AfterViewInit {
 	mostrarMenu: string = "";

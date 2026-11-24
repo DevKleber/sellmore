@@ -1,11 +1,4 @@
-import {
-	HttpInterceptor,
-	HttpRequest,
-	HttpHandler,
-	HttpErrorResponse,
-	HttpClient,
-	HttpEvent,
-} from "@angular/common/http";
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpErrorResponse, HttpClient, HttpEvent } from "@angular/common/http";
 import { catchError, flatMap } from "rxjs/operators";
 import { Injectable, Injector } from "@angular/core";
 import { LoginService } from "../security/login/login.service";

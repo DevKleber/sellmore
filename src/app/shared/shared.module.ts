@@ -33,23 +33,27 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
-import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+import { NgScrollbarModule, NgScrollbarOptions, provideScrollbarOptions, provideScrollbarPolyfill } from 'ngx-scrollbar';
+import { NgScrollHoverVisibility } from 'ngx-scrollbar/addons';
 
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
-import { NgxMaskModule, IConfig } from 'ngx-mask';
-import { LottieModule } from 'ngx-lottie';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { LottieComponent, provideLottieOptions } from 'ngx-lottie';
 import player from 'lottie-web';
 
 import ptBr from '@angular/common/locales/pt';
 registerLocaleData(ptBr);
 
-const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
-	suppressScrollX: true,
+/** A barra fica por cima do conteúdo, só aparece ao passar o mouse ou rolar, e nunca na horizontal. */
+const DEFAULT_SCROLLBAR_OPTIONS: Partial<NgScrollbarOptions> = {
+	orientation: 'vertical',
+	visibility: 'hover',
+	appearance: 'compact',
 };
+/** Navegadores sem ScrollTimeline carregam o polyfill do próprio site, e não de uma CDN. */
+const SCROLL_TIMELINE_POLYFILL_URL = '/assets/lib/ngx-scrollbar/scroll-timeline-polyfill.js';
 export function playerFactory() {
 	return player;
 }
@@ -74,14 +78,16 @@ export function playerFactory() {
 		MatTooltipModule,
 		ScrollingModule,
 		MatMenuModule,
-		PerfectScrollbarModule,
-		NgxMaskModule.forRoot(),
+		NgScrollbarModule,
+		NgScrollHoverVisibility,
+		NgxMaskDirective,
 		CalendarModule.forRoot({
 			provide: DateAdapter,
 			useFactory: adapterFactory,
 		}),
-		LottieModule.forRoot({ player: playerFactory }),
+		LottieComponent,
 	],
+	providers: [provideNgxMask(), provideLottieOptions({ player: playerFactory })],
 	exports: [
 		SafeHtml,
 		InputComponent,
@@ -98,10 +104,11 @@ export function playerFactory() {
 		MatTooltipModule,
 		ScrollingModule,
 		MatMenuModule,
-		PerfectScrollbarModule,
-		NgxMaskModule,
+		NgScrollbarModule,
+		NgScrollHoverVisibility,
+		NgxMaskDirective,
 		CalendarModule,
-		LottieModule,
+		LottieComponent,
 	],
 })
 export class SharedModule {
@@ -120,10 +127,8 @@ export class SharedModule {
 					multi: true,
 				},
 				// {provide:HTTP_INTERCEPTORS, useClass: AuthRefreshtokenInterceptor, multi:true},
-				{
-					provide: PERFECT_SCROLLBAR_CONFIG,
-					useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
-				},
+				provideScrollbarOptions(DEFAULT_SCROLLBAR_OPTIONS),
+				provideScrollbarPolyfill(SCROLL_TIMELINE_POLYFILL_URL),
 			],
 		};
 	}

@@ -18,10 +18,12 @@
 				[attr.aria-expanded]="buscaAbertaNoCelular" (click)="alternarBuscaNoCelular()">
 				<app-icon name="search" [size]="22"></app-icon>
 			</button>
-			<button type="button" *ngIf="user?.id === 1" [routerLink]="[ '/access_log']"
-				class="ws-btn ws-btn--quiet ws-only-desktop">
-				Log
-			</button>
+			@if (user?.id === 1) {
+				<button type="button" [routerLink]="[ '/access_log']"
+					class="ws-btn ws-btn--quiet ws-only-desktop">
+					Log
+				</button>
+			}
 			<button type="button" (click)="setDarkMode()" class="ws-btn ws-btn--icon ws-only-desktop"
 				aria-label="Tema escuro" [attr.aria-pressed]="themeIsDark" matTooltip="Tema escuro">
 				<app-icon [name]="themeIsDark ? 'sun' : 'moon'"></app-icon>
@@ -50,10 +52,12 @@
 				<app-icon name="edit" [size]="18"></app-icon>
 				Perfil: em desenvolvimento
 			</button>
-			<button mat-menu-item class="ws-only-mobile" *ngIf="user?.id === 1" [routerLink]="[ '/access_log']">
-				<app-icon name="list" [size]="18"></app-icon>
-				Log de acesso
-			</button>
+			@if (user?.id === 1) {
+				<button mat-menu-item class="ws-only-mobile" [routerLink]="[ '/access_log']">
+					<app-icon name="list" [size]="18"></app-icon>
+					Log de acesso
+				</button>
+			}
 			<button mat-menu-item class="ws-only-mobile" (click)="setDarkMode()">
 				<app-icon [name]="themeIsDark ? 'sun' : 'moon'" [size]="18"></app-icon>
 				{{ themeIsDark ? 'Usar tema claro' : 'Usar tema escuro' }}
@@ -75,7 +79,7 @@
 
 	<!-- A troca de status para "ligar depois" abre a agenda por este botao, que precisa existir sempre. -->
 	<button type="button" hidden tabindex="-1" aria-hidden="true" #openCalendar (click)="setEvents()"
-		data-toggle="modal" data-target="#modalCalendar"></button>
+	data-toggle="modal" data-target="#modalCalendar"></button>
 
 	<main class="ws-page">
 		<div class="ws-pagehead">
@@ -102,245 +106,36 @@
 			</div>
 		</div>
 
-		<section class="ws-results" *ngIf="customersFilter.length || searchForm.value.searchControl.length">
-			<div class="ws-results__summary totalFilter">Filtro: {{searchForm.value.searchControl}} <span
-					class="ws-results__total totalRegisterFilter">{{customersFilter.length}}</span></div>
-
-			<div class="ws-results__none" *ngIf="!customersFilter.length && !isSearch">
-				<ng-lottie [options]="options" class="lottieSearch"></ng-lottie>
-				<h2>Nenhum resultado encontrado</h2>
-			</div>
-
-			<div class="ws-grid display-row">
-				<article class="ws-card customersFilter" *ngFor="let item of customersFilter; index as indexItem; ">
-					<div class="ws-card__head">
-						<span class="ws-avatar" aria-hidden="true">{{ iniciais(item.name) }}</span>
-						<div class="ws-card__who filterName">
-							<div class="ws-card__name filterNameRow">{{ item.name }}</div>
-							<div class="ws-phones">
-								<span class="ws-phone filterPhone" *ngFor="let itemPhone of item.phones">+{{itemPhone?.country_code}}&ngsp;{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}</span>
-							</div>
-						</div>
-						<span class="ws-tag filtercreated_at" [class.ws-tag--inativo]="!item.bo_ativo"
-							[class.ws-tag--c]="item.bo_ativo">{{item.bo_ativo | booleanMessage:'bo_ativo'}}</span>
-						<button type="button" class="ws-btn ws-btn--quiet ws-btn--icon menuFilter" matTooltip="Menu"
-							[attr.aria-label]="'Mais opções de ' + item.name" [matMenuTriggerFor]="menu">
-							<app-icon name="dots"></app-icon>
-						</button>
-						<mat-menu #menu="matMenu">
-							<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
-								data-target="#modalImportContact">
-								<app-icon name="upload" [size]="18"></app-icon> Importar contatos
-							</button>
-							<button mat-menu-item (click)="updateOpenForm(item)" data-toggle="modal"
-								data-target="#modalStickyAdd">
-								<app-icon name="edit" [size]="18"></app-icon> Alterar
-							</button>
-							<ng-container *ngIf="!item.bo_ativo; else elseTemplateActiveOrInative">
-								<button mat-menu-item (click)="ativar(item)">
-									<app-icon name="restore" [size]="18"></app-icon> Ativar
-								</button>
-							</ng-container>
-							<ng-template #elseTemplateActiveOrInative>
-								<button mat-menu-item (click)="inativar(item)">
-									<app-icon name="archive" [size]="18"></app-icon> Arquivar
-								</button>
-							</ng-template>
-							<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
-								data-target="#modalStickyAdd">
-								<app-icon name="promote" [size]="18"></app-icon>
-								Tornar Lead
-							</button>
-							<button mat-menu-item (click)="callTo(item, indexItem)" data-toggle="modal"
-								data-target="#modalCall">
-								<app-icon name="phone" [size]="18"></app-icon>
-								Ligar
-							</button>
-						</mat-menu>
+		@if (customersFilter.length || searchForm.value.searchControl.length) {
+			<section class="ws-results">
+				<div class="ws-results__summary totalFilter">Filtro: {{searchForm.value.searchControl}} <span
+				class="ws-results__total totalRegisterFilter">{{customersFilter.length}}</span></div>
+				@if (!customersFilter.length && !isSearch) {
+					<div class="ws-results__none">
+						<ng-lottie [options]="options" class="lottieSearch"></ng-lottie>
+						<h2>Nenhum resultado encontrado</h2>
 					</div>
-
-					<div class="ws-result__facts">
-						<div class="filterstatus"><strong>Status:</strong> {{item.status | helpers:'statusString' }}</div>
-						<div class="filterbo_ativo"><strong>Criado em:</strong> {{item.created_at | date: 'fullDate'}}</div>
-					</div>
-				</article>
-			</div>
-		</section>
-
-		<ng-container *ngIf="!customersFilter.length && !searchForm.value.searchControl.length">
-			<div class="ws-stats">
-				<div class="ws-stat">
-					<span class="ws-stat__icon ws-stat__icon--comprou">
-						<app-icon name="thumbs-up"></app-icon>
-					</span>
-					<p class="ws-stat__text totalOthers"><strong class="ws-stat__number">{{statistics?.c}}</strong>&ngsp;<span
-							class="ws-stat__label">{{statistics?.c <= 1 ? 'venda' : 'vendas'}}</span></p>
-				</div>
-				<div class="ws-stat">
-					<span class="ws-stat__icon ws-stat__icon--ligar">
-						<app-icon name="headset"></app-icon>
-					</span>
-					<p class="ws-stat__text totalOthers"><strong class="ws-stat__number">{{statistics?.ld}}</strong>&ngsp;<span
-							class="ws-stat__label">ligar depois</span></p>
-				</div>
-				<div class="ws-stat">
-					<span class="ws-stat__icon ws-stat__icon--cartao">
-						<app-icon name="card"></app-icon>
-					</span>
-					<p class="ws-stat__text totalOthers"><strong class="ws-stat__number">{{statistics?.pc}}</strong>&ngsp;<span
-							class="ws-stat__label">{{statistics?.pc <= 1 ? 'problema com cartão' : 'problemas com cartão'}}</span></p>
-				</div>
-			</div>
-
-			<div class="ws-toolbar">
-				<div class="ws-pills" role="group" aria-label="Filtrar por status">
-					<button type="button" class="ws-pill" *ngFor="let filtro of filtros"
-						[attr.aria-pressed]="filtroAtivo === filtro.chave" (click)="selecionarFiltro(filtro.chave)">
-						{{ filtro.rotulo }}
-					</button>
-				</div>
-
-				<button type="button" class="ws-btn ws-btn--icon orderByMenu" matTooltip="Ordem" aria-label="Ordem"
-					[matMenuTriggerFor]="orderByMenu">
-					<app-icon name="sort"></app-icon>
-				</button>
-
-				<mat-menu #orderByMenu="matMenu">
-					<h3 style="margin: 8px 16px;">Ordem</h3>
-					<button mat-menu-item (click)="setStatusLocalStorage({column: 'id', type: 'desc'})">
-						Ordem de lançamento decrescente
-						<app-icon *ngIf="orderBy?.column == 'id' && orderBy?.type == 'desc'" class="checkOrder" name="check"
-							[size]="18"></app-icon>
-					</button>
-					<button mat-menu-item (click)="setStatusLocalStorage({column: 'id', type: 'asc'})">
-						Ordem de lançamento crescente
-						<app-icon *ngIf="orderBy?.column == 'id' && orderBy?.type == 'asc'" class="checkOrder" name="check"
-							[size]="18"></app-icon>
-					</button>
-					<button mat-menu-item (click)="setStatusLocalStorage({column: 'name', type: 'asc'})">
-						Ordem alfabética A → Z
-						<app-icon *ngIf="orderBy?.column == 'name' && orderBy?.type == 'asc'" class="checkOrder" name="check"
-							[size]="18"></app-icon>
-					</button>
-					<button mat-menu-item (click)="setStatusLocalStorage({column: 'name', type: 'desc'})">
-						Ordem alfabética Z → A
-						<app-icon *ngIf="orderBy?.column == 'name' && orderBy?.type == 'desc'" class="checkOrder" name="check"
-							[size]="18"></app-icon>
-					</button>
-				</mat-menu>
-			</div>
-
-			<div class="ws-grid contentWiseller" id="customersBody">
-				<ng-container *ngFor="let itemLead of customersDynamic; index as indexItemLead;">
-					<article class="ws-card customers" *ngIf="itemLead?.referidos.length > 0 || itemLead?.bo_ativo">
-						<div class="ws-card__head parent">
-							<span class="ws-avatar" aria-hidden="true">{{ iniciais(itemLead?.name) }}</span>
-							<div class="ws-card__who contact">
-								<div class="ws-card__name name">{{ itemLead?.name }}</div>
-								<div class="ws-phones">
-									<span class="ws-phone contacto-phone" *ngFor="let itemPhone of itemLead.phones">+{{itemPhone?.country_code}}&ngsp;{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}</span>
-								</div>
-							</div>
-							<button type="button" class="ws-btn ws-btn--quiet ws-btn--icon" matTooltip="Menu"
-								[attr.aria-label]="'Mais opções de ' + itemLead?.name" [matMenuTriggerFor]="menuLead">
-								<app-icon name="dots"></app-icon>
-							</button>
-							<mat-menu #menuLead="matMenu">
-								<button mat-menu-item (click)="newChildren(itemLead)" data-toggle="modal"
-									data-target="#modalImportContact">
-									<app-icon name="upload" [size]="18"></app-icon> Importar contatos
-								</button>
-								<button mat-menu-item (click)="updateOpenForm(itemLead)" data-toggle="modal"
-									data-target="#modalStickyAdd">
-									<app-icon name="edit" [size]="18"></app-icon> Alterar
-								</button>
-								<button mat-menu-item (click)="inativar(itemLead)">
-									<app-icon name="archive" [size]="18"></app-icon> Arquivar
-								</button>
-							</mat-menu>
-						</div>
-
-						<div class="ws-card__meta info">
-							<span class="ws-tag ws-status" [ngClass]="'ws-tag--' + itemLead?.status"
-								[attr.data-status]="itemLead?.status">{{ rotuloDoStatus[itemLead?.status] }}</span>
-							<span class="ws-card__count quantitative">{{ itemLead?.referidos.length }} referidos</span>
-						</div>
-
-						<div class="ws-statusbar" role="group" aria-label="Status do atendimento"
-							[class.waiting]="itemLead?.status == 'a'" [class.finished]="itemLead?.status != 'a'">
-							<button type="button" class="ws-statusbtn ws-statusbtn--ld" matTooltip="Ligar depois"
-								aria-label="Ligar depois" [attr.aria-pressed]="itemLead?.status == 'ld'"
-								[disabled]="itemLead?.status != 'a'" (click)="changeStatus(itemLead, 'ld')">
-								<app-icon name="headset"></app-icon>
-							</button>
-							<button type="button" class="ws-statusbtn ws-statusbtn--pc"
-								matTooltip="Problemas com cartão de crédito" aria-label="Problemas com cartão de crédito"
-								[attr.aria-pressed]="itemLead?.status == 'pc'" [disabled]="itemLead?.status != 'a'"
-								(click)="changeStatus(itemLead, 'pc')">
-								<app-icon name="card"></app-icon>
-							</button>
-							<button type="button" class="ws-statusbtn ws-statusbtn--n" matTooltip="Não deu negócio 😭"
-								aria-label="Não tem interesse" [attr.aria-pressed]="itemLead?.status == 'n'"
-								[disabled]="itemLead?.status != 'a'" (click)="changeStatus(itemLead, 'n')">
-								<app-icon name="thumbs-down"></app-icon>
-							</button>
-							<button type="button" class="ws-statusbtn ws-statusbtn--c" matTooltip="Vendido 😃"
-								aria-label="Comprou" [attr.aria-pressed]="itemLead?.status == 'c'"
-								[disabled]="itemLead?.status != 'a'" (click)="changeStatus(itemLead, 'c')">
-								<app-icon name="thumbs-up"></app-icon>
-							</button>
-						</div>
-
-						<perfect-scrollbar class="ws-refs-scroll" *ngIf="itemLead?.referidos.length; else semReferidos">
-						<div class="ws-refs children">
-							<div class="ws-ref item" *ngFor=" let item of itemLead?.referidos; index as indexItemReferido;"
-								[class.waiting]="item?.status == 'a'" [class.finished]="item?.status != 'a'">
-								<div class="ws-ref__who contacto"
-									(click)="callTo(item, {itemLead, referido : indexItemReferido, indexItemLeade:indexItemLead})"
-									data-toggle="modal" data-target="#modalCall">
-									<div class="ws-ref__name">
-										<span class="contacto-name">{{ item?.name }}</span>
-										<app-icon *ngIf="item?.bo_preference" class="ws-ref__star" name="star-filled" [size]="14"
-											matTooltip="Preferido"></app-icon>
-										<span *ngIf="item?.status != 'a'" class="ws-tag ws-status"
-											[ngClass]="'ws-tag--' + item?.status" [attr.data-status]="item?.status">{{
-											rotuloDoStatus[item?.status] }}</span>
-									</div>
-									<div class="ws-ref__details">
-										<span class="ws-phone contacto-phone" *ngFor="let itemPhone of item?.phones">+{{itemPhone?.country_code}}&ngsp;{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}</span>
-										<span class="ws-ref__date">{{item?.created_at | date: 'dd/MM/yyyy'}}</span>
+				}
+				<div class="ws-grid display-row">
+					@for (item of customersFilter; track item; let indexItem = $index) {
+						<article class="ws-card customersFilter">
+							<div class="ws-card__head">
+								<span class="ws-avatar" aria-hidden="true">{{ iniciais(item.name) }}</span>
+								<div class="ws-card__who filterName">
+									<div class="ws-card__name filterNameRow">{{ item.name }}</div>
+									<div class="ws-phones">
+										@for (itemPhone of item.phones; track itemPhone) {
+											<span class="ws-phone filterPhone">+{{itemPhone?.country_code}}&ngsp;{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}</span>
+										}
 									</div>
 								</div>
-
-								<button type="button" class="ws-btn ws-btn--soft ws-btn--icon ws-btn--round"
-									matTooltip="Ligar" [attr.aria-label]="'Ligar para ' + item?.name"
-									(click)="callTo(item, {itemLead, referido : indexItemReferido, indexItemLeade:indexItemLead})"
-									data-toggle="modal" data-target="#modalCall">
-									<app-icon name="phone" [size]="18"></app-icon>
-								</button>
-								<button type="button" class="ws-btn ws-btn--quiet ws-btn--icon" matTooltip="Menu"
-									[attr.aria-label]="'Mais opções de ' + item?.name" [matMenuTriggerFor]="menuReferido">
+								<span class="ws-tag filtercreated_at" [class.ws-tag--inativo]="!item.bo_ativo"
+								[class.ws-tag--c]="item.bo_ativo">{{item.bo_ativo | booleanMessage:'bo_ativo'}}</span>
+								<button type="button" class="ws-btn ws-btn--quiet ws-btn--icon menuFilter" matTooltip="Menu"
+									[attr.aria-label]="'Mais opções de ' + item.name" [matMenuTriggerFor]="menu">
 									<app-icon name="dots"></app-icon>
 								</button>
-								<mat-menu #menuReferido="matMenu">
-									<ng-container *ngIf="item?.status == 'a'">
-										<button mat-menu-item (click)="preference(item)">
-											<app-icon [name]="item?.bo_preference ? 'star-filled' : 'star'" [size]="18"></app-icon>
-											{{ item?.bo_preference ? 'Tirar preferência' : 'Dar preferência' }}
-										</button>
-										<button mat-menu-item (click)="changeStatus(item, 'ld')">
-											<app-icon name="headset" [size]="18"></app-icon> Ligar depois
-										</button>
-										<button mat-menu-item (click)="changeStatus(item, 'pc')">
-											<app-icon name="card" [size]="18"></app-icon> Problemas com cartão
-										</button>
-										<button mat-menu-item (click)="changeStatus(item, 'n')">
-											<app-icon name="thumbs-down" [size]="18"></app-icon> Não tem interesse
-										</button>
-										<button mat-menu-item (click)="changeStatus(item, 'c')">
-											<app-icon name="thumbs-up" [size]="18"></app-icon> Comprou
-										</button>
-									</ng-container>
+								<mat-menu #menu="matMenu">
 									<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
 										data-target="#modalImportContact">
 										<app-icon name="upload" [size]="18"></app-icon> Importar contatos
@@ -349,36 +144,264 @@
 										data-target="#modalStickyAdd">
 										<app-icon name="edit" [size]="18"></app-icon> Alterar
 									</button>
-									<button mat-menu-item (click)="inativar(item)">
-										<app-icon name="archive" [size]="18"></app-icon> Arquivar
-									</button>
+									@if (!item.bo_ativo) {
+										<button mat-menu-item (click)="ativar(item)">
+											<app-icon name="restore" [size]="18"></app-icon> Ativar
+										</button>
+									} @else {
+										<button mat-menu-item (click)="inativar(item)">
+											<app-icon name="archive" [size]="18"></app-icon> Arquivar
+										</button>
+									}
 									<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
 										data-target="#modalStickyAdd">
 										<app-icon name="promote" [size]="18"></app-icon>
 										Tornar Lead
 									</button>
+									<button mat-menu-item (click)="callTo(item, indexItem)" data-toggle="modal"
+										data-target="#modalCall">
+										<app-icon name="phone" [size]="18"></app-icon>
+										Ligar
+									</button>
 								</mat-menu>
 							</div>
-						</div>
-						</perfect-scrollbar>
-						<ng-template #semReferidos>
-							<div class="ws-empty">Nenhum referido ainda</div>
-						</ng-template>
+							<div class="ws-result__facts">
+								<div class="filterstatus"><strong>Status:</strong> {{item.status | helpers:'statusString' }}</div>
+								<div class="filterbo_ativo"><strong>Criado em:</strong> {{item.created_at | date: 'fullDate'}}</div>
+							</div>
+						</article>
+					}
+				</div>
+			</section>
+		}
 
-						<button type="button" class="ws-btn ws-btn--block ws-btn--link actionButton"
-							(click)="newChildren(itemLead)" data-toggle="modal" data-target="#modalStickyAdd">
-							<app-icon name="plus" [size]="18" [stroke]="2"></app-icon>
-							Adicionar referido
-						</button>
-					</article>
-				</ng-container>
-
-				<ng-container *ngIf="isLoadCard">
-					<div class="ws-skeleton skeleton piscando_div" *ngFor="let item of skeleton"></div>
-				</ng-container>
+		@if (!customersFilter.length && !searchForm.value.searchControl.length) {
+			<div class="ws-stats">
+				<div class="ws-stat">
+					<span class="ws-stat__icon ws-stat__icon--comprou">
+						<app-icon name="thumbs-up"></app-icon>
+					</span>
+					<p class="ws-stat__text totalOthers"><strong class="ws-stat__number">{{statistics?.c}}</strong>&ngsp;<span
+				class="ws-stat__label">{{statistics?.c <= 1 ? 'venda' : 'vendas'}}</span></p>
 			</div>
-		</ng-container>
-	</main>
+			<div class="ws-stat">
+				<span class="ws-stat__icon ws-stat__icon--ligar">
+					<app-icon name="headset"></app-icon>
+				</span>
+				<p class="ws-stat__text totalOthers"><strong class="ws-stat__number">{{statistics?.ld}}</strong>&ngsp;<span
+			class="ws-stat__label">ligar depois</span></p>
+		</div>
+		<div class="ws-stat">
+			<span class="ws-stat__icon ws-stat__icon--cartao">
+				<app-icon name="card"></app-icon>
+			</span>
+			<p class="ws-stat__text totalOthers"><strong class="ws-stat__number">{{statistics?.pc}}</strong>&ngsp;<span
+		class="ws-stat__label">{{statistics?.pc <= 1 ? 'problema com cartão' : 'problemas com cartão'}}</span></p>
+	</div>
+</div>
+<div class="ws-toolbar">
+	<div class="ws-pills" role="group" aria-label="Filtrar por status">
+		@for (filtro of filtros; track filtro) {
+			<button type="button" class="ws-pill"
+				[attr.aria-pressed]="filtroAtivo === filtro.chave" (click)="selecionarFiltro(filtro.chave)">
+				{{ filtro.rotulo }}
+			</button>
+		}
+	</div>
+	<button type="button" class="ws-btn ws-btn--icon orderByMenu" matTooltip="Ordem" aria-label="Ordem"
+		[matMenuTriggerFor]="orderByMenu">
+		<app-icon name="sort"></app-icon>
+	</button>
+	<mat-menu #orderByMenu="matMenu">
+		<h3 style="margin: 8px 16px;">Ordem</h3>
+		<button mat-menu-item (click)="setStatusLocalStorage({column: 'id', type: 'desc'})">
+			Ordem de lançamento decrescente
+			@if (orderBy?.column == 'id' && orderBy?.type == 'desc') {
+				<app-icon class="checkOrder" name="check"
+				[size]="18"></app-icon>
+			}
+		</button>
+		<button mat-menu-item (click)="setStatusLocalStorage({column: 'id', type: 'asc'})">
+			Ordem de lançamento crescente
+			@if (orderBy?.column == 'id' && orderBy?.type == 'asc') {
+				<app-icon class="checkOrder" name="check"
+				[size]="18"></app-icon>
+			}
+		</button>
+		<button mat-menu-item (click)="setStatusLocalStorage({column: 'name', type: 'asc'})">
+			Ordem alfabética A → Z
+			@if (orderBy?.column == 'name' && orderBy?.type == 'asc') {
+				<app-icon class="checkOrder" name="check"
+				[size]="18"></app-icon>
+			}
+		</button>
+		<button mat-menu-item (click)="setStatusLocalStorage({column: 'name', type: 'desc'})">
+			Ordem alfabética Z → A
+			@if (orderBy?.column == 'name' && orderBy?.type == 'desc') {
+				<app-icon class="checkOrder" name="check"
+				[size]="18"></app-icon>
+			}
+		</button>
+	</mat-menu>
+</div>
+<div class="ws-grid contentWiseller" id="customersBody">
+	@for (itemLead of customersDynamic; track itemLead; let indexItemLead = $index) {
+		@if (itemLead?.referidos.length > 0 || itemLead?.bo_ativo) {
+			<article class="ws-card customers">
+				<div class="ws-card__head parent">
+					<span class="ws-avatar" aria-hidden="true">{{ iniciais($safeNavigationMigration(itemLead?.name)) }}</span>
+					<div class="ws-card__who contact">
+						<div class="ws-card__name name">{{ itemLead?.name }}</div>
+						<div class="ws-phones">
+							@for (itemPhone of itemLead.phones; track itemPhone) {
+								<span class="ws-phone contacto-phone">+{{itemPhone?.country_code}}&ngsp;{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}</span>
+							}
+						</div>
+					</div>
+					<button type="button" class="ws-btn ws-btn--quiet ws-btn--icon" matTooltip="Menu"
+						[attr.aria-label]="'Mais opções de ' + itemLead?.name" [matMenuTriggerFor]="menuLead">
+						<app-icon name="dots"></app-icon>
+					</button>
+					<mat-menu #menuLead="matMenu">
+						<button mat-menu-item (click)="newChildren(itemLead)" data-toggle="modal"
+							data-target="#modalImportContact">
+							<app-icon name="upload" [size]="18"></app-icon> Importar contatos
+						</button>
+						<button mat-menu-item (click)="updateOpenForm(itemLead)" data-toggle="modal"
+							data-target="#modalStickyAdd">
+							<app-icon name="edit" [size]="18"></app-icon> Alterar
+						</button>
+						<button mat-menu-item (click)="inativar(itemLead)">
+							<app-icon name="archive" [size]="18"></app-icon> Arquivar
+						</button>
+					</mat-menu>
+				</div>
+				<div class="ws-card__meta info">
+					<span class="ws-tag ws-status" [ngClass]="'ws-tag--' + $safeNavigationMigration(itemLead?.status)"
+					[attr.data-status]="itemLead?.status">{{ rotuloDoStatus[itemLead?.status] }}</span>
+					<span class="ws-card__count quantitative">{{ itemLead?.referidos.length }} referidos</span>
+				</div>
+				<div class="ws-statusbar" role="group" aria-label="Status do atendimento"
+					[class.waiting]="itemLead?.status == 'a'" [class.finished]="itemLead?.status != 'a'">
+					<button type="button" class="ws-statusbtn ws-statusbtn--ld" matTooltip="Ligar depois"
+						aria-label="Ligar depois" [attr.aria-pressed]="itemLead?.status == 'ld'"
+						[disabled]="itemLead?.status != 'a'" (click)="changeStatus(itemLead, 'ld')">
+						<app-icon name="headset"></app-icon>
+					</button>
+					<button type="button" class="ws-statusbtn ws-statusbtn--pc"
+						matTooltip="Problemas com cartão de crédito" aria-label="Problemas com cartão de crédito"
+						[attr.aria-pressed]="itemLead?.status == 'pc'" [disabled]="itemLead?.status != 'a'"
+						(click)="changeStatus(itemLead, 'pc')">
+						<app-icon name="card"></app-icon>
+					</button>
+					<button type="button" class="ws-statusbtn ws-statusbtn--n" matTooltip="Não deu negócio 😭"
+						aria-label="Não tem interesse" [attr.aria-pressed]="itemLead?.status == 'n'"
+						[disabled]="itemLead?.status != 'a'" (click)="changeStatus(itemLead, 'n')">
+						<app-icon name="thumbs-down"></app-icon>
+					</button>
+					<button type="button" class="ws-statusbtn ws-statusbtn--c" matTooltip="Vendido 😃"
+						aria-label="Comprou" [attr.aria-pressed]="itemLead?.status == 'c'"
+						[disabled]="itemLead?.status != 'a'" (click)="changeStatus(itemLead, 'c')">
+						<app-icon name="thumbs-up"></app-icon>
+					</button>
+				</div>
+				@if (itemLead?.referidos.length) {
+					<ng-scrollbar class="ws-refs-scroll" visibleOnScroll>
+						<div class="ws-refs children">
+							@for ( item of itemLead?.referidos; track  item; let indexItemReferido = $index) {
+								<div class="ws-ref item"
+									[class.waiting]="item?.status == 'a'" [class.finished]="item?.status != 'a'">
+									<div class="ws-ref__who contacto"
+										(click)="callTo(item, {itemLead, referido : indexItemReferido, indexItemLeade:indexItemLead})"
+										data-toggle="modal" data-target="#modalCall">
+										<div class="ws-ref__name">
+											<span class="contacto-name">{{ item?.name }}</span>
+											@if (item?.bo_preference) {
+												<app-icon class="ws-ref__star" name="star-filled" [size]="14"
+												matTooltip="Preferido"></app-icon>
+											}
+											@if (item?.status != 'a') {
+												<span class="ws-tag ws-status"
+													[ngClass]="'ws-tag--' + $safeNavigationMigration(item?.status)" [attr.data-status]="item?.status">{{
+												rotuloDoStatus[item?.status] }}</span>
+											}
+										</div>
+										<div class="ws-ref__details">
+											@for (itemPhone of item?.phones; track itemPhone) {
+												<span class="ws-phone contacto-phone">+{{itemPhone?.country_code}}&ngsp;{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}</span>
+											}
+											<span class="ws-ref__date">{{$safeNavigationMigration(item?.created_at) | date: 'dd/MM/yyyy'}}</span>
+										</div>
+									</div>
+									<button type="button" class="ws-btn ws-btn--soft ws-btn--icon ws-btn--round"
+										matTooltip="Ligar" [attr.aria-label]="'Ligar para ' + item?.name"
+										(click)="callTo(item, {itemLead, referido : indexItemReferido, indexItemLeade:indexItemLead})"
+										data-toggle="modal" data-target="#modalCall">
+										<app-icon name="phone" [size]="18"></app-icon>
+									</button>
+									<button type="button" class="ws-btn ws-btn--quiet ws-btn--icon" matTooltip="Menu"
+										[attr.aria-label]="'Mais opções de ' + item?.name" [matMenuTriggerFor]="menuReferido">
+										<app-icon name="dots"></app-icon>
+									</button>
+									<mat-menu #menuReferido="matMenu">
+										@if (item?.status == 'a') {
+											<button mat-menu-item (click)="preference(item)">
+												<app-icon [name]="item?.bo_preference ? 'star-filled' : 'star'" [size]="18"></app-icon>
+												{{ item?.bo_preference ? 'Tirar preferência' : 'Dar preferência' }}
+											</button>
+											<button mat-menu-item (click)="changeStatus(item, 'ld')">
+												<app-icon name="headset" [size]="18"></app-icon> Ligar depois
+											</button>
+											<button mat-menu-item (click)="changeStatus(item, 'pc')">
+												<app-icon name="card" [size]="18"></app-icon> Problemas com cartão
+											</button>
+											<button mat-menu-item (click)="changeStatus(item, 'n')">
+												<app-icon name="thumbs-down" [size]="18"></app-icon> Não tem interesse
+											</button>
+											<button mat-menu-item (click)="changeStatus(item, 'c')">
+												<app-icon name="thumbs-up" [size]="18"></app-icon> Comprou
+											</button>
+										}
+										<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
+											data-target="#modalImportContact">
+											<app-icon name="upload" [size]="18"></app-icon> Importar contatos
+										</button>
+										<button mat-menu-item (click)="updateOpenForm(item)" data-toggle="modal"
+											data-target="#modalStickyAdd">
+											<app-icon name="edit" [size]="18"></app-icon> Alterar
+										</button>
+										<button mat-menu-item (click)="inativar(item)">
+											<app-icon name="archive" [size]="18"></app-icon> Arquivar
+										</button>
+										<button mat-menu-item (click)="newChildren(item)" data-toggle="modal"
+											data-target="#modalStickyAdd">
+											<app-icon name="promote" [size]="18"></app-icon>
+											Tornar Lead
+										</button>
+									</mat-menu>
+								</div>
+							}
+						</div>
+					</ng-scrollbar>
+				} @else {
+					<div class="ws-empty">Nenhum referido ainda</div>
+				}
+				<button type="button" class="ws-btn ws-btn--block ws-btn--link actionButton"
+					(click)="newChildren(itemLead)" data-toggle="modal" data-target="#modalStickyAdd">
+					<app-icon name="plus" [size]="18" [stroke]="2"></app-icon>
+					Adicionar referido
+				</button>
+			</article>
+		}
+	}
+	@if (isLoadCard) {
+		@for (item of skeleton; track item) {
+			<div class="ws-skeleton skeleton piscando_div"></div>
+		}
+	}
+</div>
+}
+</main>
 </div>
 
 <!-- Modal cadastre indicados -->
@@ -387,15 +410,18 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h3 class="modal-title" id="modalNewSticky">
-					<ng-container *ngIf="parent.id; else indicatedBy">
+					@if (parent.id) {
 						<p>
 							Cadastre abaixo os indicados do(a) {{ parent.name }}
 						</p>
-					</ng-container>
-					<ng-template #indicatedBy>
-						<span *ngIf="!form.value.id">Novo referido </span>
-						<span *ngIf="form.value.id">Alterando referido </span>
-					</ng-template>
+					} @else {
+						@if (!form.value.id) {
+							<span>Novo referido </span>
+						}
+						@if (form.value.id) {
+							<span>Alterando referido </span>
+						}
+					}
 				</h3>
 			</div>
 			<div class="modal-body" style="overflow: auto; max-height: 75vh;">
@@ -423,9 +449,11 @@
 										Selecione uma opção caso tenha entrado
 										em contato com o referente
 									</option>
-									<option *ngFor="let item of status" [value]="item?.id">
-										{{ item?.status }}
-									</option>
+									@for (item of status; track item) {
+										<option [value]="$safeNavigationMigration(item?.id)">
+											{{ item?.status }}
+										</option>
+									}
 								</select>
 							</div>
 						</div>
@@ -436,21 +464,23 @@
 							Adicionar número de telefone
 						</button>
 
-						<div class="card-input ws-phone-item mb-15" *ngFor="let telefone of form.value.telefones; let j = index"
-							[attr.data-index]="j">
-							<div class="phone-icon">
-								<app-icon [name]="telefone?.bo_whatsapp == 1 ? 'whatsapp' : 'smartphone'"></app-icon>
+						@for (telefone of form.value.telefones; track telefone; let j = $index) {
+							<div class="card-input ws-phone-item mb-15"
+								[attr.data-index]="j">
+								<div class="phone-icon">
+									<app-icon [name]="telefone?.bo_whatsapp == 1 ? 'whatsapp' : 'smartphone'"></app-icon>
+								</div>
+								<div class="phone-number">
+									+{{telefone?.country_code}}&ngsp;{{$safeNavigationMigration(telefone?.phone) | helpers: "phoneByCountry" :telefone.country_code}}
+								</div>
+								<div class="phone-remove">
+									<button type="button" class="ws-btn ws-btn--quiet ws-btn--icon" aria-label="Remover telefone"
+										(click)="deleteTelefone(j)">
+										<app-icon name="trash" [size]="18"></app-icon>
+									</button>
+								</div>
 							</div>
-							<div class="phone-number">
-								+{{telefone?.country_code}}&ngsp;{{telefone?.phone | helpers: "phoneByCountry" :telefone.country_code}}
-							</div>
-							<div class="phone-remove">
-								<button type="button" class="ws-btn ws-btn--quiet ws-btn--icon" aria-label="Remover telefone"
-									(click)="deleteTelefone(j)">
-									<app-icon name="trash" [size]="18"></app-icon>
-								</button>
-							</div>
-						</div>
+						}
 					</form>
 				</div>
 
@@ -461,16 +491,15 @@
 				</button>
 
 
-				<ng-container *ngIf="!form.value.id; else elseTemplateUpdate">
+				@if (!form.value.id) {
 					<button type="button" class="btn btn-primary" (click)="save(form.value)" [disabled]="!form.valid">
 						Salvar
 					</button>
-				</ng-container>
-				<ng-template #elseTemplateUpdate>
+				} @else {
 					<button type="button" class="btn btn-primary" (click)="update(form.value)" [disabled]="!form.valid">
 						Alterar
 					</button>
-				</ng-template>
+				}
 			</div>
 
 		</div>
@@ -596,36 +625,39 @@
 			</div>
 			<div class="modal-body">
 				<div class="content">
-					<span *ngIf="customersImported.length == 0">
-						<h2>Anexe o arquivo baixado na conversa com o(a) {{ parent.name }} </h2>
-						<div class="form-group margint-25">
-							<input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput />
-							<div class="uploadArquivo"
+					@if (customersImported.length == 0) {
+						<span>
+							<h2>Anexe o arquivo baixado na conversa com o(a) {{ parent.name }} </h2>
+							<div class="form-group margint-25">
+								<input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput />
+								<div class="uploadArquivo"
 								[style.background-image]=" 'url(' + img + ' )' | safeHtml: 'style' "></div>
-							<button class="btn btn-upload btn-secondary" (click)="fileInput.click()">
-								<app-icon name="upload" [size]="18"></app-icon>
-								Anexar arquivo
-							</button>
-						</div>
-					</span>
-					<ng-container *ngIf="customersImported.length != 0">
+								<button class="btn btn-upload btn-secondary" (click)="fileInput.click()">
+									<app-icon name="upload" [size]="18"></app-icon>
+									Anexar arquivo
+								</button>
+							</div>
+						</span>
+					}
+					@if (customersImported.length != 0) {
 						<div class="card mb-15">
 							<h3>Importado {{customersImported?.res.length}}</h3>
-							<div *ngFor="let item of customersImported?.res" class="mt-15">
-								{{ item?.name }} <br>
-								{{ item?.phone}}
-							</div>
-
+							@for (item of customersImported?.res; track item) {
+								<div class="mt-15">
+									{{ item?.name }} <br>
+									{{ item?.phone}}
+								</div>
+							}
 						</div>
 						<div class="card">
 							<h3>Indicado por outro lead {{customersImported?.repetidos.length}}</h3>
-							<p *ngFor="let item of customersImported?.repetidos">
-								{{item}}
-							</p>
-
+							@for (item of customersImported?.repetidos; track item) {
+								<p>
+									{{item}}
+								</p>
+							}
 						</div>
-
-					</ng-container>
+					}
 
 				</div>
 			</div>
@@ -633,10 +665,12 @@
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">
 					Fechar
 				</button>
-				<button type="button" class="btn btn-primary" *ngIf="customersImported.length == 0"
-					(click)="importContact(formScript.value)">
-					Importar
-				</button>
+				@if (customersImported.length == 0) {
+					<button type="button" class="btn btn-primary"
+						(click)="importContact(formScript.value)">
+						Importar
+					</button>
+				}
 			</div>
 		</div>
 	</div>
@@ -655,108 +689,136 @@
 				<h2 class="modal-title" id="modalStapcall">
 					<div class="row flex-wrap">
 						Ligando para {{ person.name }} -
-						<div class="contacto-phone" *ngFor="let itemPhone of person.phones; let last = last">
-							<div class="cursor-pointer">
-								<a target="_BLANK"
-									href="https://api.whatsapp.com/send/?phone={{itemPhone.country_code}}{{itemPhone.phone}}&text={{strategy?.url_sale}}"
-									title="Enviar link">
-									<app-icon [name]="itemPhone.bo_whatsapp ? 'whatsapp' : 'smartphone'" [size]="18"></app-icon>
-									+{{itemPhone?.country_code}}&ngsp;{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
-									<span *ngIf="!last" class="mr-10">,</span>
-								</a>
+						@for (itemPhone of person.phones; track itemPhone; let last = $last) {
+							<div class="contacto-phone">
+								<div class="cursor-pointer">
+									<a target="_BLANK"
+										href="https://api.whatsapp.com/send/?phone={{itemPhone.country_code}}{{itemPhone.phone}}&text={{strategy?.url_sale}}"
+										title="Enviar link">
+										<app-icon [name]="itemPhone.bo_whatsapp ? 'whatsapp' : 'smartphone'" [size]="18"></app-icon>
+										+{{itemPhone?.country_code}}&ngsp;{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
+										@if (!last) {
+											<span class="mr-10">,</span>
+										}
+									</a>
+								</div>
 							</div>
+						}
+					</div>
+					@if (person.status != 'a') {
+						<div class="row">
+							<div class="filterstatus"> <strong>Status atual:</strong> {{person.status | helpers:'statusString' }}
 						</div>
 					</div>
-					<div class="row" *ngIf="person.status != 'a'">
-						<div class="filterstatus"> <strong>Status atual:</strong> {{person.status | helpers:'statusString' }}
-						</div>
-					</div>
+				}
 
-					<div class="ws-call__actions">
-						<a *ngIf="strategy?.url_sale" class="ws-btn ws-btn--soft ws-btn--icon" target="_BLANK"
+				<div class="ws-call__actions">
+					@if (strategy?.url_sale) {
+						<a class="ws-btn ws-btn--soft ws-btn--icon" target="_BLANK"
 							href="{{strategy?.url_sale}}" title="Fazer a venda.">
 							<app-icon name="cart"></app-icon>
 						</a>
+					}
 
-						<h4>Deseja alterar o status?</h4>
-						<div class="ws-call__statusbar">
+					<h4>Deseja alterar o status?</h4>
+					<div class="ws-call__statusbar">
+						@if (person.status != 'pc') {
 							<button type="button" class="ws-statusbtn" (click)="changeStatus(person, 'pc')"
-								title="Problemas com cartão de crédito" *ngIf="person.status != 'pc'">
+								title="Problemas com cartão de crédito">
 								<app-icon name="card"></app-icon>
 							</button>
+						}
+						@if (person.status != 'ld') {
 							<button type="button" class="ws-statusbtn" (click)="changeStatus(person, 'ld')"
-								title="Ligar depois" *ngIf="person.status != 'ld'">
+								title="Ligar depois">
 								<app-icon name="headset"></app-icon>
 							</button>
+						}
+						@if (person.status != 'n') {
 							<button type="button" class="ws-statusbtn" (click)="changeStatus(person, 'n')"
-								title="Não deu negócio 😭" *ngIf="person.status != 'n'">
+								title="Não deu negócio 😭">
 								<app-icon name="thumbs-down"></app-icon>
 							</button>
+						}
+						@if (person.status != 'c') {
 							<button type="button" class="ws-statusbtn" (click)="changeStatus(person, 'c')"
-								title="Vendido 😃" *ngIf="person.status != 'c'">
+								title="Vendido 😃">
 								<app-icon name="thumbs-up"></app-icon>
 							</button>
-						</div>
+						}
 					</div>
-				</h2>
-			</div>
-			<div class="modal-body">
-				<div class="content rowCall">
-					<div class="person">
-						<form [formGroup]="form" novalidate>
-							<label for="">
-								Referido criado em: {{person?.created_at | date: 'dd/MM/yyyy H:mm:ss'}} <br>
-								Referido alterado em: {{person?.updated_at | date: 'dd/MM/yyyy H:mm:ss'}}
-							</label>
-							<textarea (change)="update(form.value,false,false,true)" placeholder="Observação" class="textarea"
-								formControlName="observation" style="height: 300px;">
-							</textarea>
-						</form>
-						<b>Árvores de indicações</b>
-						<div class="tree margint-25" *ngFor="let itemParent of parents; let i = index">
+				</div>
+			</h2>
+		</div>
+		<div class="modal-body">
+			<div class="content rowCall">
+				<div class="person">
+					<form [formGroup]="form" novalidate>
+						<label for="">
+							Referido criado em: {{$safeNavigationMigration(person?.created_at) | date: 'dd/MM/yyyy H:mm:ss'}} <br>
+							Referido alterado em: {{$safeNavigationMigration(person?.updated_at) | date: 'dd/MM/yyyy H:mm:ss'}}
+						</label>
+						<textarea (change)="update(form.value,false,false,true)" placeholder="Observação" class="textarea"
+							formControlName="observation" style="height: 300px;">
+						</textarea>
+					</form>
+					<b>Árvores de indicações</b>
+					@for (itemParent of parents; track itemParent; let i = $index) {
+						<div class="tree margint-25">
 							<div [style.marginLeft.px]="20 * i">
 								<div class="parentName">
 									<app-icon name="folder"></app-icon>
-
 									{{ itemParent.name }}
-									<ng-container *ngIf="itemParent.status != 'a'">
-										<app-icon *ngIf="itemParent.status == 'pc'" class="icon-finished icon-finished-no"
+									@if (itemParent.status != 'a') {
+										@if (itemParent.status == 'pc') {
+											<app-icon class="icon-finished icon-finished-no"
 											name="card"></app-icon>
-										<app-icon *ngIf="itemParent.status == 'ld'" class="icon-finished" name="headset">
-										</app-icon>
-										<app-icon *ngIf="itemParent.status == 'n'" class="icon-finished icon-finished-no"
+										}
+										@if (itemParent.status == 'ld') {
+											<app-icon class="icon-finished" name="headset">
+											</app-icon>
+										}
+										@if (itemParent.status == 'n') {
+											<app-icon class="icon-finished icon-finished-no"
 											name="thumbs-down"></app-icon>
-										<app-icon *ngIf="itemParent.status == 'c'" class="icon-finished icon-finished-yes"
+										}
+										@if (itemParent.status == 'c') {
+											<app-icon class="icon-finished icon-finished-yes"
 											name="thumbs-up"></app-icon>
-									</ng-container>
+										}
+									}
 								</div>
 								<div class="row">
-
-									<div class="parentPhone"
-										*ngFor="let itemPhone of itemParent.phones; let last = last">
-										+{{itemPhone?.country_code}}&ngsp;{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
-										<span *ngIf="!last" class="mr-10">,</span>
-									</div>
+									@for (itemPhone of itemParent.phones; track itemPhone; let last = $last) {
+										<div class="parentPhone"
+											>
+											+{{itemPhone?.country_code}}&ngsp;{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
+											@if (!last) {
+												<span class="mr-10">,</span>
+											}
+										</div>
+									}
 								</div>
 								<div class="parentDesc">
 									{{ itemParent.observation }}
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="strategy">
-						<perfect-scrollbar>
-							<h1>Strategy</h1>
-							<span *ngFor="let item of strategy?.staps">
-								{{ item }}
-								<br />
-							</span>
-						</perfect-scrollbar>
-					</div>
+					}
+				</div>
+				<div class="strategy">
+					<h1>Strategy</h1>
+					@for (item of strategy?.staps; track $index) {
+						<span>
+							{{ item }}
+							<br />
+						</span>
+					}
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
 </div>
 
 <!-- Modal doação -->
@@ -823,226 +885,245 @@
 <div class="modal fade" id="modalBug" tabindex="-1" aria-labelledby="modalNewBug" aria-hidden="true">
 	<div class="modal-dialog ">
 		<div class="modal-content">
-		<div class="modal-header">
-			<h3 class="modal-title" id="modalNewBug">
-				<p>
-					<app-icon name="bug"></app-icon> Enviar um relatório de erro (Bug)
-				</p>
-			</h3>
-		</div>
-		<div class="modal-body">
-			<div class="content">
-				<p>
-					Reporte aqui um erro que tenha encontrado, assim que possível ele será corrigido. <br>
-					Para que possamos identificar o erro, digite em detalhes tudo que aconteceu<br><br>
-				</p>
-				<p class="mb-15">
-					<a class="ws-bug__link" target="_BLANK" href="https://trello.com/b/GQpoOLdf/sell-more">
-						<app-icon name="external" [size]="16"></app-icon> Veja no que estamos trabalhando</a>
-				</p>
-
-				<form [formGroup]="formBug" novalidate>
-					<div class="inputText">
-						<input type="text" class="w-100" formControlName="name" placeholder="Título" />
-					</div>
-					<textarea placeholder="Descreva seu problema em detalhes" class="textarea" formControlName="desc">
-					</textarea>
-				</form>
+			<div class="modal-header">
+				<h3 class="modal-title" id="modalNewBug">
+					<p>
+						<app-icon name="bug"></app-icon> Enviar um relatório de erro (Bug)
+					</p>
+				</h3>
 			</div>
-		</div>
-		<div class="modal-footer">
-			<button type="button" class="btn btn-secondary" data-dismiss="modal">
-				Fechar
-			</button>
-			<button type="button" class="btn btn-primary" (click)="bug(formBug.value)" [disabled]="!formBug.valid">
-				Salvar
-			</button>
-		</div>
+			<div class="modal-body">
+				<div class="content">
+					<p>
+						Reporte aqui um erro que tenha encontrado, assim que possível ele será corrigido. <br>
+						Para que possamos identificar o erro, digite em detalhes tudo que aconteceu<br><br>
+					</p>
+					<p class="mb-15">
+						<a class="ws-bug__link" target="_BLANK" href="https://trello.com/b/GQpoOLdf/sell-more">
+							<app-icon name="external" [size]="16"></app-icon> Veja no que estamos trabalhando</a>
+						</p>
+
+						<form [formGroup]="formBug" novalidate>
+							<div class="inputText">
+								<input type="text" class="w-100" formControlName="name" placeholder="Título" />
+							</div>
+							<textarea placeholder="Descreva seu problema em detalhes" class="textarea" formControlName="desc">
+							</textarea>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">
+						Fechar
+					</button>
+					<button type="button" class="btn btn-primary" (click)="bug(formBug.value)" [disabled]="!formBug.valid">
+						Salvar
+					</button>
+				</div>
+			</div>
 		</div>
 	</div>
-</div>
 
-<!-- Modal Calendar -->
-<div class="modal fade" id="modalCalendar" tabindex="-1" aria-labelledby="modalCalendar" aria-hidden="true">
-	<div class="modal-dialog modal-exlg">
-		<div class="modal-content">
-		<button type="button" class="ws-btn ws-btn--quiet ws-btn--icon ws-modal-close" data-dismiss="modal"
-			aria-label="Fechar">
-			<app-icon name="close"></app-icon>
-		</button>
-		<div class="modal-header">
-			<h3 class="modal-title">
-				<p>
-					<app-icon name="calendar"></app-icon> Calendario
-				</p>
-			</h3>
-		</div>
-		<div class="modal-body">
-
-			<div class="calendarOptions">
-				<div class="calendarDate">
-					<button class="btn btn-secondary" mwlCalendarPreviousView
-						[view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
-						Anterior
-					</button>
-					<button class="btn btn-secondary" mwlCalendarToday
-						[(viewDate)]="viewDate">
-						Hoje
-					</button>
-					<button class="btn btn-secondary" mwlCalendarNextView [view]="view"
-						[(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
-						Próximo
-					</button>
+	<!-- Modal Calendar -->
+	<div class="modal fade" id="modalCalendar" tabindex="-1" aria-labelledby="modalCalendar" aria-hidden="true">
+		<div class="modal-dialog modal-exlg">
+			<div class="modal-content">
+				<button type="button" class="ws-btn ws-btn--quiet ws-btn--icon ws-modal-close" data-dismiss="modal"
+					aria-label="Fechar">
+					<app-icon name="close"></app-icon>
+				</button>
+				<div class="modal-header">
+					<h3 class="modal-title">
+						<p>
+							<app-icon name="calendar"></app-icon> Calendario
+						</p>
+					</h3>
 				</div>
-				<div class="calendarDateChosen">
-					<h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'pt-br' }}</h3>
-				</div>
-				<div class="calendarDateType">
-					<div class="row flex-direction-row">
-						<button class="btn btn-secondary"
-							(click)="setView(CalendarView.Month)" [class.active]="view === CalendarView.Month">
-							Mês
-						</button>
-						<button class="btn btn-secondary"
-							(click)="setView(CalendarView.Week)" [class.active]="view === CalendarView.Week">
-							Semana
-						</button>
-						<button class="btn btn-secondary"
-							(click)="setView(CalendarView.Day)" [class.active]="view === CalendarView.Day">
-							Dia
-						</button>
-					</div>
-				</div>
-			</div>
-			<br />
-			<div [ngSwitch]="view">
-				<mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events"
-					[refresh]="refresh" [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)"
-					(eventClicked)="handleEvent('Clicked', $event.event)"
-					(eventTimesChanged)="eventTimesChanged($event)">
-				</mwl-calendar-month-view>
-				<mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events"
-					[refresh]="refresh" (eventClicked)="handleEvent('Clicked', $event.event)"
-					(eventTimesChanged)="eventTimesChanged($event)">
-				</mwl-calendar-week-view>
-				<mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate" [events]="events"
-					[refresh]="refresh" (eventClicked)="handleEvent('Clicked', $event.event)"
-					(eventTimesChanged)="eventTimesChanged($event)">
-				</mwl-calendar-day-view>
-			</div>
+				<div class="modal-body">
 
-			<div class="calendarNew">
-				<h3> Novo agendamento: clique no dia e informe o horário </h3>
-				<h2> {{formCalendar.value.title}}</h2>
-
-				<div class="card-light">
-					<form [formGroup]="formCalendar" novalidate>
-						<div class="row">
-							<div class="input">
-								<div class="inputIcon">
-									<app-icon name="user" [size]="18"></app-icon>
-								</div>
-								<select formControlName="id_customers" class="w-100">
-									<option value="" selected>
-										Referente
-									</option>
-									<option *ngFor="let item of customersLd" [value]="item.id">
-										<div class="row flex-wrap">
-											{{ item?.name }} -
-											<div class="contacto-phone ml-5"
-												*ngFor="let itemPhone of item.phones; let last = last">
-												<div class="cursor-pointer">
-													<i
-														[ngClass]="itemPhone.bo_whatsapp ? 'fab fa-whatsapp' : 'fa fa-mobile-alt'"></i>
-													+{{itemPhone.country_code}}&ngsp;{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
-													<span *ngIf="!last" class="mr-10">,</span>
-												</div>
-											</div>
-										</div>
-									</option>
-								</select>
-							</div>
-							<div class="input">
-								<div class="inputIcon">
-									<app-icon name="calendar" [size]="18"></app-icon>
-								</div>
-								<div class="inputText">
-									<input type="text" mask="dX/M0/0000" [showMaskTyped]="true" class="w-100"
-										formControlName="date" placeholder="Dia" />
-								</div>
-							</div>
-							<div class="input">
-								<div class="inputIcon">
-									<app-icon name="clock" [size]="18"></app-icon>
-								</div>
-								<div class="inputText">
-									<input type="text" mask="Hh:m0:s0" [showMaskTyped]="true" class="w-100"
-										formControlName="hour" placeholder="Hora" />
-								</div>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-primary" (click)="addEvent()"
-								[disabled]="!formCalendar.valid">
-								Salvar
+					<div class="calendarOptions">
+						<div class="calendarDate">
+							<button class="btn btn-secondary" mwlCalendarPreviousView
+								[view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
+								Anterior
+							</button>
+							<button class="btn btn-secondary" mwlCalendarToday
+								[(viewDate)]="viewDate">
+								Hoje
+							</button>
+							<button class="btn btn-secondary" mwlCalendarNextView [view]="view"
+								[(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
+								Próximo
 							</button>
 						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-		</div>
-	</div>
-</div>
+						<div class="calendarDateChosen">
+							<h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'pt-br' }}</h3>
+						</div>
+						<div class="calendarDateType">
+							<div class="row flex-direction-row">
+								<button class="btn btn-secondary"
+									(click)="setView(CalendarView.Month)" [class.active]="view === CalendarView.Month">
+									Mês
+								</button>
+								<button class="btn btn-secondary"
+									(click)="setView(CalendarView.Week)" [class.active]="view === CalendarView.Week">
+									Semana
+								</button>
+								<button class="btn btn-secondary"
+									(click)="setView(CalendarView.Day)" [class.active]="view === CalendarView.Day">
+									Dia
+								</button>
+							</div>
+						</div>
+					</div>
+					<br />
+					<div>
+						@switch (view) {
+							@case (CalendarView.Month) {
+								<mwl-calendar-month-view [viewDate]="viewDate" [events]="events"
+									[refresh]="refresh" [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)"
+									(eventClicked)="handleEvent('Clicked', $event.event)"
+									(eventTimesChanged)="eventTimesChanged($event)">
+								</mwl-calendar-month-view>
+							}
+							@case (CalendarView.Week) {
+								<mwl-calendar-week-view [viewDate]="viewDate" [events]="events"
+									[refresh]="refresh" (eventClicked)="handleEvent('Clicked', $event.event)"
+									(eventTimesChanged)="eventTimesChanged($event)">
+								</mwl-calendar-week-view>
+							}
+							@case (CalendarView.Day) {
+								<mwl-calendar-day-view [viewDate]="viewDate" [events]="events"
+									[refresh]="refresh" (eventClicked)="handleEvent('Clicked', $event.event)"
+									(eventTimesChanged)="eventTimesChanged($event)">
+								</mwl-calendar-day-view>
+							}
+						}
+					</div>
 
+					<div class="calendarNew">
+						<h3> Novo agendamento: clique no dia e informe o horário </h3>
+						<h2> {{formCalendar.value.title}}</h2>
 
-<button style="display: none;" #openCalendarDetail data-toggle="modal" data-target="#modalDetailCalendar"></button>
-<div class="modal fade" id="modalDetailCalendar" tabindex="-1" aria-labelledby="modalDetailCalendar" aria-hidden="true">
-	<div class="modal-dialog ">
-		<div class="modal-content">
-			<button type="button" class="ws-btn ws-btn--quiet ws-btn--icon ws-modal-close" data-dismiss="modal"
-				aria-label="Fechar">
-				<app-icon name="close"></app-icon>
-			</button>
-			<div class="modal-body">
-				<div class="content ws-appointment">
-					<h3 [innerHtml]="calendarDetail?.title"></h3>
-					<p *ngIf="calendarDetail?.referido?.id">
-						Referido adicionado no dia {{calendarDetail?.referido.created_at | date: 'dd/MM/yyyy H:mm:ss'}} <br>
-						Você alterou esse contato no dia {{calendarDetail?.referido.updated_at | date: 'dd/MM/yyyy H:mm:ss'}}
-					</p>
-
-					<button
-						*ngIf="calendarDetail?.referido?.id"
-						type="button"
-						class="ws-btn ws-btn--soft ws-appointment__call"
-						data-dismiss="modal"
-						(click)="callTo(calendarDetail?.referido)"
-						data-toggle="modal"
-						data-target="#modalCall"
-					>
-						<app-icon name="phone" [size]="18"></app-icon>
-						Ligar
-					</button>
-
-					<small [innerHtml]="calendarDetail?.referido?.observation"></small>
-					<small>
-						Mova o conatato para alterar.
-					</small>
-					<div class="buttonsAgendaRemover">
-						<button type="button" class="ws-btn" (click)="removerAgendamento()" data-dismiss="modal">Remover agendamento</button>
-						<button type="button" class="ws-btn" (click)="removerAgendamento(true)" data-dismiss="modal">Remover agendamento e filtrar referido</button>
+						<div class="card-light">
+							<form [formGroup]="formCalendar" novalidate>
+								<div class="row">
+									<div class="input">
+										<div class="inputIcon">
+											<app-icon name="user" [size]="18"></app-icon>
+										</div>
+										<select formControlName="id_customers" class="w-100">
+											<option value="" selected>
+												Referente
+											</option>
+											@for (item of customersLd; track item) {
+												<option [value]="item.id">
+													<div class="row flex-wrap">
+														{{ item?.name }} -
+														@for (itemPhone of item.phones; track itemPhone; let last = $last) {
+															<div class="contacto-phone ml-5"
+																>
+																<div class="cursor-pointer">
+																	<i
+																	[ngClass]="itemPhone.bo_whatsapp ? 'fab fa-whatsapp' : 'fa fa-mobile-alt'"></i>
+																	+{{itemPhone.country_code}}&ngsp;{{ itemPhone.phone | helpers: "phoneByCountry" :itemPhone.country_code }}
+																	@if (!last) {
+																		<span class="mr-10">,</span>
+																	}
+																</div>
+															</div>
+														}
+													</div>
+												</option>
+											}
+										</select>
+									</div>
+									<div class="input">
+										<div class="inputIcon">
+											<app-icon name="calendar" [size]="18"></app-icon>
+										</div>
+										<div class="inputText">
+											<input type="text" mask="dX/M0/0000" [showMaskTyped]="true" class="w-100"
+												formControlName="date" placeholder="Dia" />
+										</div>
+									</div>
+									<div class="input">
+										<div class="inputIcon">
+											<app-icon name="clock" [size]="18"></app-icon>
+										</div>
+										<div class="inputText">
+											<input type="text" mask="Hh:m0:s0" [showMaskTyped]="true" class="w-100"
+												formControlName="hour" placeholder="Hora" />
+										</div>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-primary" (click)="addEvent()"
+										[disabled]="!formCalendar.valid">
+										Salvar
+									</button>
+								</div>
+							</form>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
 
 
-<div class="row" style="position: fixed; top: 0;width: 100%; height: 100%;" *ngIf="showCongrats">
-	<ng-lottie [options]="optionsSold" class="center-center" (complete)="showCongrats=false" style="width: 100%;">
-	</ng-lottie>
-</div>
+	<button style="display: none;" #openCalendarDetail data-toggle="modal" data-target="#modalDetailCalendar"></button>
+	<div class="modal fade" id="modalDetailCalendar" tabindex="-1" aria-labelledby="modalDetailCalendar" aria-hidden="true">
+		<div class="modal-dialog ">
+			<div class="modal-content">
+				<button type="button" class="ws-btn ws-btn--quiet ws-btn--icon ws-modal-close" data-dismiss="modal"
+					aria-label="Fechar">
+					<app-icon name="close"></app-icon>
+				</button>
+				<div class="modal-body">
+					<div class="content ws-appointment">
+						<h3 [innerHtml]="$safeNavigationMigration(calendarDetail?.title)"></h3>
+						@if (calendarDetail?.referido?.id) {
+							<p>
+								Referido adicionado no dia {{$safeNavigationMigration(calendarDetail?.referido.created_at) | date: 'dd/MM/yyyy H:mm:ss'}} <br>
+								Você alterou esse contato no dia {{$safeNavigationMigration(calendarDetail?.referido.updated_at) | date: 'dd/MM/yyyy H:mm:ss'}}
+							</p>
+						}
 
-<app-commemorations ></app-commemorations>
+						@if (calendarDetail?.referido?.id) {
+							<button
+								type="button"
+								class="ws-btn ws-btn--soft ws-appointment__call"
+								data-dismiss="modal"
+								(click)="callTo($safeNavigationMigration(calendarDetail?.referido))"
+								data-toggle="modal"
+								data-target="#modalCall"
+								>
+								<app-icon name="phone" [size]="18"></app-icon>
+								Ligar
+							</button>
+						}
+
+						<small [innerHtml]="$safeNavigationMigration(calendarDetail?.referido?.observation)"></small>
+						<small>
+							Mova o conatato para alterar.
+						</small>
+						<div class="buttonsAgendaRemover">
+							<button type="button" class="ws-btn" (click)="removerAgendamento()" data-dismiss="modal">Remover agendamento</button>
+							<button type="button" class="ws-btn" (click)="removerAgendamento(true)" data-dismiss="modal">Remover agendamento e filtrar referido</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	@if (showCongrats) {
+		<div class="row" style="position: fixed; top: 0;width: 100%; height: 100%;">
+			<ng-lottie [options]="optionsSold" class="center-center" (complete)="showCongrats=false" style="width: 100%;">
+			</ng-lottie>
+		</div>
+	}
+
+	<app-commemorations ></app-commemorations>

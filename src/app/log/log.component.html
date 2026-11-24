@@ -34,16 +34,18 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr *ngFor="let log of logs">
-								<td class="log-table__nowrap">{{ log?.created_at | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
-								<td>{{ log?.nome }}</td>
-								<td class="log-table__nowrap">{{ log?.display_resolution }}</td>
-								<td>{{ log?.os }}</td>
-								<td>{{ log?.device }}</td>
-								<td>{{ log?.browser }}</td>
-								<td>{{ log?.language }}</td>
-								<td class="log-table__nowrap">{{ log?.ip }}</td>
-							</tr>
+							@for (log of logs; track log) {
+								<tr>
+									<td class="log-table__nowrap">{{ $safeNavigationMigration(log?.created_at) | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+									<td>{{ log?.nome }}</td>
+									<td class="log-table__nowrap">{{ log?.display_resolution }}</td>
+									<td>{{ log?.os }}</td>
+									<td>{{ log?.device }}</td>
+									<td>{{ log?.browser }}</td>
+									<td>{{ log?.language }}</td>
+									<td class="log-table__nowrap">{{ log?.ip }}</td>
+								</tr>
+							}
 						</tbody>
 					</table>
 				</div>
@@ -66,23 +68,31 @@
 <ng-template #report let-title="title" let-rows="rows" let-column="column" let-field="field" let-showTotal="showTotal">
 	<section class="ws-card log-report">
 		<h2 class="log-report__title">
-			{{ title }} <span class="log-report__count" *ngIf="rows">{{ rows.length }}</span>
-		</h2>
-		<div class="log-scroll">
-			<table class="log-table">
-				<thead>
+			{{ title }} @if (rows) {
+			<span class="log-report__count">{{ rows.length }}</span>
+		}
+	</h2>
+	<div class="log-scroll">
+		<table class="log-table">
+			<thead>
+				<tr>
+					<th scope="col">{{ column }}</th>
+					@if (showTotal) {
+						<th scope="col" class="log-table__number">Quantidade</th>
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@for (item of rows; track item) {
 					<tr>
-						<th scope="col">{{ column }}</th>
-						<th scope="col" class="log-table__number" *ngIf="showTotal">Quantidade</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr *ngFor="let item of rows">
 						<td>{{ item?.[field] }}</td>
-						<td class="log-table__number" *ngIf="showTotal">{{ item?.total }}</td>
+						@if (showTotal) {
+							<td class="log-table__number">{{ item?.total }}</td>
+						}
 					</tr>
-				</tbody>
-			</table>
-		</div>
-	</section>
+				}
+			</tbody>
+		</table>
+	</div>
+</section>
 </ng-template>
