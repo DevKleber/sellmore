@@ -4,11 +4,11 @@ import { uniqueBrazilianMobile, uniqueName, uniquePortugueseMobile } from '../..
 import { expect, test } from '../../support/fixtures';
 
 test.describe('Cadastro de leads', () => {
-	test('o botão Novo lead abre o modal "Novo referido", que exige o nome para salvar', async ({ home }) => {
+	test('o botão Novo lead abre o modal "Novo lead", que exige o nome para salvar', async ({ home }) => {
 		await home.goto();
 		await home.openNewLeadForm();
 
-		await expect(home.leadForm.title).toHaveText('Novo referido');
+		await expect(home.leadForm.title).toHaveText('Novo lead');
 		await expect(home.leadForm.saveButton).toBeDisabled();
 		await home.leadForm.nameInput.fill(uniqueName('Lead'));
 		await expect(home.leadForm.saveButton).toBeEnabled();

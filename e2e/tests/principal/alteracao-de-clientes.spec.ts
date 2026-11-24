@@ -47,6 +47,19 @@ test.describe('Alteração de clientes', () => {
 		await expect(card.referral(referral.name).root).toHaveCount(0);
 	});
 
+	test('"Alterar" mostra o título de alteração mesmo depois de abrir o cadastro de referido', async ({ home, api }) => {
+		const lead = await api.createCustomer({ name: uniqueName('Lead') });
+		const referral = await api.createReferral(lead, { name: uniqueName('Referido') });
+		await home.goto();
+		await home.leadCard(lead.name).addReferral();
+		await home.leadForm.close();
+
+		const menu = await home.leadCard(lead.name).referral(referral.name).openMenu();
+		await menu.choose('Alterar');
+
+		await expect(home.leadForm.title).toHaveText('Alterando referido');
+	});
+
 	test('alterar o lead pelo menu do card salva o novo nome, que aparece ao recarregar', async ({ home, api }) => {
 		const lead = await api.createCustomer({ name: uniqueName('Lead') });
 		const newName = uniqueName('Lead alterado');
@@ -54,6 +67,7 @@ test.describe('Alteração de clientes', () => {
 
 		const menu = await home.leadCard(lead.name).openMenu();
 		await menu.choose('Alterar');
+		await expect(home.leadForm.title).toHaveText('Alterando lead');
 		await home.leadForm.nameInput.fill(newName);
 		await home.leadForm.update();
 		await home.alert.acknowledge('Alterado com sucesso!');

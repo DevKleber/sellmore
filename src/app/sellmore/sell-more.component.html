@@ -422,18 +422,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h3 class="modal-title" id="modalNewSticky">
-					@if (parent.id) {
-						<p>
-							Cadastre abaixo os indicados do(a) {{ parent.name }}
-						</p>
-					} @else {
-						@if (!form.value.id) {
-							<span>Novo referido </span>
-						}
-						@if (form.value.id) {
-							<span>Alterando referido </span>
-						}
-					}
+					<span>{{ tituloDoFormulario() }}</span>
 				</h3>
 			</div>
 			<div class="modal-body" style="overflow: auto; max-height: 75vh;">

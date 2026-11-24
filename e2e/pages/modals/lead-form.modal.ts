@@ -11,7 +11,7 @@ export interface LeadFormData {
 	phones?: PhoneNumber[];
 }
 
-/** Modal de cadastro/alteração de lead ou referido ("Novo referido", "Alterando referido"...). */
+/** Modal de cadastro/alteração de lead ou referido ("Novo lead", "Alterando lead", "Alterando referido"...). */
 export class LeadFormModal extends BootstrapModal {
 	readonly phoneModal: PhoneModal;
 
