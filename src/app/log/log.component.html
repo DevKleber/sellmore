@@ -8,7 +8,7 @@
 
 	<main class="ws-page">
 		<div class="ws-pagehead">
-			<h1 class="ws-title log-title">Access log</h1>
+			<h1 class="ws-title log-title">Painel do administrador</h1>
 			<div class="ws-pagehead__actions">
 				<button type="button" class="ws-btn ws-btn--primary" (click)="getLogs()">
 					<app-icon name="restore" [size]="18"></app-icon>
@@ -17,6 +17,133 @@
 			</div>
 		</div>
 
+		@if (metricas) {
+			<h2 class="ws-section-title">Hoje</h2>
+			<div class="ws-stats ws-results-panel log-hoje">
+				<div class="ws-stat">
+					<p class="ws-stat__text">
+						<span class="ws-stat__number hoje-acessos">{{ metricas.hoje.contasQueAcessaram }}</span>
+						<span class="ws-stat__label">contas acessaram</span>
+					</p>
+				</div>
+				<div class="ws-stat">
+					<p class="ws-stat__text">
+						<span class="ws-stat__number hoje-contas-novas">{{ metricas.hoje.contasNovas }}</span>
+						<span class="ws-stat__label">contas novas</span>
+					</p>
+				</div>
+				<div class="ws-stat">
+					<p class="ws-stat__text">
+						<span class="ws-stat__number hoje-clientes">{{ metricas.hoje.clientesCadastrados }}</span>
+						<span class="ws-stat__label">contatos cadastrados</span>
+					</p>
+				</div>
+				<div class="ws-stat">
+					<p class="ws-stat__text">
+						<span class="ws-stat__number hoje-vendas">{{ metricas.hoje.vendas }}</span>
+						<span class="ws-stat__label">vendas registradas</span>
+					</p>
+				</div>
+			</div>
+
+			<h2 class="ws-section-title">Contas que acessaram por dia (14 dias)</h2>
+			<div class="ws-chart log-acessos-por-dia" role="img" aria-label="Contas que acessaram em cada um dos últimos 14 dias">
+				@for (dia of metricas.acessosPorDia; track dia.dia) {
+					<div class="ws-chart__month">
+						<div class="ws-chart__bars">
+							<span class="ws-chart__bar ws-chart__bar--indicacoes" [style.height.%]="alturaDoDia(dia.contas)"></span>
+						</div>
+						<span class="ws-chart__values">{{ dia.contas }}</span>
+						<span class="ws-chart__label">{{ dia.dia | date: 'dd/MM' }}</span>
+					</div>
+				}
+			</div>
+
+			<h2 class="ws-section-title">Uso da plataforma</h2>
+			<div class="ws-stats ws-results-panel log-metricas">
+				<div class="ws-stat">
+					<p class="ws-stat__text">
+						<span class="ws-stat__number metrica-contas">{{ metricas.contas.total }}</span>
+						<span class="ws-stat__label">contas · {{ metricas.contas.ultimos7Dias }} nos últimos 7 dias · {{ metricas.contas.ultimos30Dias }} em 30 dias</span>
+					</p>
+				</div>
+				<div class="ws-stat">
+					<p class="ws-stat__text">
+						<span class="ws-stat__number metrica-com-cliente">{{ metricas.ativacao.comCliente }}</span>
+						<span class="ws-stat__label">cadastraram um lead ({{ percentual(metricas.ativacao.comCliente, metricas.contas.total) }}%)</span>
+					</p>
+				</div>
+				<div class="ws-stat">
+					<p class="ws-stat__text">
+						<span class="ws-stat__number metrica-com-indicacao">{{ metricas.ativacao.comIndicacao }}</span>
+						<span class="ws-stat__label">receberam indicação ({{ percentual(metricas.ativacao.comIndicacao, metricas.contas.total) }}%)</span>
+					</p>
+				</div>
+				<div class="ws-stat">
+					<p class="ws-stat__text">
+						<span class="ws-stat__number metrica-ativos">{{ metricas.ativos.ultimos7Dias }}</span>
+						<span class="ws-stat__label">acessaram em 7 dias · {{ metricas.ativos.ultimos30Dias }} em 30 dias</span>
+					</p>
+				</div>
+			</div>
+
+			<section class="ws-card log-report log-funil">
+				<h2 class="log-report__title">Contas novas por semana</h2>
+				<div class="log-scroll">
+					<table class="log-table">
+						<thead>
+							<tr>
+								<th scope="col">Semana de</th>
+								<th scope="col" class="log-table__number">Criaram conta</th>
+								<th scope="col" class="log-table__number">Cadastraram lead</th>
+								<th scope="col" class="log-table__number">Voltaram depois de 7 dias</th>
+							</tr>
+						</thead>
+						<tbody>
+							@for (semana of metricas.semanas; track semana.inicio) {
+								<tr>
+									<td>{{ semana.inicio | date: 'dd/MM/yyyy' }}</td>
+									<td class="log-table__number">{{ semana.criaram }}</td>
+									<td class="log-table__number">{{ semana.cadastraramCliente }} ({{ percentual(semana.cadastraramCliente, semana.criaram) }}%)</td>
+									<td class="log-table__number">{{ semana.voltaram }} ({{ percentual(semana.voltaram, semana.criaram) }}%)</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</section>
+
+			<section class="ws-card log-report log-contas-recentes">
+				<h2 class="log-report__title">Contas mais recentes</h2>
+				<div class="log-scroll log-scroll--access" tabindex="0" role="region" aria-label="Contas mais recentes">
+					<table class="log-table">
+						<thead>
+							<tr>
+								<th scope="col">Nome</th>
+								<th scope="col">E-mail</th>
+								<th scope="col">Criada em</th>
+								<th scope="col" class="log-table__number">Contatos</th>
+								<th scope="col">Último acesso</th>
+							</tr>
+						</thead>
+						<tbody>
+							@for (conta of metricas.contasRecentes; track conta.id) {
+								<tr>
+									<td>{{ conta.nome }}</td>
+									<td>{{ conta.email }}</td>
+									<td class="log-table__nowrap">{{ conta.criadaEm | date: 'dd/MM/yyyy HH:mm' }}</td>
+									<td class="log-table__number">{{ conta.clientes }}</td>
+									<td class="log-table__nowrap">{{ conta.ultimoAcesso ? (conta.ultimoAcesso | date: 'dd/MM/yyyy HH:mm') : 'nunca' }}</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</section>
+
+			<h2 class="ws-section-title">Acessos recentes</h2>
+		}
+
 		<div class="log-layout">
 			<section class="ws-card log-access">
 				<div class="log-scroll log-scroll--access" tabindex="0" role="region" aria-label="Acessos">
@@ -24,12 +151,12 @@
 						<thead>
 							<tr>
 								<th scope="col">Data</th>
-								<th scope="col">User</th>
-								<th scope="col">Display</th>
-								<th scope="col">OS</th>
-								<th scope="col">Device</th>
-								<th scope="col">Browser</th>
-								<th scope="col">Language</th>
+								<th scope="col">Usuário</th>
+								<th scope="col">Tela</th>
+								<th scope="col">Sistema</th>
+								<th scope="col">Dispositivo</th>
+								<th scope="col">Navegador</th>
+								<th scope="col">Idioma</th>
 								<th scope="col">IP</th>
 							</tr>
 						</thead>
@@ -53,13 +180,13 @@
 
 			<div class="log-reports">
 				<ng-container *ngTemplateOutlet="report; context: { title: 'Acessos do dia', rows: logDay, column: 'Nome', field: 'nome' }"></ng-container>
-				<ng-container *ngTemplateOutlet="report; context: { title: 'Clientes por usuário', rows: totalCustomerActive, column: 'User', field: 'nome', showTotal: true }"></ng-container>
-				<ng-container *ngTemplateOutlet="report; context: { title: 'Vendas por usuário', rows: totalCustomerSeller, column: 'User', field: 'nome', showTotal: true }"></ng-container>
-				<ng-container *ngTemplateOutlet="report; context: { title: 'Acessos por usuário', rows: totalAccessByUser, column: 'User', field: 'nome', showTotal: true }"></ng-container>
+				<ng-container *ngTemplateOutlet="report; context: { title: 'Clientes por usuário', rows: totalCustomerActive, column: 'Usuário', field: 'nome', showTotal: true }"></ng-container>
+				<ng-container *ngTemplateOutlet="report; context: { title: 'Vendas por usuário', rows: totalCustomerSeller, column: 'Usuário', field: 'nome', showTotal: true }"></ng-container>
+				<ng-container *ngTemplateOutlet="report; context: { title: 'Acessos por usuário', rows: totalAccessByUser, column: 'Usuário', field: 'nome', showTotal: true }"></ng-container>
 				<ng-container *ngTemplateOutlet="report; context: { title: 'Resolução', rows: totalDisplay, column: 'Resolução', field: 'display_resolution', showTotal: true }"></ng-container>
-				<ng-container *ngTemplateOutlet="report; context: { title: 'Navegador', rows: totalBrowser, column: 'Browser', field: 'browser', showTotal: true }"></ng-container>
-				<ng-container *ngTemplateOutlet="report; context: { title: 'Dispositivo', rows: totalDevice, column: 'Device', field: 'device', showTotal: true }"></ng-container>
-				<ng-container *ngTemplateOutlet="report; context: { title: 'Idioma', rows: totalLanguage, column: 'Language', field: 'language', showTotal: true }"></ng-container>
+				<ng-container *ngTemplateOutlet="report; context: { title: 'Navegador', rows: totalBrowser, column: 'Navegador', field: 'browser', showTotal: true }"></ng-container>
+				<ng-container *ngTemplateOutlet="report; context: { title: 'Dispositivo', rows: totalDevice, column: 'Dispositivo', field: 'device', showTotal: true }"></ng-container>
+				<ng-container *ngTemplateOutlet="report; context: { title: 'Idioma', rows: totalLanguage, column: 'Idioma', field: 'language', showTotal: true }"></ng-container>
 			</div>
 		</div>
 	</main>

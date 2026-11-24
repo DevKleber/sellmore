@@ -7,7 +7,10 @@ import { OrderingMenu } from './components/ordering-menu';
 import { SearchResults } from './components/search-results';
 import { StatisticsPanel } from './components/statistics-panel';
 import { StatusFilters } from './components/status-filters';
+import { FirstSteps } from './components/first-steps';
 import { VersionNotice } from './components/version-notice';
+import { AccountModal } from './modals/account.modal';
+import { AskReferralModal } from './modals/ask-referral.modal';
 import { AppointmentDetailModal } from './modals/appointment-detail.modal';
 import { BugReportModal } from './modals/bug-report.modal';
 import { CalendarModal } from './modals/calendar.modal';
@@ -15,6 +18,7 @@ import { CallModal } from './modals/call.modal';
 import { DonateModal } from './modals/donate.modal';
 import { ImportContactsModal } from './modals/import-contacts.modal';
 import { LeadFormModal } from './modals/lead-form.modal';
+import { ResultsModal } from './modals/results.modal';
 import { StrategyModal } from './modals/strategy.modal';
 
 const CELEBRATION_TIMEOUT_MS = 15_000;
@@ -38,6 +42,10 @@ export class HomePage {
 	readonly importContacts: ImportContactsModal;
 	readonly bugReport: BugReportModal;
 	readonly donate: DonateModal;
+	readonly results: ResultsModal;
+	readonly accountModal: AccountModal;
+	readonly askReferral: AskReferralModal;
+	readonly firstSteps: FirstSteps;
 
 	readonly searchInput: Locator;
 	readonly reportBugButton: Locator;
@@ -64,6 +72,10 @@ export class HomePage {
 		this.importContacts = new ImportContactsModal(page);
 		this.bugReport = new BugReportModal(page);
 		this.donate = new DonateModal(page);
+		this.results = new ResultsModal(page);
+		this.accountModal = new AccountModal(page);
+		this.askReferral = new AskReferralModal(page);
+		this.firstSteps = new FirstSteps(page);
 
 		this.searchInput = page.getByPlaceholder('Buscar por nome ou telefone');
 		this.reportBugButton = page.getByRole('button', { name: 'Reportar bug' });
@@ -125,6 +137,17 @@ export class HomePage {
 	async openCalendar(): Promise<void> {
 		await this.page.locator(byHint('Agenda')).click();
 		await this.calendar.expectOpen();
+	}
+
+	async openResults(): Promise<void> {
+		await this.page.locator(byHint('Meus resultados')).click();
+		await this.results.expectOpen();
+	}
+
+	async openAccount(): Promise<void> {
+		await this.openProfileMenu();
+		await this.profileMenu.choose('Minha conta');
+		await this.accountModal.expectOpen();
 	}
 
 	async openProfileMenu(): Promise<ContextMenu> {

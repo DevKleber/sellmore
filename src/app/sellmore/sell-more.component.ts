@@ -36,6 +36,8 @@ import {
 } from '@angular/forms';
 import { LoaderService } from '../shared/loader/loader.service';
 
+/** Índice das versões no Notion; a API pode mandar em `link` a página da versão atual. */
+const PAGINA_DAS_NOVIDADES = 'https://forested-file-aaa.notion.site/e77c48f6ea4047a3938f4030974d4d1d';
 const FILTRO_TODOS = 'todos';
 const MAXIMO_DE_INICIAIS = 2;
 
@@ -61,6 +63,8 @@ export class SellMoreComponent implements OnInit {
 	private totalDeLeads = 0;
 	private carregandoPagina = false;
 	private ultimoPedidoDeLeads = 0;
+	/** Avisa o guia de primeiros passos de que a listagem foi recarregada. */
+	versaoDaLista = 0;
 	scrollTo: number = 0;
 	skeleton: any[] = [];
 	isLoadCard: boolean;
@@ -262,10 +266,7 @@ export class SellMoreComponent implements OnInit {
 			confirmButtonText: 'Ver as novidades!',
 		}).then((result) => {
 			if (result.isConfirmed) {
-				window.open(
-					'https://www.notion.so/Wiseller-Vers-o-1-0-8-e77c48f6ea4047a3938f4030974d4d1d',
-					'_blank'
-				);
+				window.open(res.link || PAGINA_DAS_NOVIDADES, '_blank');
 			}
 			window.location.reload();
 		});
@@ -318,6 +319,7 @@ export class SellMoreComponent implements OnInit {
 	private receberPagina(res: any, reiniciar: boolean) {
 		if (reiniciar) {
 			this.customersDynamic = [];
+			this.versaoDaLista += 1;
 		}
 
 		this.customersDynamic.push(...Object.values(res['arCustomers'] ?? {}));

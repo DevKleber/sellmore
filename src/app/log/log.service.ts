@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { tap, filter } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
 import { Log } from './log.model';
@@ -16,8 +16,8 @@ export class LogService {
 		return this.http.get<Log[]>(`${API}/access_log`);
 	}
 
-	getlogById(id: string): Observable<Log> {
-		return this.http.get<Log>(`${API}/access_log/${id}`);
+	metricasDeUso(): Observable<any> {
+		return this.http.get<any>(`${API}/metricas-de-uso`).pipe(map((resposta) => resposta.dados));
 	}
 
 	save(form) {

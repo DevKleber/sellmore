@@ -49,6 +49,25 @@ test.describe('Filtros de status', () => {
 		}
 	});
 
+	test('o filtro esconde os cards em que nem o lead nem um referido estão naquele status', async ({ home, api }) => {
+		const openLead = await api.createCustomer({ name: uniqueName('Lead aberto') });
+		const leadToCallLater = await api.createCustomer({ name: uniqueName('Lead ligar depois') });
+		await api.changeStatus(leadToCallLater, CustomerStatus.LigarDepois);
+		const leadWithReferral = await api.createCustomer({ name: uniqueName('Lead com referido') });
+		await api.changeStatus(await api.createReferral(leadWithReferral), CustomerStatus.LigarDepois);
+		await home.goto();
+		await expect(home.leadCard(openLead.name).root).toBeVisible();
+
+		await home.filters.showOnly(CustomerStatus.LigarDepois);
+
+		await expect(home.leadCard(leadToCallLater.name).root).toBeVisible();
+		await expect(home.leadCard(leadWithReferral.name).root).toBeVisible();
+		await expect(home.leadCard(openLead.name).root).toBeHidden();
+
+		await home.filters.showAll();
+		await expect(home.leadCard(openLead.name).root).toBeVisible();
+	});
+
 	test('"Todos" volta a mostrar os referidos de todos os status', async ({ home, api }) => {
 		const { lead } = await leadWithOneReferralPerStatus(api);
 		await home.goto();

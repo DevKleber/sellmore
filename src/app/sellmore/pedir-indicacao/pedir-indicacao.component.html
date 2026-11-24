@@ -1,0 +1,46 @@
+<div class="modal fade" id="modalPedirIndicacao" tabindex="-1" aria-labelledby="tituloPedirIndicacao" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title" id="tituloPedirIndicacao">
+					<p>Pedir indicações para {{ cliente?.name }}</p>
+				</h3>
+			</div>
+			<div class="modal-body">
+				<p class="ws-hint">
+					Envie este link ao cliente. Ele mesmo preenche o nome e o telefone de quem indica, e os contatos
+					aparecem aqui como referidos dele.
+				</p>
+
+				<div class="input">
+					<div class="inputIcon"><app-icon name="link" [size]="18"></app-icon></div>
+					<div class="inputText">
+						<input type="text" class="w-100 indicacao-link" [value]="link" readonly aria-label="Link de indicação" />
+					</div>
+				</div>
+
+				<textarea class="textarea indicacao-mensagem" [(ngModel)]="mensagem" aria-label="Mensagem para o cliente"></textarea>
+
+				<div class="ws-share">
+					@for (telefone of telefonesComWhatsapp; track telefone.id) {
+						<a class="ws-btn ws-btn--primary indicacao-whatsapp" target="_blank" rel="noopener"
+							[href]="enderecoDoWhatsapp(telefone)">
+							<app-icon name="whatsapp" [size]="18"></app-icon>
+							Enviar para {{ telefone.phone | helpers: "phoneByCountry" : telefone.country_code }}
+						</a>
+					}
+					<button type="button" class="ws-btn indicacao-copiar-mensagem" [disabled]="!link" (click)="copiar(mensagem)">
+						Copiar a mensagem
+					</button>
+					<button type="button" class="ws-btn indicacao-copiar-link" [disabled]="!link" (click)="copiar(link)">
+						Copiar só o link
+					</button>
+				</div>
+				<p class="ws-hint indicacao-copiado" role="status">{{ copiado ? 'Copiado!' : '' }}</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+			</div>
+		</div>
+	</div>
+</div>

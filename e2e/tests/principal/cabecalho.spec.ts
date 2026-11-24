@@ -4,8 +4,8 @@ import { mockApi } from '../../support/mock-api';
 import { expect, test } from '../../support/fixtures';
 
 const BUG_THANKS = 'Obrigado por nos reportar!';
-const NEW_VERSION = { version: '99.0.0', resume: 'Novidade de teste E2E' };
-const RELEASE_NOTES_URL = /https:\/\/www\.notion\.so\//;
+const RELEASE_NOTES_URL = 'https://forested-file-aaa.notion.site/pagina-da-versao-de-teste';
+const NEW_VERSION = { version: '99.0.0', resume: 'Novidade de teste E2E', link: RELEASE_NOTES_URL };
 
 test.describe('Cabeçalho da tela principal', () => {
 	test('alterna para o tema escuro, que continua depois de recarregar, e volta ao claro', async ({ home }) => {
@@ -24,12 +24,12 @@ test.describe('Cabeçalho da tela principal', () => {
 		await expect.poll(() => home.backgroundColor()).toBe(lightBackground);
 	});
 
-	test('o menu do perfil mostra o nome do vendedor, "Perfil: em desenvolvimento" e "Sair"', async ({ home, account }) => {
+	test('o menu do perfil mostra o nome do vendedor, "Minha conta" e "Sair"', async ({ home, account }) => {
 		await home.goto();
 
 		const menu = await home.openProfileMenu();
 
-		await expect(menu.items).toHaveText([account.credentials.name, 'Perfil: em desenvolvimento', 'Sair']);
+		await expect(menu.items).toHaveText([account.credentials.name, 'Minha conta', 'Sair']);
 	});
 
 	test('o botão LOG não aparece para vendedor comum', async ({ home }) => {

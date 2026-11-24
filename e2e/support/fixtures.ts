@@ -4,6 +4,7 @@ import { HomePage } from '../pages/home.page';
 import { LoginPage } from '../pages/login.page';
 import { NotFoundPage } from '../pages/not-found.page';
 import { RecoverPasswordPage } from '../pages/recover-password.page';
+import { ReferPage } from '../pages/refer.page';
 import { SignUpPage } from '../pages/sign-up.page';
 import { AccountRegistry, TestAccount } from './accounts';
 import { ApiHttp } from './api/api-http';
@@ -49,6 +50,7 @@ interface Fixtures {
 	home: HomePage;
 	accessLogPage: AccessLogPage;
 	notFoundPage: NotFoundPage;
+	referPage: ReferPage;
 }
 
 interface WorkerFixtures {
@@ -158,6 +160,9 @@ export const test = base.extend<Options & Fixtures, WorkerFixtures>({
 	},
 	notFoundPage: async ({ page }, use) => {
 		await use(new NotFoundPage(page));
+	},
+	referPage: async ({ page }, use) => {
+		await use(new ReferPage(page));
 	},
 });
 

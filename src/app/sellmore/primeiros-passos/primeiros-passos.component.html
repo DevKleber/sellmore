@@ -1,0 +1,36 @@
+@if (visivel) {
+	<section class="ws-steps" aria-labelledby="tituloPrimeirosPassos">
+		<div class="ws-steps__head">
+			<div>
+				<h2 class="ws-steps__title" id="tituloPrimeirosPassos">Comece em três passos</h2>
+				<p class="ws-subtitle">Leva poucos minutos para deixar sua carteira de indicações organizada.</p>
+			</div>
+			<button type="button" class="ws-btn ws-btn--quiet ws-steps__dismiss" (click)="dispensar()">Dispensar</button>
+		</div>
+		<ol class="ws-steps__list">
+			@for (passo of passos; track passo.titulo; let numero = $index) {
+				<li class="ws-step" [class.is-done]="passo.feito">
+					<span class="ws-step__mark" aria-hidden="true">
+						@if (passo.feito) {
+							<app-icon name="check" [size]="18" [stroke]="2.5"></app-icon>
+						} @else {
+							{{ numero + 1 }}
+						}
+					</span>
+					<div>
+						<strong class="ws-step__title">{{ passo.titulo }}</strong>
+						<span class="ws-step__status">{{ passo.feito ? '(feito)' : '' }}</span>
+						<p class="ws-step__text">{{ passo.descricao }}</p>
+					</div>
+				</li>
+			}
+		</ol>
+		@if (semNenhumPasso) {
+			<button type="button" class="ws-btn ws-btn--primary ws-steps__start" (click)="novoLead.emit()"
+				data-toggle="modal" data-target="#modalStickyAdd">
+				<app-icon name="plus" [size]="18" [stroke]="2"></app-icon>
+				Cadastrar meu primeiro lead
+			</button>
+		}
+	</section>
+}

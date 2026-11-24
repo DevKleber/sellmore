@@ -1,0 +1,81 @@
+<div class="modal fade" id="modalResultados" tabindex="-1" aria-labelledby="tituloResultados" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title" id="tituloResultados">
+					<p>Meus resultados</p>
+				</h3>
+			</div>
+			<div class="modal-body">
+				<div class="ws-pills" role="group" aria-label="Período">
+					@for (periodo of periodos; track periodo.chave) {
+						<button type="button" class="ws-pill"
+							[attr.aria-pressed]="periodoAtivo === periodo.chave" (click)="periodoAtivo = periodo.chave">
+							{{ periodo.rotulo }}
+						</button>
+					}
+				</div>
+
+				@if (doPeriodo; as numeros) {
+					<div class="ws-stats ws-results-panel">
+						<div class="ws-stat">
+							<span class="ws-stat__icon ws-stat__icon--ligar"><app-icon name="promote"></app-icon></span>
+							<p class="ws-stat__text">
+								<span class="ws-stat__number resultado-indicacoes">{{ numeros.indicacoes }}</span>
+								<span class="ws-stat__label">indicações recebidas</span>
+							</p>
+						</div>
+						<div class="ws-stat">
+							<span class="ws-stat__icon ws-stat__icon--cartao"><app-icon name="headset"></app-icon></span>
+							<p class="ws-stat__text">
+								<span class="ws-stat__number resultado-atendidos">{{ numeros.atendidos }}</span>
+								<span class="ws-stat__label">contatos atendidos</span>
+							</p>
+						</div>
+						<div class="ws-stat">
+							<span class="ws-stat__icon ws-stat__icon--comprou"><app-icon name="thumbs-up"></app-icon></span>
+							<p class="ws-stat__text">
+								<span class="ws-stat__number resultado-vendas">{{ numeros.vendas }}</span>
+								<span class="ws-stat__label">vendas</span>
+							</p>
+						</div>
+						<div class="ws-stat">
+							<span class="ws-stat__icon ws-stat__icon--comprou"><app-icon name="check"></app-icon></span>
+							<p class="ws-stat__text">
+								<span class="ws-stat__number resultado-conversao">{{ numeros.conversao }}%</span>
+								<span class="ws-stat__label">dos atendidos compraram</span>
+							</p>
+						</div>
+					</div>
+
+					<h4 class="ws-section-title">Últimos seis meses</h4>
+					<div class="ws-chart" role="img" aria-label="Indicações e vendas dos últimos seis meses">
+						@for (mes of resultados.historico; track mes.mes) {
+							<div class="ws-chart__month">
+								<div class="ws-chart__bars">
+									<span class="ws-chart__bar ws-chart__bar--indicacoes" [style.height.%]="altura(mes.indicacoes)"
+										[attr.title]="mes.indicacoes + ' indicações'"></span>
+									<span class="ws-chart__bar ws-chart__bar--vendas" [style.height.%]="altura(mes.vendas)"
+										[attr.title]="mes.vendas + ' vendas'"></span>
+								</div>
+								<span class="ws-chart__values">{{ mes.indicacoes }} · {{ mes.vendas }}</span>
+								<span class="ws-chart__label">{{ nomeDoMes(mes) }}</span>
+							</div>
+						}
+					</div>
+					<p class="ws-chart__legend">
+						<span class="ws-chart__dot ws-chart__bar--indicacoes"></span> Indicações
+						<span class="ws-chart__dot ws-chart__bar--vendas"></span> Vendas
+					</p>
+					<p class="ws-hint">
+						Atendidos e vendas contam pela data em que o status foi alterado. Para os contatos antigos vale a
+						data da última alteração do cadastro.
+					</p>
+				}
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+			</div>
+		</div>
+	</div>
+</div>

@@ -2,7 +2,6 @@ import {
 	buildPasswordResetLink,
 	expiredPasswordResetLink,
 	MALFORMED_PASSWORD_RESET_LINK,
-	passwordResetLinkSentByApi,
 	tamperedPasswordResetLink,
 } from '../../support/data/password-reset-link';
 import { nonExistentEmail } from '../../support/data/unique';
@@ -15,6 +14,7 @@ import { expect, test } from '../../support/fixtures';
  */
 const NEW_PASSWORD = 'NovaSenha@E2e2026';
 const WEAK_PASSWORD = '123456';
+const INVALID_LINK = 'Link inválido ou já utilizado. Peça um novo.';
 
 test.describe('Recuperar senha', () => {
 	test.use({ authenticated: false });
@@ -72,14 +72,12 @@ test.describe('Troca de senha pelo link do e-mail', () => {
 		await expect(recoverPasswordPage.changePasswordButton).toBeEnabled();
 	});
 
-	// Hoje a API responde erro 500 para link com parâmetros inválidos e a tela mostra
-	// "Erro interno no servidor! Server Error".
-	test.fixme('link com parâmetros inválidos avisa que o link é inválido', async ({ recoverPasswordPage }) => {
+	test('link com parâmetros inválidos avisa que o link é inválido', async ({ recoverPasswordPage }) => {
 		await recoverPasswordPage.gotoResetLink(MALFORMED_PASSWORD_RESET_LINK);
 
 		await recoverPasswordPage.changePassword(NEW_PASSWORD);
 
-		await recoverPasswordPage.alert.expectMessage(/link/i);
+		await recoverPasswordPage.alert.acknowledge(INVALID_LINK);
 	});
 
 	test('link expirado mostra "Link expirado"', async ({ recoverPasswordPage, account }) => {
@@ -90,12 +88,12 @@ test.describe('Troca de senha pelo link do e-mail', () => {
 		await recoverPasswordPage.alert.acknowledge('Link expirado');
 	});
 
-	test('link com token adulterado é recusado com a mensagem "Error"', async ({ recoverPasswordPage, account }) => {
+	test('link com assinatura adulterada é recusado como inválido', async ({ recoverPasswordPage, account }) => {
 		await recoverPasswordPage.gotoResetLink(tamperedPasswordResetLink(account.credentials));
 
 		await recoverPasswordPage.changePassword(NEW_PASSWORD);
 
-		await recoverPasswordPage.alert.acknowledge('Error');
+		await recoverPasswordPage.alert.acknowledge(INVALID_LINK);
 	});
 
 	test('senhas diferentes mostram "As senhas não conferem"', async ({ recoverPasswordPage, account }) => {
@@ -127,14 +125,18 @@ test.describe('Troca de senha pelo link do e-mail', () => {
 			await expect(publicApi.login(account.credentials)).rejects.toThrow(/401/);
 		});
 
-		// Hoje o link que a API envia por e-mail leva sempre o id 1: para qualquer outro
-		// vendedor a troca de senha dá erro 500 ("Erro interno no servidor!").
-		test.fixme('o link no formato enviado pela API por e-mail troca a senha do vendedor', async ({ recoverPasswordPage, account }) => {
-			await recoverPasswordPage.gotoResetLink(passwordResetLinkSentByApi(account.credentials));
-
+		test('o mesmo link não troca a senha uma segunda vez', async ({ recoverPasswordPage, account, context }) => {
+			const link = buildPasswordResetLink(account.credentials);
+			await recoverPasswordPage.gotoResetLink(link);
 			await recoverPasswordPage.changePassword(NEW_PASSWORD);
-
 			await expect(recoverPasswordPage.page).toHaveURL('/');
+			await context.clearCookies();
+			await recoverPasswordPage.page.evaluate(() => localStorage.clear());
+
+			await recoverPasswordPage.gotoResetLink(link);
+			await recoverPasswordPage.changePassword(`${NEW_PASSWORD}-outra`);
+
+			await recoverPasswordPage.alert.acknowledge(INVALID_LINK);
 		});
 	});
 });

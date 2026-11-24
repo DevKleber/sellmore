@@ -19,7 +19,13 @@ export const ROUTES: Routes = [
 		component: RequestRecoverPasswordComponent,
 	},
 	{
+		path: 'indicar/:codigo',
+		loadChildren: () => import('./indicar/indicar.module').then((m) => m.IndicarModule),
+	},
+	{
 		path: '',
+		pathMatch: 'full',
+		canActivate: [LoggedInGuard],
 		loadChildren: () =>
 			import('./sellmore/sell-more.module').then((m) => m.SellMoreModule),
 	},
@@ -32,6 +38,7 @@ export const ROUTES: Routes = [
 	},
 	{
 		path: 'access_log',
+		canActivate: [LoggedInGuard],
 		loadChildren: () => import('./log/log.module').then((m) => m.LogModule),
 	},
 	{ path: '**', redirectTo: 'not-found', pathMatch: 'full' },
