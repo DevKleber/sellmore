@@ -1,6 +1,9 @@
+import { execFileSync } from 'node:child_process';
+import path from 'node:path';
 import { TIMEZONE } from '../env';
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+const DOCKER_COMPOSE_DIR = path.join(__dirname, '..', '..', '..', '..');
 
 export interface PasswordResetLink {
 	url: string;
@@ -10,23 +13,19 @@ export interface PasswordResetLink {
 interface ResetLinkOwner {
 	id: number | string;
 	email: string;
-	createdAt: string;
 }
 
-/** A API sempre grava "id": "1" no link que envia por e-mail (User::recoverPassword). */
-const ID_SENT_BY_API = '1';
-
 /**
- * Reproduz os parâmetros do link de troca de senha que a API enviaria por e-mail
- * (`url` = base64 de {email, id, expired}; `token` = base64 do created_at do usuário),
- * para testar a tela de troca de senha sem disparar e-mail nenhum.
+ * Parâmetros do link de troca de senha que a API enviaria por e-mail: `url` é o base64 de
+ * {email, id, expired} e `token` é a assinatura feita pela API. A assinatura é calculada dentro
+ * do container da API, porque depende da chave da aplicação; assim a tela de troca de senha é
+ * testada sem disparar e-mail nenhum.
  */
 export function buildPasswordResetLink(owner: ResetLinkOwner, expiresAt = new Date(Date.now() + ONE_DAY_MS)): PasswordResetLink {
-	const payload = { email: owner.email, id: owner.id, expired: toServerDateTime(expiresAt) };
-	return {
-		url: toBase64(JSON.stringify(payload)),
-		token: toBase64(toServerDateTime(new Date(owner.createdAt))),
-	};
+	const payload = { email: owner.email, id: Number(owner.id), expired: toServerDateTime(expiresAt) };
+	const url = toBase64(JSON.stringify(payload));
+
+	return { url, token: signedByApi(url, Number(owner.id)) };
 }
 
 export function expiredPasswordResetLink(owner: ResetLinkOwner): PasswordResetLink {
@@ -35,15 +34,23 @@ export function expiredPasswordResetLink(owner: ResetLinkOwner): PasswordResetLi
 
 export function tamperedPasswordResetLink(owner: ResetLinkOwner): PasswordResetLink {
 	const link = buildPasswordResetLink(owner);
-	return { ...link, token: toBase64(toServerDateTime(new Date(0))) };
-}
-
-/** Link exatamente como a API o envia por e-mail, com o id fixo. */
-export function passwordResetLinkSentByApi(owner: ResetLinkOwner): PasswordResetLink {
-	return buildPasswordResetLink({ ...owner, id: ID_SENT_BY_API });
+	return { ...link, token: link.token.split('').reverse().join('') };
 }
 
 export const MALFORMED_PASSWORD_RESET_LINK: PasswordResetLink = { url: 'link-invalido', token: 'token-invalido' };
+
+/** O conteúdo e o id só têm letras, números e sinais do base64, então podem ir direto no código executado. */
+function signedByApi(url: string, ownerId: number): string {
+	const code = `echo App\\User::assinaturaDoLinkDeRecuperacao('${url}', App\\Funcionario::find(${ownerId}));`;
+	const output = execFileSync('docker', ['compose', 'exec', '-T', 'api', 'php', 'artisan', 'tinker', `--execute=${code}`], {
+		cwd: DOCKER_COMPOSE_DIR,
+		encoding: 'utf8',
+	});
+
+	const lines = output.trim().split('\n');
+
+	return lines[lines.length - 1].trim();
+}
 
 /** Data no fuso e no formato do banco da API: "2026-11-23 13:45:00". */
 function toServerDateTime(date: Date): string {
